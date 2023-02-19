@@ -1,13 +1,13 @@
-package models;
+package middleware;
 
-public enum Type {
+public enum Types {
     Initial(0),
     Transition(1),
     Final(2);
 
     public final int num;
 
-    private Type(int num){
+    private Types(int num){
         this.num = num;
     }    
 }

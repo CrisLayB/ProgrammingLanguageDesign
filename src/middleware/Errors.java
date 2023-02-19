@@ -1,7 +1,7 @@
 package middleware;
 
 public enum Errors {
-    InvalidExpression("\u001B[30m" + "ERROR: Esta expresion es invalida");
+    InvalidExpression("\u001B[31m" + "ERROR: Esta expresion regular insertada es invalida" + "\u001B[0m");
 
     public final String error;
 

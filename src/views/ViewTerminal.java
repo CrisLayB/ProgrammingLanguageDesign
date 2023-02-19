@@ -20,7 +20,6 @@ public class ViewTerminal {
         System.out.println("Expresion Regular (r): " + r);
 
         if(rPostfix.equals(Errors.InvalidExpression.error)){
-            System.out.println(rPostfix);
             throw new Exception(Errors.InvalidExpression.error);
         }
         System.out.println("Nueva Expresion Regular (r'): " + rPostfix);
