@@ -47,14 +47,14 @@ public class ShuntingYardAlgorithm {
     }
     
     private static int precedence(char c){
-        if(c == '+' || c == '-' || c == '?') return 1;
+        if(c == '+' || c == '|' || c == '-' || c == '?') return 1;
         if(c == '*' || c == '/' || c == '÷') return 2;
         if(c == '^') return 3;
         return -1;
     }
 
     private static boolean leftAssociativity(char c){
-        if(c == '+' || c == '-' || c == '/' || c == '*' || c == '?') return true;
+        if(c == '+' || c == '|' || c == '-' || c == '/' || c == '*' || c == '?') return true;
         return false;
     }
 }

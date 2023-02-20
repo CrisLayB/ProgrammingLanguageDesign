@@ -1,5 +1,8 @@
 import views.ViewTerminal;
 import controllers.ShuntingYardAlgorithm;
+import controllers.ThompsonAlgorithm;
+import controllers.GenerateSymbols;
+import models.Symbol;
 
 /**
  * <h1> Diseño De Lenguajes de Programacion - UVG </h1>
@@ -12,19 +15,18 @@ import controllers.ShuntingYardAlgorithm;
 
 public class Main {
 
-    private static void app() throws Exception{
-        ViewTerminal.welcome();
-
-        String r = ViewTerminal.readRegularExpresion();
-        
+    private static void makeAFN(String r) throws Exception{        
         // Implementar el Algoritmo Shunting Yard para obtener R'
         String rPostfix = ShuntingYardAlgorithm.infixToPostfix(r);
 
         // Mostrar Resultados de r'
         ViewTerminal.results(r, rPostfix);
 
+        // Obtener todos los simbolos de la forma correspondiente
+        Symbol[] symbols = GenerateSymbols.getSymbols(rPostfix);
+
         // Implementar el Algoritmo de Construccion de Thompson
-        // ...
+        ThompsonAlgorithm.constructNFA(symbols);
 
         // Mostrar Resultados
         // ...
@@ -46,6 +48,9 @@ public class Main {
          *      a|
          */
 
-        app();
+        makeAFN("a?(a+b)*?b");
+         
+        // ViewTerminal.welcome();
+        // makeAFN(ViewTerminal.readRegularExpresion());
     }
 }

@@ -25,3 +25,6 @@ replay_pid*
 
 # VS Code Cache
 /.vscode
+
+# .java~
+*.java~

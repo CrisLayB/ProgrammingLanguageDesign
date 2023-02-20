@@ -27,9 +27,10 @@ public class SYAlgorithm {
     
     @Test
     public void RegularExpressions(){
-        assertEquals("ab*|*c", ShuntingYardAlgorithm.infixToPostfix("(a*|b*)c"));
+        assertEquals("a*b*|c", ShuntingYardAlgorithm.infixToPostfix("(a*|b*)c"));
         assertEquals("a|", ShuntingYardAlgorithm.infixToPostfix("a|"));
         assertEquals("aab+*?b?", ShuntingYardAlgorithm.infixToPostfix("a?(a+b)*?b"));
+        assertEquals("aab|*?b?", ShuntingYardAlgorithm.infixToPostfix("a?(a|b)*?b"));
     }
 
     @Test
