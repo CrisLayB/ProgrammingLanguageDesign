@@ -1,14 +1,21 @@
 package models;
 
 import java.util.List;
+import java.util.ArrayList;
 
-public abstract class Set<E> {
+public abstract class Set {
     
-    protected List<E> elements;
+    protected List<State> elements;
 
-    abstract Set<E> intersection( Set<E> A);
-    abstract Set<E> union( Set<E> A);
-    abstract Set<E> difference( Set<E> A);
+    public Set(){
+        elements = new ArrayList<State>();
+    }
+
+    abstract Set intersection( Set A);
+    abstract Set union( Set A);
+    abstract Set difference( Set A);
         
-    abstract protected void addIteem(Set<E> object);
+    public void addIteem(State element){
+        elements.add(element);
+    }
 }

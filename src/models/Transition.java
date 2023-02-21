@@ -1,7 +1,13 @@
 package models;
 
 public class Transition {
-    public State<Integer> stateOrigin;
-    public State<Integer> stateFinal;
+    public State stateOrigin;
+    public State stateFinal;
     public Symbol symbol;
+
+    public Transition(State sOrigin, State sFinal, Symbol symbol){
+        stateOrigin = sOrigin;
+        stateFinal = sFinal;
+        this.symbol = symbol;
+    }
 }
