@@ -5,17 +5,20 @@ import controllers.GenerateSymbols;
 import models.Symbol;
 
 /**
- * <h1> Diseño De Lenguajes de Programacion - UVG </h1>
- * <p> Main <p>
+ * <h1>Diseño De Lenguajes de Programacion - UVG</h1>
+ * <p>
+ * Main
+ * <p>
  * 
  * Creado por:
+ * 
  * @author Cristian Laynez
  * @since 2023
- **/    
+ **/
 
 public class Main {
 
-    private static void makeAFN(String r) throws Exception{        
+    private static void makeAFN(String r) throws Exception {
         // Implementar el Algoritmo Shunting Yard para obtener R'
         String rPostfix = ShuntingYardAlgorithm.infixToPostfix(r);
 
@@ -31,26 +34,31 @@ public class Main {
         // Mostrar Resultados
         // ...
     }
-    
-    public static void main(String[] args) throws Exception{
+
+    public static void main(String[] args) throws Exception {
         /**
          * PRUEBAS Y ENTRADAS *************************************
          * 
          * EXPRESIONES REGULARES DEL PRE LAB 'A' Y 'B'
-         *      ab*ab*
-         *      0?(1?)?0*
-         *      (a*|b*)c
-         *      (b|b)*abb(a|b)*
-         *      (a|E)b(a+)c?
-         *      (a|b)*a(a|b)(a|b)
+         * ab*ab*
+         * 0?(1?)?0*
+         * (a*|b*)c
+         * (b|b)*abb(a|b)*
+         * (a|E)b(a+)c?
+         * (a|b)*a(a|b)(a|b)
          * 
          * EJEMPLO EXPRESION REGULAR NO VALIDA
-         *      a|
+         * a|
+         * 
+         * MAS EXPRESIONES:
+         * a?(a+b)*?b
          */
 
-        makeAFN("a?(a+b)*?b");
-         
-        // ViewTerminal.welcome();
-        // makeAFN(ViewTerminal.readRegularExpresion());
+        if (args.length == 0) {
+            System.out.println("No ingresaste una expresion a la par de ejecutable");
+            return;
+        }
+
+        makeAFN(args[0]);
     }
 }

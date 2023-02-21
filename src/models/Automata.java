@@ -4,17 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Automata {
-    public Set entryStates; // Start States
-    public Set outStates; // Final states
-    public Set symbols;
+    public List<State> entryStates;
+    public List<State> outStates;
+    public List<State> symbols;
     public State stateInitial;
     public List<Transition> transitions;
 
-    public Automata(){
+    public Automata() {
+
+        stateInitial = null;
         transitions = new ArrayList<Transition>();
     }
 
-    public Set Transition(State e, State s){ // move(e, s)
+    public Transition Transition(State e, State s) { // move(e, s)
         return null;
     }
 }
