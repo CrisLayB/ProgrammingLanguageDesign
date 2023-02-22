@@ -2,30 +2,51 @@ package controllers;
 
 import java.util.Stack;
 
-import models.Symbol;
 import models.NFA;
+// import models.State;
+import models.Symbol;
+// import middleware.Types;
+import models.Transition;
 
 public class ThompsonAlgorithm {
+
+    public static int countStates = 1;
+
     public static NFA constructNFA(Symbol[] symbols) {
         Stack<NFA> stack = new Stack<NFA>();
 
         for (int i = 0; i < symbols.length; i++) {
-            int idSymbol = symbols[i].getId();
+            Symbol symbol = symbols[i];
 
-            switch (idSymbol) {
-                case 43: // '+' // PLUS OPERATOR
+            switch (symbol.getId()) {
+                case 43: // '+'
+                    NFA nfaForPlus = stack.pop();
+
                     break;
 
-                case 124: // '|' // OR OPERATOR
+                case 124: // '|'
+                    //
+                    NFA nfa2 = stack.pop();
+                    NFA nfa1 = stack.pop();
+
+                    // Crear un nuevo automata
+                    NFA nfaForOr = new NFA();
                     break;
 
-                case 42: // '*' // CLEAN
+                case 42: // '*'
+                    NFA nfaForClean = stack.pop();
                     break;
 
-                case 63: // '?' // CONCATENATION
+                case 63: // '?'
+                    NFA nfaPopForQuestion = new NFA();
                     break;
 
-                default: // Sunpogamos que es un caracter normal
+                default: // NORMAL CHARACTER
+                    Transition transition = new Transition(symbol);
+                    NFA nfa = new NFA();
+                    nfa.saveSymbols(symbol);
+                    nfa.addTransition(transition);
+                    stack.add(nfa);
                     break;
             }
         }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import middleware.Types;
 
 public class State {
-    private int id; // char id
+    private int id; // id of this State
     private Types type;
     private List<State> prevStatesAFN;
     private List<State> nextStatesAFN;
@@ -16,6 +16,13 @@ public class State {
         this.type = type;
         prevStatesAFN = new ArrayList<State>();
         nextStatesAFN = new ArrayList<State>();
+    }
+
+    public State(int id, Types type, List<State> prevStatesAFN, List<State> nextStatesAFN) {
+        this.id = id;
+        this.type = type;
+        this.prevStatesAFN = prevStatesAFN;
+        this.nextStatesAFN = nextStatesAFN;
     }
 
     public int getId() {
