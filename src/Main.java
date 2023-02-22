@@ -56,6 +56,8 @@ public class Main {
 
         if (args.length == 0) {
             System.out.println("No ingresaste una expresion a la par de ejecutable");
+            System.out.println("Ejemplo de como ejecutar el programa e ingresar una expresion regular:");
+            System.out.println("\njava Main '(a*|b*)c'\n");
             return;
         }
 

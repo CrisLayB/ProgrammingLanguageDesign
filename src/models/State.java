@@ -8,12 +8,14 @@ import middleware.Types;
 public class State {
     private int id; // char id
     private Types type;
-    private List<State> statesAFN;
+    private List<State> prevStatesAFN;
+    private List<State> nextStatesAFN;
 
     public State(int id, Types type) {
         this.id = id;
         this.type = type;
-        statesAFN = new ArrayList<State>();
+        prevStatesAFN = new ArrayList<State>();
+        nextStatesAFN = new ArrayList<State>();
     }
 
     public int getId() {
@@ -28,11 +30,19 @@ public class State {
         this.type = type;
     }
 
-    public List<State> getStatesAFN() {
-        return statesAFN;
+    public List<State> getPrevStatesAFN() {
+        return prevStatesAFN;
     }
 
-    public void addState(State state) {
-        statesAFN.add(state);
+    public List<State> getNextStatesAFN() {
+        return nextStatesAFN;
+    }
+
+    public void addPrevState(State state) {
+        prevStatesAFN.add(state);
+    }
+
+    public void addNextState(State state) {
+        nextStatesAFN.add(state);
     }
 }

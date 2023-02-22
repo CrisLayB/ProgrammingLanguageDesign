@@ -1,22 +1,22 @@
 package controllers;
 
-// import java.util.Stack;
+import java.util.Stack;
 
 import models.Symbol;
 import models.NFA;
 
 public class ThompsonAlgorithm {
     public static NFA constructNFA(Symbol[] symbols) {
-        NFA nfa = new NFA();
-
-        // Stack<NFA> stack = new Stack<NFA>();
-        // Se agregara un estado vacio en el stack
+        Stack<NFA> stack = new Stack<NFA>();
 
         for (int i = 0; i < symbols.length; i++) {
             int idSymbol = symbols[i].getId();
-            System.out.println(idSymbol);
+
             switch (idSymbol) {
-                case 43: // '+' o '|' // UNION
+                case 43: // '+' // PLUS OPERATOR
+                    break;
+
+                case 124: // '|' // OR OPERATOR
                     break;
 
                 case 42: // '*' // CLEAN
@@ -30,7 +30,9 @@ public class ThompsonAlgorithm {
             }
         }
 
-        // return stack.pop();
-        return null;
+        if (stack.size() == 1) // Quiere decir que todo esta en orden
+            return stack.pop();
+
+        return null; // Si no hay solo uyn elemento quiere decir que el automata es invalido
     }
 }
