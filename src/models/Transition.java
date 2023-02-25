@@ -9,7 +9,7 @@ public class Transition {
     private State stateFinal;
     private Symbol symbol;
 
-    // Create a normal Transition
+    // Crear una transicion normal
     public Transition(Symbol symbol) {
         this.symbol = symbol;
         stateOrigin = new State(ThompsonAlgorithm.countStates, Types.Initial);
@@ -23,6 +23,12 @@ public class Transition {
         this.symbol = symbol;
         stateOrigin = sOrigin;
         stateFinal = sFinal;
+    }
+
+    // Cambiar el tipo de stados de la transicion
+    public void changueType(Types typeO, Types typeF){
+        stateOrigin.setType(typeO);
+        stateFinal.setType(typeF);
     }
 
     public State getStateOrigin() {

@@ -42,9 +42,30 @@ public class Automata {
     public State getStateFinal(){
         return finalStates.get(0);
     }
+
+    public void ChangueStatesTransition(){
+        for (Transition transition : transitions) {
+            transition.getStateOrigin().setType(Types.Transition);
+            transition.getStateFinal().setType(Types.Transition);
+        }
+    }
+
+    public void ChagueFinalStatesTransition(){
+        for(Transition transition : transitions){
+            transition.getStateFinal().setType(Types.Transition);
+        }
+    }
     
     public List<Transition> allTransitions(){
         return transitions;
+    }
+
+    public List<Symbol> getSymbols() {
+        return symbols;
+    }
+
+    public Symbol getSymbol(int num){
+        return symbols.get(num);
     }
 
     public Transition getInitialTransition(){ // Inicial = 0

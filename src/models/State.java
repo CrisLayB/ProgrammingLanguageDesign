@@ -52,4 +52,9 @@ public class State {
     public void addNextState(State state) {
         nextStatesAFN.add(state);
     }
+
+    @Override
+    public String toString() {
+        return "Label: " + id + " | " + type;
+    }
 }
