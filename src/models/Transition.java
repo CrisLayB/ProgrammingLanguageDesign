@@ -12,9 +12,9 @@ public class Transition {
     // Create a normal Transition
     public Transition(Symbol symbol) {
         this.symbol = symbol;
-        stateOrigin = new State(ThompsonAlgorithm.countStates, Types.Transition);
+        stateOrigin = new State(ThompsonAlgorithm.countStates, Types.Initial);
         ThompsonAlgorithm.countStates++;
-        stateFinal = new State(ThompsonAlgorithm.countStates, Types.Transition);
+        stateFinal = new State(ThompsonAlgorithm.countStates, Types.Final);
         ThompsonAlgorithm.countStates++;
     }
 
@@ -35,7 +35,7 @@ public class Transition {
 
     public Symbol getSymbol() {
         return symbol;
-    }
+    }    
 
     @Override
     public String toString() {

@@ -10,7 +10,7 @@ import models.Transition;
 
 public class ThompsonAlgorithm {
 
-    public static int countStates = 1;
+    public static int countStates = 0;
 
     public static NFA constructNFA(String postfixExpression) {
         // Generar todos los simbolos desde la expression postfix creada
@@ -24,7 +24,7 @@ public class ThompsonAlgorithm {
             switch (symbol.getId()) {
                 case 43: // '+'
                     NFA nfaForPlus = stack.pop();
-                    plus(nfaForPlus);
+                    stack.add(plus(nfaForPlus));
                     break;
 
                 case 124: // '|'
@@ -34,8 +34,8 @@ public class ThompsonAlgorithm {
                     break;
 
                 case 42: // '*'
-                    // NFA nfaForClean = stack.pop();
-                    // kleene(nfaForClean);
+                    NFA nfaForClean = stack.pop();
+                    stack.add(kleene(nfaForClean));
                     break;
 
                 case 63: // '?'
@@ -49,16 +49,18 @@ public class ThompsonAlgorithm {
 
                 default: // NORMAL CHARACTER
                     Transition transition = new Transition(symbol);
-                    NFA nfa = new NFA(transition.getStateOrigin());
+                    NFA nfa = new NFA(transition.getStateOrigin(), transition.getStateFinal());
                     nfa.addTransition(transition);
                     stack.add(nfa);
-                    System.out.println("NORMAL: " + nfa.getStateInitial().toString());
+                    System.out.println("NORMAL: " + transition.toString());
                     break;
             }
         }
 
         NFA check = stack.peek();
 
+        System.out.println("------------------------");
+        System.out.println("FINAL TRANSITIONS OF UNIQUE NFA");
         System.out.println("------------------------");
         for (Transition t : check.allTransitions()) {
             System.out.println(t.toString());
@@ -72,31 +74,36 @@ public class ThompsonAlgorithm {
     }
 
     private static NFA plus(NFA nfa) {
-        return null;
+        NFA nfaPlus = kleene(nfa);
+        countStates++;
+        State state = new State(countStates, Types.Final);
+        // System.out.println("JAJA CHECK:" + state.getId());        
+        return nfaPlus;
     }
 
     private static NFA or(NFA nfaUp, NFA nfaDown) {
         // Crear dos estados nuevos
-        State stateInitial = new State(countStates, Types.Initial);
-        State stateFinal = new State(countStates, Types.Final);
+        State stateInitial = new State(countStates, Types.Transition);
+        countStates++;
+        State stateFinal = new State(countStates, Types.Transition);
 
         // Transiciones principales para el or
-        Transition transitionUp = nfaUp.getTransition();
-        Transition transitionDown = nfaDown.getTransition();
+        Transition transitionUp = nfaUp.getInitialTransition();
+        Transition transitionDown = nfaDown.getFinalTransition();
 
         // Crear nuevas transiciones
         Transition transitionUpIninitial = new Transition(new Symbol((int) 'E', 'E'), stateInitial,
                 transitionUp.getStateOrigin());
         Transition transitionDownIninitial = new Transition(new Symbol((int) 'E', 'E'), stateInitial,
                 transitionDown.getStateOrigin());
-
+        
         Transition transitionUpFinal = new Transition(new Symbol((int) 'E', 'E'), transitionUp.getStateFinal(),
                 stateFinal);
         Transition transitionDownFinal = new Transition(new Symbol((int) 'E', 'E'), transitionDown.getStateFinal(),
                 stateFinal);
 
         // Crear un nuevo nfa
-        NFA nfaUnion = new NFA(stateInitial);
+        NFA nfaUnion = new NFA(stateInitial, stateFinal);
         // Agregar las transiciones al nfa
         nfaUnion.addTransition(transitionUp);
         nfaUnion.addTransition(transitionDown);
@@ -108,7 +115,26 @@ public class ThompsonAlgorithm {
     }
 
     private static NFA kleene(NFA nfa) {
-        return null;
+        System.out.println("JAJA");
+        // Crear dos estados nuevos
+        State stateInitial = new State(countStates, Types.Transition);
+        countStates++;
+        State stateFinal = new State(countStates, Types.Transition);
+
+        // Crear las nuevas transiciones
+        Transition transitionInverse = new Transition(new Symbol((int) 'E', 'E'), nfa.getStateFinal(), nfa.getStateInitial());
+        Transition transitionConnection = new Transition(new Symbol((int) 'E', 'E'), stateInitial, stateFinal); // OJO
+        Transition transitionConnectNFAOrigin = new Transition(new Symbol((int) 'E', 'E'), stateInitial, nfa.getStateInitial());
+        Transition transitionConnectNFAFinal = new Transition(new Symbol((int) 'E', 'E'), nfa.getStateFinal(), stateFinal); // OJO
+        
+        NFA nfaKleene = new NFA(stateInitial, stateFinal);
+        nfaKleene.addTransition(nfa.getInitialTransition()); // si
+        nfaKleene.addTransition(transitionInverse); // si
+        nfaKleene.addTransition(transitionConnection);
+        nfaKleene.addTransition(transitionConnectNFAOrigin); // si
+        nfaKleene.addTransition(transitionConnectNFAFinal);
+
+        return nfaKleene;
     }
 
     private static NFA concatenate(NFA nfa) {
