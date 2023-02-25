@@ -25,11 +25,8 @@ public class Main {
         // Mostrar Resultados de r'
         ViewTerminal.results(r, rPostfix);
 
-        // Obtener todos los simbolos de la forma correspondiente
-        Symbol[] symbols = GenerateSymbols.getSymbols(rPostfix);
-
         // Implementar el Algoritmo de Construccion de Thompson
-        ThompsonAlgorithm.constructNFA(symbols);
+        ThompsonAlgorithm.constructNFA(rPostfix);
 
         // Mostrar Resultados
         // ...
@@ -47,12 +44,18 @@ public class Main {
          * (a|E)b(a+)c?
          * (a|b)*a(a|b)(a|b)
          * 
-         * EJEMPLO EXPRESION REGULAR NO VALIDA
-         * a|
-         * 
          * MAS EXPRESIONES:
-         * a?(a+b)*?b
-         */
+         * a(a|b)*b
+         * 
+         * ! EJEMPLOS EXPRESIONES REGULAR NO VALIDAS
+         * a|
+         * *a
+         * |ba
+         * (a|b
+         * (a|b))
+         * a||
+         * ab|E|
+        */
 
         if (args.length == 0) {
             System.out.println("No ingresaste una expresion a la par de ejecutable");

@@ -12,9 +12,12 @@ public class ThompsonAlgorithm {
 
     public static int countStates = 1;
 
-    public static NFA constructNFA(Symbol[] symbols) {
+    public static NFA constructNFA(String postfixExpression) {
+        // Generar todos los simbolos desde la expression postfix creada
+        Symbol[] symbols = GenerateSymbols.getSymbols(postfixExpression);
+        
+        // Stack que nos ayudara con el algoritmo de thompson
         Stack<NFA> stack = new Stack<NFA>();
-
         for (int i = 0; i < symbols.length; i++) {
             Symbol symbol = symbols[i];
 
@@ -46,14 +49,22 @@ public class ThompsonAlgorithm {
 
                 default: // NORMAL CHARACTER
                     Transition transition = new Transition(symbol);
-                    NFA nfa = new NFA();
+                    NFA nfa = new NFA(transition.getStateOrigin());
                     nfa.addTransition(transition);
                     stack.add(nfa);
-                    System.out.println("NORMAL: " + nfa.getTransition().toString());
+                    System.out.println("NORMAL: " + nfa.getStateInitial().toString());
                     break;
             }
         }
 
+        NFA check = stack.peek();
+
+        System.out.println("------------------------");
+        for (Transition t : check.allTransitions()) {
+            System.out.println(t.toString());
+        }
+        System.out.println("------------------------");
+        
         if (stack.size() == 1) // Quiere decir que todo esta en orden
             return stack.pop();
 
@@ -74,19 +85,21 @@ public class ThompsonAlgorithm {
         Transition transitionDown = nfaDown.getTransition();
 
         // Crear nuevas transiciones
-        Transition transitionUpIninitial = new Transition(new Symbol((int) 'ε', 'ε'), stateInitial,
+        Transition transitionUpIninitial = new Transition(new Symbol((int) 'E', 'E'), stateInitial,
                 transitionUp.getStateOrigin());
-        Transition transitionDownIninitial = new Transition(new Symbol((int) 'ε', 'ε'), stateInitial,
+        Transition transitionDownIninitial = new Transition(new Symbol((int) 'E', 'E'), stateInitial,
                 transitionDown.getStateOrigin());
 
-        Transition transitionUpFinal = new Transition(new Symbol((int) 'ε', 'ε'), transitionUp.getStateFinal(),
+        Transition transitionUpFinal = new Transition(new Symbol((int) 'E', 'E'), transitionUp.getStateFinal(),
                 stateFinal);
-        Transition transitionDownFinal = new Transition(new Symbol((int) 'ε', 'ε'), transitionDown.getStateFinal(),
+        Transition transitionDownFinal = new Transition(new Symbol((int) 'E', 'E'), transitionDown.getStateFinal(),
                 stateFinal);
 
         // Crear un nuevo nfa
         NFA nfaUnion = new NFA(stateInitial);
         // Agregar las transiciones al nfa
+        nfaUnion.addTransition(transitionUp);
+        nfaUnion.addTransition(transitionDown);
         nfaUnion.addTransition(transitionUpIninitial);
         nfaUnion.addTransition(transitionDownIninitial);
         nfaUnion.addTransition(transitionUpFinal);

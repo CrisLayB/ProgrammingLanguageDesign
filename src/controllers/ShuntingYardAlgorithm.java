@@ -27,14 +27,11 @@ public class ShuntingYardAlgorithm {
                 stack.pop();
             }
 
-            // Si un operador fue encontrado entonces el contenido del pop
-            // sera tomado para el output
-            else{
-                while(!stack.isEmpty()  && precedence(c) <= precedence(stack.peek()) && leftAssociativity(c)){
-                    output += stack.pop();
-                }
-                stack.push(c);
-            }
+            // Signos que agregar al stack
+            else if(c == '+' || c == '|') stack.push(c);
+            
+            // Agregar el resto de operadores...
+            else output += c;            
         }
         
         // Se sacaran el resto de los operadores pendientes
@@ -44,17 +41,5 @@ public class ShuntingYardAlgorithm {
         }
         
         return output;
-    }
-    
-    private static int precedence(char c){
-        if(c == '+' || c == '|' || c == '-' || c == '?') return 1;
-        if(c == '*' || c == '/' || c == '÷') return 2;
-        if(c == '^') return 3;
-        return -1;
-    }
-
-    private static boolean leftAssociativity(char c){
-        if(c == '+' || c == '|' || c == '-' || c == '/' || c == '*' || c == '?') return true;
-        return false;
     }
 }
