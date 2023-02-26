@@ -149,7 +149,7 @@ public class ThompsonAlgorithm {
     }
 
     private static NFA question(NFA nfa) {
-        nfa.ChangueStatesTransition(); // ! Cuidado con esto
+        nfa.ChangueStatesTransition();
         Transition transitionDown = new Transition(new Symbol((int)'E', 'E'));
         transitionDown.changueType(Types.Transition, Types.Transition);
         nfa.addTransition(transitionDown);
@@ -161,8 +161,8 @@ public class ThompsonAlgorithm {
         Transition transitionOriginUp = new Transition(new Symbol((int)'E', 'E'), origin, nfa.getStateInitial());
         Transition transitionOriginDown = new Transition(new Symbol((int)'E', 'E'), origin, transitionDown.getStateOrigin());
 
-        Transition transitionFinalUp = new Transition(new Symbol((int)'E', 'E'), nfa.getStateInitial(), sFinal);
-        Transition transitionFinalDown = new Transition(new Symbol((int)'E', 'E'), transitionDown.getStateOrigin(), sFinal);
+        Transition transitionFinalUp = new Transition(new Symbol((int)'E', 'E'), nfa.getStateFinal(), sFinal);
+        Transition transitionFinalDown = new Transition(new Symbol((int)'E', 'E'), transitionDown.getStateFinal(), sFinal);
 
         nfa.addTransition(transitionOriginUp);
         nfa.addTransition(transitionOriginDown);

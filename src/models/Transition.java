@@ -45,6 +45,6 @@ public class Transition {
 
     @Override
     public String toString() {
-        return stateOrigin.getId() + " - " + symbol.getcId() + " - " + stateFinal.getId();
+        return stateOrigin.getId() + " -> " + stateFinal.getId() + "[label=\""+ symbol.getcId() + "\"]\n";
     }
 }

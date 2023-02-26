@@ -89,8 +89,4 @@ public class Automata {
         }
         return null;
     }
-
-    public List<State> Transition(State e, State s) { // move(e, s)
-        return null;
-    }
 }

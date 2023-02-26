@@ -1,8 +1,8 @@
 import views.ViewTerminal;
 import controllers.ShuntingYardAlgorithm;
 import controllers.ThompsonAlgorithm;
-import controllers.GenerateSymbols;
-import models.Symbol;
+import models.NFA;
+import controllers.Graphviz;;
 
 /**
  * <h1>Diseño De Lenguajes de Programacion - UVG</h1>
@@ -18,7 +18,7 @@ import models.Symbol;
 
 public class Main {
 
-    private static void makeAFN(String r) throws Exception {
+    private static void makeAFN(String r, String fileDot, String outputImg) throws Exception {
         // Implementar el Algoritmo Shunting Yard para obtener R'
         String rPostfix = ShuntingYardAlgorithm.infixToPostfix(r);
 
@@ -26,10 +26,21 @@ public class Main {
         ViewTerminal.results(r, rPostfix);
 
         // Implementar el Algoritmo de Construccion de Thompson
-        ThompsonAlgorithm.constructNFA(rPostfix);
+        NFA nfa = ThompsonAlgorithm.constructNFA(rPostfix);
+
+        // Escribir el codigo del grafo
+        String formatedCode = Graphviz.readContentNFA(nfa);
+
+        // Crear o sobreescribir el archivo
+        if(!Graphviz.writeFileCode(formatedCode, fileDot)){
+            System.out.println("No se pudo guardar el archivo.dot");
+            return;
+        }
 
         // Mostrar Resultados
-        // ...
+        
+        // Crear la imagen
+        Graphviz.createImgOfAutomata(fileDot, outputImg);
     }
 
     public static void main(String[] args) throws Exception {
@@ -64,6 +75,6 @@ public class Main {
             return;
         }
 
-        makeAFN(args[0]);
+        makeAFN(args[0], "src\\docs\\automata.dot", "src\\img\\results.jpg");
     }
 }
