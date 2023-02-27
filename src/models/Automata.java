@@ -1,19 +1,19 @@
 package models;
 
+import java.lang.ProcessBuilder.Redirect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import middleware.Types;
 
 public class Automata {
     protected List<State> states;
-    protected List<State> finalStates;
     protected List<Symbol> symbols;
     protected State stateInitial;
+    protected State stateFinal;
     protected List<Transition> transitions;
 
     public Automata(State stateInitial) {
         states = new ArrayList<State>();
-        finalStates = new ArrayList<State>();
         symbols = new ArrayList<Symbol>();
         this.stateInitial = stateInitial;
         transitions = new ArrayList<Transition>();
@@ -21,26 +21,48 @@ public class Automata {
 
     public Automata(State stateInitial, State stateFinal) {
         states = new ArrayList<State>();
-        finalStates = new ArrayList<State>();
         symbols = new ArrayList<Symbol>();
         this.stateInitial = stateInitial;
+        this.stateFinal = stateFinal;
         transitions = new ArrayList<Transition>();
-        finalStates.add(stateFinal);
     }
 
     public void addTransition(Transition transition) {
         transitions.add(transition);
         states.add(transition.getStateOrigin());
-        finalStates.add(transition.getStateFinal());
         symbols.add(transition.getSymbol());
     }
 
+    public <E> void revList(List<E> list){
+        if (list.size() <= 1 || list == null)
+            return;
+ 
+        E value = list.remove(0);
+
+        revList(list);
+ 
+        list.add(value);
+    }
+    
+    public void changueTransition(State sFinal, State sInitial){
+        for (Transition transition : transitions) {
+            if(transition.getStateFinal().getId() == sFinal.getId()){
+                transition.getStateFinal().setId(sInitial.getId());
+                transition.getStateFinal().setType(Types.Transition);                
+            }
+        }
+    }
+    
     public State getStateInitial() {
         return stateInitial;
     }
 
     public State getStateFinal(){
-        return finalStates.get(0);
+        return stateFinal;
+    }
+
+    public void setStateFinal(State stateFinal) {
+        this.stateFinal = stateFinal;
     }
 
     public void ChangueStatesTransition(){

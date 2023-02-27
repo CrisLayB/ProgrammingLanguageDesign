@@ -148,21 +148,16 @@ public class ThompsonAlgorithm {
     }
 
     private static NFA concatenate(NFA nfa1, NFA nfa2) {
-        System.out.println("+++++++++++++++++++++++++++++++++++++++++++");        
         for (Transition transition : nfa1.allTransitions()) {
-            System.out.println(transition);
+            transition.getStateFinal().setType(Types.Transition);
         }
-        System.out.println("-------------------------------------------");
-        System.out.println(nfa1.getStateInitial().getId());
-        System.out.println(nfa1.getStateFinal().getId());
-        System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
-        NFA nfaConcatenaded = new NFA(nfa1.getStateInitial(), nfa2.getStateFinal());
-        nfa2.getStateInitial().setType(Types.Transition);
-        Transition transition1 = new Transition(nfa1.getSymbol(0), nfa1.getStateInitial(), nfa2.getStateInitial());
-        Transition transition2 = new Transition(nfa2.getSymbol(0), nfa2.getStateInitial(), nfa2.getStateFinal());
-        nfaConcatenaded.addTransition(transition1);
-        nfaConcatenaded.addTransition(transition2);
-        return nfaConcatenaded;
+        
+        for (Transition transition : nfa2.allTransitions()) {
+            transition.getStateOrigin().setType(Types.Transition);
+            nfa1.addTransition(transition);
+        }
+
+        return nfa1;
     }
 
     private static NFA question(NFA nfa) {

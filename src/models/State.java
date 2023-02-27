@@ -29,6 +29,10 @@ public class State {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public Types getType() {
         return type;
     }
