@@ -19,6 +19,9 @@ import controllers.Graphviz;;
 public class Main {
 
     private static void makeAFN(String r, String fileDot, String outputImg) throws Exception {
+        // Concatenar la expresion para obtener las concatenaciones correctas
+        r = ShuntingYardAlgorithm.concatenate(r);
+        
         // Implementar el Algoritmo Shunting Yard para obtener R'
         String rPostfix = ShuntingYardAlgorithm.infixToPostfix(r);
 
@@ -28,16 +31,22 @@ public class Main {
         // Implementar el Algoritmo de Construccion de Thompson
         NFA nfa = ThompsonAlgorithm.constructNFA(rPostfix);
 
+        if(nfa == null){
+            System.out.println("\nEl nfa procesador es invalido por la expresion ingresada\n");
+            return;
+        }
+
+        // Mostrar Resultados
+        // ...
+
         // Escribir el codigo del grafo
-        String formatedCode = Graphviz.readContentNFA(nfa);
+        String formatedCode = Graphviz.readContentNFA(nfa);        
 
         // Crear o sobreescribir el archivo
         if(!Graphviz.writeFileCode(formatedCode, fileDot)){
             System.out.println("No se pudo guardar el archivo.dot");
             return;
         }
-
-        // Mostrar Resultados
         
         // Crear la imagen
         Graphviz.createImgOfAutomata(fileDot, outputImg);

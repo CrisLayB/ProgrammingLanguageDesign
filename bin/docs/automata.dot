@@ -1,17 +1,21 @@
 digraph "Resultado Automata" {
 rankdir=LR size="8,5"
 node [shape=doublecircle]
-1
+7
 node [shape=circle]
-0
+6
 node [shape=none]
 ""
-""-> 0 [label=""]
+""-> 6 [label=""]
 node [shape=circle]
 0 -> 1[label="a"]
-2 -> 3[label="E"]
+2 -> 3[label="c"]
 4 -> 0[label="E"]
 4 -> 2[label="E"]
 1 -> 5[label="E"]
 3 -> 5[label="E"]
+5 -> 4[label="E"]
+6 -> 7[label="E"]
+6 -> 4[label="E"]
+5 -> 7[label="E"]
 }

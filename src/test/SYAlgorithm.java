@@ -10,49 +10,27 @@ import controllers.ShuntingYardAlgorithm;
 import middleware.Errors;
 
 public class SYAlgorithm {
-
-    /**
-         * PRUEBAS Y ENTRADAS *************************************
-         * 
-         * EXPRESIONES REGULARES DEL PRE LAB 'A' Y 'B'
-         * ab*ab*
-         * 0?(1?)?0*
-         * (a*|b*)c
-         * (b|b)*abb(a|b)*
-         * (a|E)b(a+)c?
-         * (a|b)*a(a|b)(a|b)
-         * 
-         * MAS EXPRESIONES:
-         * a(a|b)*b
-    */
     @Test
-    public void ValidExpressions(){
-        // ab*ab*
-        assertEquals("ab*ab*", ShuntingYardAlgorithm.infixToPostfix("ab*ab*"));
-        // 0?(1?)?0*
-        assertEquals("0?1??0*", ShuntingYardAlgorithm.infixToPostfix("0?(1?)?0*"));
-        // (a*|b*)c
-        assertEquals("a*b*|c", ShuntingYardAlgorithm.infixToPostfix("(a*|b*)c"));
-        // (b|b)*abb(a|b)*
-        assertEquals("bb|*abbab|*", ShuntingYardAlgorithm.infixToPostfix("(b|b)*abb(a|b)*"));
-        // (a|E)b(a+)c?
-        assertEquals("aE|ba+c?", ShuntingYardAlgorithm.infixToPostfix("(a|E)b(a+)c?"));
-        // (a|b)*a(a|b)(a|b)
-        assertEquals("ab|*aab|ab|", ShuntingYardAlgorithm.infixToPostfix("(a|b)*a(a|b)(a|b)"));
-        // a(a|b)*b
-        assertEquals("aab|*b", ShuntingYardAlgorithm.infixToPostfix("a(a|b)*b"));
+    public void Concatenate(){
+        assertEquals("a.b*.a.b*", ShuntingYardAlgorithm.concatenate("ab*ab*"));
+        assertEquals("0?.(1?)?.0*", ShuntingYardAlgorithm.concatenate("0?(1?)?0*"));
+        assertEquals("(a*|b*).c", ShuntingYardAlgorithm.concatenate("(a*|b*)c"));
+        assertEquals("(b|b)*.a.b.b.(a|b)*", ShuntingYardAlgorithm.concatenate("(b|b)*abb(a|b)*"));
+        assertEquals("(a|E).b.(a+).c?", ShuntingYardAlgorithm.concatenate("(a|E)b(a+)c?"));
+        assertEquals("(a|b)*.a.(a|b).(a|b)", ShuntingYardAlgorithm.concatenate("(a|b)*a(a|b)(a|b)"));
+        assertEquals("a.(a|b)*.b", ShuntingYardAlgorithm.concatenate("a(a|b)*b"));
     }
-
-    /**
-     * ! EJEMPLOS EXPRESIONES REGULAR NO VALIDAS
-     * a|
-     * *a
-     * |ba
-     * (a|b
-     * (a|b))
-     * a||
-     * ab|E|
-     */
+    
+    @Test
+    public void ExpressionsComplete(){
+        assertEquals("ab*.a.b*.", ShuntingYardAlgorithm.infixToPostfix("a.b*.a.b*"));
+        assertEquals("0?1??.0*.", ShuntingYardAlgorithm.infixToPostfix("0?.(1?)?.0*"));
+        assertEquals("a*b*|c.", ShuntingYardAlgorithm.infixToPostfix("(a*|b*).c"));
+        assertEquals("bb|*a.b.b.ab|*.", ShuntingYardAlgorithm.infixToPostfix("(b|b)*.a.b.b.(a|b)*"));
+        assertEquals("aE|b.a+.c?.", ShuntingYardAlgorithm.infixToPostfix("(a|E).b.(a+).c?"));
+        assertEquals("ab|*a.ab|.ab|.", ShuntingYardAlgorithm.infixToPostfix("(a|b)*.a.(a|b).(a|b)"));
+        assertEquals("aab|*.b.", ShuntingYardAlgorithm.infixToPostfix("a.(a|b)*.b"));
+    }
 
     /**
      * Evaluar si los checking de Chars y Difitos son validos
