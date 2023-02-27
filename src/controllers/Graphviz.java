@@ -23,7 +23,7 @@ public class Graphviz {
         contentScript += "\"\"\n";
         contentScript += "\"\"-> " + nfa.getStateInitial().getId() + " [label=\"\"]\n";
         contentScript += "node [shape=circle]\n";
-        for (Transition transition : nfa.allTransitions()) {
+        for (Transition transition : nfa.getTransitions()) {
             contentScript += transition.toString();
         }
         contentScript += "}";        

@@ -1,114 +1,99 @@
 package models;
 
-import java.lang.ProcessBuilder.Redirect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import middleware.Types;
 
 public class Automata {
-    protected List<State> states;
-    protected List<Symbol> symbols;
-    protected State stateInitial;
-    protected State stateFinal;
-    protected List<Transition> transitions;
-
-    public Automata(State stateInitial) {
-        states = new ArrayList<State>();
-        symbols = new ArrayList<Symbol>();
-        this.stateInitial = stateInitial;
-        transitions = new ArrayList<Transition>();
-    }
-
-    public Automata(State stateInitial, State stateFinal) {
-        states = new ArrayList<State>();
-        symbols = new ArrayList<Symbol>();
+    // Atributos
+    private State stateInitial;
+    private State stateFinal;
+    private List<State> states;
+    private List<Transition> transitions;
+    
+    // Constructor
+    public Automata(Symbol symbol, State stateInitial, State stateFinal){
+        // Inicializar componentes
         this.stateInitial = stateInitial;
         this.stateFinal = stateFinal;
+        states = new ArrayList<State>();
         transitions = new ArrayList<Transition>();
+        // Agregar nueva data
+        addFirstTransition(symbol, stateInitial, stateFinal);
     }
 
-    public void addTransition(Transition transition) {
-        transitions.add(transition);
-        states.add(transition.getStateOrigin());
-        symbols.add(transition.getSymbol());
-    }
-
-    public <E> void revList(List<E> list){
-        if (list.size() <= 1 || list == null)
-            return;
- 
-        E value = list.remove(0);
-
-        revList(list);
- 
-        list.add(value);
-    }
-    
-    public void changueTransition(State sFinal, State sInitial){
-        for (Transition transition : transitions) {
-            if(transition.getStateFinal().getId() == sFinal.getId()){
-                transition.getStateFinal().setId(sInitial.getId());
-                transition.getStateFinal().setType(Types.Transition);                
-            }
-        }
-    }
-    
+    // Getters
     public State getStateInitial() {
         return stateInitial;
     }
 
-    public State getStateFinal(){
+    public State getStateFinal() {
         return stateFinal;
+    }
+
+    public List<State> getStates() {
+        return states;
+    }
+
+    public List<Transition> getTransitions() {
+        return transitions;
+    }
+
+    // Setters
+    public void setStateInitial(State stateInitial) {
+        this.stateInitial = stateInitial;
     }
 
     public void setStateFinal(State stateFinal) {
         this.stateFinal = stateFinal;
     }
 
-    public void ChangueStatesTransition(){
+    // Metodos
+    private void addFirstTransition(Symbol symbol, State stateInitial, State stateFinal){
+        // Crear primera transicion
+        Transition transition = new Transition(symbol, stateInitial, stateFinal);
+        transitions.add(transition);
+        // Almacenar todos los estados creados
+        states.add(stateInitial);
+        states.add(stateFinal);
+        // ----------------------------------------------------------
+        System.out.println("Nueva transicion creada: " + transition.toString());
+    }
+
+    public void addTransition(Transition transition){
+        transitions.add(transition);
+    }
+
+    public void addState(State state){
+        states.add(state);
+    }
+
+    public void concatenate(State state1, State stateFinal, Symbol symbol){
+        this.stateFinal = stateFinal;
+        states.remove(states.size() - 1);
+        states.add(state1);
+        states.add(stateFinal);
+        transitions.get(transitions.size() - 1).setStateFinal(state1);
+        Transition transition = new Transition(symbol, state1, stateFinal);
+        transitions.add(transition);
+    }
+
+
+    // ToString para ver el contenido del Automata
+    @Override
+    public String toString() {
+        String information = "";
+        information += "-----------------------------------------------\n";
+        information += "Stado Inicial: " + this.stateInitial + "\n";
+        information += "Stado Final: " + this.stateFinal + "\n";
+        information += "Estados: \n";
+        for (State state : states) {
+            information += state.toString() + "\n";
+        }
+        information += "Transiciones: \n";
         for (Transition transition : transitions) {
-            transition.getStateOrigin().setType(Types.Transition);
-            transition.getStateFinal().setType(Types.Transition);
+            information += transition.toString();
         }
-    }
-
-    public void ChagueFinalStatesTransition(){
-        for(Transition transition : transitions){
-            transition.getStateFinal().setType(Types.Transition);
-        }
-    }
-    
-    public List<Transition> allTransitions(){
-        return transitions;
-    }
-
-    public List<Symbol> getSymbols() {
-        return symbols;
-    }
-
-    public Symbol getSymbol(int num){
-        return symbols.get(num);
-    }
-
-    public Transition getInitialTransition(){ // Inicial = 0
-        for (Transition transition : transitions) {
-            State sInitial = transition.getStateOrigin();
-            Types sType = sInitial.getType();
-            if(sType.num == 0){
-                return transition;
-            }
-        }
-        return null;
-    }
-
-    public Transition getFinalTransition(){ // Final = 2
-        for (Transition transition : transitions) {
-            State sFinal = transition.getStateFinal();
-            Types sType = sFinal.getType();
-            if(sType.num == 2){
-                return transition;
-            }
-        }
-        return null;
+        information += "-----------------------------------------------\n";
+        return information;
     }
 }

@@ -80,10 +80,10 @@ public class Main {
         if (args.length == 0) {
             System.out.println("No ingresaste una expresion a la par de ejecutable");
             System.out.println("Ejemplo de como ejecutar el programa e ingresar una expresion regular:");
-            System.out.println("\njava Main '(a*|b*)c'\n");
+            System.out.println("\njava Main 'abc'\n");
             return;
         }
 
-        makeAFN(args[0], "src\\docs\\automata.dot", "src\\img\\results.jpg");
+        makeAFN(args[0], "src\\docs\\automata.dot", "src\\img\\resultsAFN.jpg");
     }
 }

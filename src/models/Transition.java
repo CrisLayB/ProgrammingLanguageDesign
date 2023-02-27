@@ -2,35 +2,20 @@ package models;
 
 import middleware.Types;
 
-import controllers.ThompsonAlgorithm;
-
 public class Transition {
+    // Atributos
     private State stateOrigin;
     private State stateFinal;
     private Symbol symbol;
 
-    // Crear una transicion normal
-    public Transition(Symbol symbol) {
-        this.symbol = symbol;
-        stateOrigin = new State(ThompsonAlgorithm.countStates, Types.Initial);
-        ThompsonAlgorithm.countStates++;
-        stateFinal = new State(ThompsonAlgorithm.countStates, Types.Final);
-        ThompsonAlgorithm.countStates++;
-    }
-
-    // Concatenar
+    // Constructor
     public Transition(Symbol symbol, State sOrigin, State sFinal) {
-        this.symbol = symbol;
         stateOrigin = sOrigin;
         stateFinal = sFinal;
+        this.symbol = symbol;
     }
 
-    // Cambiar el tipo de stados de la transicion
-    public void changueType(Types typeO, Types typeF){
-        stateOrigin.setType(typeO);
-        stateFinal.setType(typeF);
-    }
-
+    // Getters
     public State getStateOrigin() {
         return stateOrigin;
     }
@@ -41,10 +26,41 @@ public class Transition {
 
     public Symbol getSymbol() {
         return symbol;
-    }    
+    }
 
+    // Setters
+    public void setStateOrigin(State stateOrigin) {
+        this.stateOrigin = stateOrigin;
+    }
+
+    public void setStateFinal(State stateFinal) {
+        this.stateFinal = stateFinal;
+    }
+
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
+    }
+
+    // Metodos adicionales
+    public void changeTypeStateOrigin(Types type){
+        this.stateOrigin.setType(type);
+    }
+
+    public void changeTypeStateFinal(Types type){
+        this.stateFinal.setType(type);
+    }
+    
+    // Metodos de mostrar informacion
     @Override
     public String toString() {
         return stateOrigin.getId() + " -> " + stateFinal.getId() + "[label=\""+ symbol.getcId() + "\"]\n";
+    }
+
+    public String detailInformation(){
+        String information = "";
+        information += stateOrigin.getId() + " | " + stateOrigin.getType() + "\n";
+        information += symbol.getcId() + "\n";        
+        information += stateFinal.getId() + " | " + stateFinal.getType() + "\n";
+        return information;
     }
 }
