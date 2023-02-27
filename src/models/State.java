@@ -29,6 +29,6 @@ public class State {
 
     @Override
     public String toString() {
-        return "Label: " + id + " - " + type;
+        return "-> Estado: " + id + " - " + type;
     }
 }

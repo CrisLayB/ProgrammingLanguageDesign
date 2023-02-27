@@ -55,8 +55,6 @@ public class Automata {
         // Almacenar todos los estados creados
         states.add(stateInitial);
         states.add(stateFinal);
-        // ----------------------------------------------------------
-        System.out.println("Nueva transicion creada: " + transition.toString());
     }
 
     public void addTransition(Transition transition){
@@ -77,6 +75,9 @@ public class Automata {
         transitions.add(transition);
     }
 
+    public void concate(State stateChangue){
+        
+    }
 
     // ToString para ver el contenido del Automata
     @Override

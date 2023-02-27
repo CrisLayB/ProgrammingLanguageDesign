@@ -37,7 +37,8 @@ public class Main {
         }
 
         // Mostrar Resultados
-        // ...
+        System.out.println("RESULTADOS:\n");
+        System.out.println(nfa.toString());
 
         // Escribir el codigo del grafo
         String formatedCode = Graphviz.readContentNFA(nfa);        
@@ -53,37 +54,13 @@ public class Main {
     }
 
     public static void main(String[] args) throws Exception {
-        /**
-         * PRUEBAS Y ENTRADAS *************************************
-         * 
-         * EXPRESIONES REGULARES DEL PRE LAB 'A' Y 'B'
-         * ab*ab*
-         * 0?(1?)?0*
-         * (a*|b*)c
-         * (b|b)*abb(a|b)*
-         * (a|E)b(a+)c?
-         * (a|b)*a(a|b)(a|b)
-         * 
-         * MAS EXPRESIONES:
-         * a(a|b)*b
-         * 
-         * ! EJEMPLOS EXPRESIONES REGULAR NO VALIDAS
-         * a|
-         * *a
-         * |ba
-         * (a|b
-         * (a|b))
-         * a||
-         * ab|E|
-        */
-
         if (args.length == 0) {
             System.out.println("No ingresaste una expresion a la par de ejecutable");
             System.out.println("Ejemplo de como ejecutar el programa e ingresar una expresion regular:");
-            System.out.println("\njava Main 'abc'\n");
+            System.out.println("\njava Main '(a*|b*)c'\n");
             return;
         }
 
-        makeAFN(args[0], "src\\docs\\automata.dot", "src\\img\\resultsAFN.jpg");
+        makeAFN(args[0], "docs\\automataAFN.dot", "img\\resultsAFN.jpg");
     }
 }

@@ -31,10 +31,20 @@ Nos servirá para ver de una manera visual las simulaciones.
 
 Para correr este proyecto debes de compilar el archivo Main.java y ejecutar el main con un argumento (en este caso sería la expresion regular) de la siguiente manera:
 
+### Opcion 1 (Ejecutar por cmd/powershell)
+
 ```
-ProgrammingLanguageDesig> & 'C:\Program Files\Java\jdk-14.0.1\bin\java.exe' '@C:\Users\CRISTI~1\AppData\Local\Temp\cp_1an12v5kdyar8p68zla384s3a.argfile' 'Main' 'a*'
+cd src
+javac Main.java
+java Main '(a*|b*)c'
 ```
 
-Ejemplo (Windows):
+![Alt text](/img/img1.png 'Corriendo Programa terminal')
 
-![Alt text](/img/img.png 'Corriendo Programa..')
+### Opcion 2 (Ejemplo dentro de VSCode Windows)
+
+```
+& 'C:\Program Files\Java\jdk-14.0.1\bin\java.exe' '@C:\Users\CRISTI~1\AppData\Local\Temp\cp_1an12v5kdyar8p68zla384s3a.argfile' 'Main' 'aaab*'
+```
+
+![Alt text](/img/img2.png 'Corriendo Programa en vscode')
