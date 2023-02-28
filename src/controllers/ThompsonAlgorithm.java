@@ -13,7 +13,6 @@ public class ThompsonAlgorithm {
     
     public static NFA constructNFA(String postfixExpression) {
         Stack<NFA> stack = new Stack<NFA>();
-        // int num = -1;
         
         for (int i = 0; i < postfixExpression.length(); i++) {
             char c = postfixExpression.charAt(i);
@@ -27,9 +26,7 @@ public class ThompsonAlgorithm {
 
                 case 43: // '+'
                     NFA nfaPlus = stack.pop();
-                    Transition transitionPlus = new Transition(new Symbol((int)'E', 'E'), nfaPlus.getStateFinal(), nfaPlus.getStateInitial());
-                    nfaPlus.addTransition(transitionPlus);
-                    stack.add(nfaPlus);
+                    stack.add(plus(nfaPlus));
                     break;
 
                 case 46: // '.'
@@ -154,5 +151,12 @@ public class ThompsonAlgorithm {
     public static NFA question(NFA nfa1){
         NFA nfa2 = createNFA((int)'E', 'E');
         return or(nfa1, nfa2);
+    }
+
+    public static NFA plus(NFA nfa){
+        NFA nfaPlus = kleene(nfa);   
+        Symbol symbolTemp = nfaPlus.getSymbol(0);
+        NFA nfaCopy = createNFA(symbolTemp.getId(), symbolTemp.getcId());
+        return concatenate(nfaPlus, nfaCopy);
     }
 }

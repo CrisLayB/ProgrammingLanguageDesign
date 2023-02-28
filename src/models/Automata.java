@@ -75,8 +75,9 @@ public class Automata {
         transitions.add(transition);
     }
 
-    public void concate(State stateChangue){
-        
+    public Symbol getSymbol(int numTransition){
+        Transition transition = transitions.get(numTransition);
+        return transition.getSymbol();
     }
 
     // ToString para ver el contenido del Automata
