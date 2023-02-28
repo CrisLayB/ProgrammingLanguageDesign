@@ -60,7 +60,8 @@ public class Main {
         }
         
         // Crear la imagen
-        Graphviz.createImgOfAutomata(fileDot, outputImg);
+        // Graphviz.createImgOfAutomata(fileDot, outputImg); // Para Windows
+        Graphviz.createImgOfAutomataLinux(fileDot, outputImg); // Para Linux
     }
 
     public static void main(String[] args) throws Exception {
@@ -71,6 +72,7 @@ public class Main {
             return;
         }
 
-        makeAFN(args[0], "docs\\automataAFN.dot", "img\\resultsAFN.jpg");
+        //makeAFN(args[0], "docs\\automataAFN.dot", "img\\resultsAFN.jpg"); // Windows
+        makeAFN(args[0], "docs/automataAFN.dot", "img/resultsAFN.png"); // Linux
     }
 }

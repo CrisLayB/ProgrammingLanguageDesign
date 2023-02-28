@@ -64,4 +64,24 @@ public class Graphviz {
             System.out.println(e);
         }        
     }
+
+    // dot -Tpng docs/automataAFN.dot -o img/resultsAFN.png && sxiv img/resultsAFN.png
+    public static void createImgOfAutomataLinux(String fileInputPath, String fileOutputPath){
+        try {
+            String[] cmd = new String[8];
+            cmd[0] = "dot";
+            cmd[1] = "-Tpng";
+            cmd[2] = fileInputPath;
+            cmd[3] = "-o";
+            cmd[4] = fileOutputPath;
+            cmd[5] = "&&";
+            cmd[6] = "sxiv";
+            cmd[7] = fileOutputPath;
+
+            Runtime rt = Runtime.getRuntime();
+            rt.exec( cmd );
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 }
