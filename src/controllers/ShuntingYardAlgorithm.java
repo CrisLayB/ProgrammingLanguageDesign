@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Arrays;
 import java.lang.Character;
 
-import middleware.Errors;
-
 public class ShuntingYardAlgorithm {
 
     private static List<Character> operators = Arrays.asList('|', '?', '+', '*', '^');
@@ -56,7 +54,7 @@ public class ShuntingYardAlgorithm {
         
         // Se sacaran el resto de los operadores pendientes
         while(!stack.isEmpty()){
-            if(stack.peek() == '(') return Errors.InvalidExpression.error;
+            if(stack.peek() == '(') return null;
             output += stack.pop();
         }
         

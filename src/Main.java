@@ -1,8 +1,8 @@
-import views.ViewTerminal;
 import controllers.ShuntingYardAlgorithm;
 import controllers.ThompsonAlgorithm;
+import controllers.Graphviz;
+import controllers.SyntaxChecker;
 import models.NFA;
-import controllers.Graphviz;;
 
 /**
  * <h1>Diseño De Lenguajes de Programacion - UVG</h1>
@@ -19,6 +19,15 @@ import controllers.Graphviz;;
 public class Main {
 
     private static void makeAFN(String r, String fileDot, String outputImg) throws Exception {
+        // Se evaluara los errores sintaxicos de la expresion antes de continuar
+        String checkExpression = SyntaxChecker.checkExpression(r);
+        if(checkExpression.length() != 0){
+            System.out.println("\u001B[31m" + "------------------------------------------------");
+            System.out.println("\nERRORES ENCONTRADOS:\n" + checkExpression);
+            System.out.println("------------------------------------------------" + "\u001B[0m");
+            return;
+        }
+        
         // Concatenar la expresion para obtener las concatenaciones correctas
         r = ShuntingYardAlgorithm.concatenate(r);
         
@@ -26,7 +35,8 @@ public class Main {
         String rPostfix = ShuntingYardAlgorithm.infixToPostfix(r);
 
         // Mostrar Resultados de r'
-        ViewTerminal.results(r, rPostfix);
+        System.out.println("Expresion Regular (r): " + r);
+        System.out.println("Nueva Expresion Regular (r'): " + rPostfix);
 
         // Implementar el Algoritmo de Construccion de Thompson
         NFA nfa = ThompsonAlgorithm.constructNFA(rPostfix);

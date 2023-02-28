@@ -7,7 +7,6 @@ import org.junit.Test;
 import java.lang.Character;
 
 import controllers.ShuntingYardAlgorithm;
-import middleware.Errors;
 
 public class SYAlgorithm {
     @Test
@@ -40,10 +39,5 @@ public class SYAlgorithm {
         assertEquals(true, Character.isLetterOrDigit('a'));
         assertEquals(true, Character.isLetterOrDigit('0'));
         assertEquals(false, Character.isLetterOrDigit('*'));
-    }
-
-    @Test
-    public void InvalidExpressions() {
-        assertEquals(Errors.InvalidExpression.error, ShuntingYardAlgorithm.infixToPostfix("(1+2*9"));
     }
 }
