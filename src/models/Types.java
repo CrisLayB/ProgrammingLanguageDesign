@@ -1,4 +1,4 @@
-package middleware;
+package models;
 
 public enum Types {
     Initial(0),

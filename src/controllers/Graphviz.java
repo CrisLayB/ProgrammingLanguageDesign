@@ -43,30 +43,8 @@ public class Graphviz {
         return true;
     }
 
-    // Referencia:
-    // https://www.rdebug.com/2010/05/usar-graphviz-desde-java.html
-    public static void createImgOfAutomata(String fileInputPath, String fileOutputPath){
-        try {
-            String dotPath = "C:\\Program Files\\Graphviz\\bin\\dot.exe";
-            String tParam = "-Tjpg";
-            String tOParam = "-o";
-              
-            String[] cmd = new String[5];
-            cmd[0] = dotPath;
-            cmd[1] = tParam;
-            cmd[2] = fileInputPath;
-            cmd[3] = tOParam;
-            cmd[4] = fileOutputPath;
-                        
-            Runtime rt = Runtime.getRuntime();
-            rt.exec( cmd );
-        } catch (Exception e) {
-            System.out.println(e);
-        }        
-    }
-
     // dot -Tpng docs/automataAFN.dot -o img/resultsAFN.png && sxiv img/resultsAFN.png
-    public static void createImgOfAutomataLinux(String fileInputPath, String fileOutputPath){
+    public static void createImgAutomata(String fileInputPath, String fileOutputPath){
         try {
             String[] cmd = new String[8];
             cmd[0] = "dot";

@@ -1,5 +1,5 @@
-import controllers.ShuntingYardAlgorithm;
-import controllers.ThompsonAlgorithm;
+import algorithms.ShuntingYardAlgorithm;
+import algorithms.ThompsonAlgorithm;
 import controllers.Graphviz;
 import controllers.SyntaxChecker;
 import models.NFA;
@@ -18,7 +18,7 @@ import models.NFA;
 
 public class Main {
 
-    private static void makeAFN(String r, String fileDot, String outputImg) throws Exception {
+    private static void compile(String r, String w) throws Exception {
         // Se evaluara los errores sintaxicos de la expresion antes de continuar
         String checkExpression = SyntaxChecker.checkExpression(r);
         if(checkExpression.length() != 0){
@@ -31,14 +31,23 @@ public class Main {
         // Concatenar la expresion para obtener las concatenaciones correctas
         r = ShuntingYardAlgorithm.concatenate(r);
         
+        // * ===========================================================================================
+        // * INFIX A POSTFIX ===========================================================================
+        // * ===========================================================================================
+        
         // Implementar el Algoritmo Shunting Yard para obtener R'
         String rPostfix = ShuntingYardAlgorithm.infixToPostfix(r);
 
         // Mostrar Resultados de r'
         System.out.println("Expresion Regular (r): " + r);
+        System.out.println("Cadena (w): " + w);
         System.out.println("Nueva Expresion Regular (r'): " + rPostfix);
 
-        // Implementar el Algoritmo de Construccion de Thompson
+        // * ===========================================================================================
+        // * CONSTRUCCION DE AFN (Automata Finito No Determinista) =====================================
+        // * ===========================================================================================
+
+        // Algoritmo de contruccion de Thompson
         NFA nfa = ThompsonAlgorithm.constructNFA(rPostfix);
 
         if(nfa == null){
@@ -47,32 +56,65 @@ public class Main {
         }
 
         // Mostrar Resultados
-        System.out.println("RESULTADOS:\n");
+        System.out.println("\nRESULTADOS:");
         System.out.println(nfa.toString());
 
-        // Escribir el codigo del grafo
+        // TODO: Visualización del AFN
+        
+        // Escribir el codigo dot del automata a refresentar
         String formatedCode = Graphviz.readContentNFA(nfa);        
 
         // Crear o sobreescribir el archivo
-        if(!Graphviz.writeFileCode(formatedCode, fileDot)){
+        if(!Graphviz.writeFileCode(formatedCode, "docs/automataAFN.dot")){
             System.out.println("No se pudo guardar el archivo.dot");
             return;
         }
         
-        // Crear la imagen
-        // Graphviz.createImgOfAutomata(fileDot, outputImg); // Para Windows
-        Graphviz.createImgOfAutomataLinux(fileDot, outputImg); // Para Linux
+        // Crear la imagen para ver los resultados
+        Graphviz.createImgAutomata("docs/automataAFN.dot", "img/resultsAFN.png");
+
+        // * ===========================================================================================
+        // * CONSTRUCCION DE AFD (Automata Finito Determinista) ========================================
+        // * ===========================================================================================
+
+        // Algoritmo de Construccion de Subconjuntos
+
+        // Algoritmo de Construccion directa de AFD
+
+        // Algoritmo de minimización de AFD
+        
+        // TODO: Visualización del AFD
+
+        // * ===========================================================================================
+        // * SIMULACIONES ==============================================================================
+        // * ===========================================================================================
+
+        // Simulacion de un AFN
+
+        // Simulacion de un AFD
+
     }
 
     public static void main(String[] args) throws Exception {
-        if (args.length == 0) {
-            System.out.println("No ingresaste una expresion a la par de ejecutable");
+        int amountArgs = args.length;
+
+        // Si no ingreso ningun argumento
+        if (amountArgs == 0) {
+            System.out.println("No ingresaste una expresion regular y tampoco una cadena de aceptacion a la par de ejecutable");
             System.out.println("Ejemplo de como ejecutar el programa e ingresar una expresion regular:");
-            System.out.println("\njava Main '(a*|b*)c'\n");
+            System.out.println("\njava Main '(a*|b*)c' 'abc'\n");
             return;
         }
 
-        //makeAFN(args[0], "docs\\automataAFN.dot", "img\\resultsAFN.jpg"); // Windows
-        makeAFN(args[0], "docs/automataAFN.dot", "img/resultsAFN.png"); // Linux
+        // Si solo le falto ingresar una cadena de aceptacion
+        if (amountArgs == 1){
+            System.out.println("¡Hey! Te falto ingresar una cadena de aceptacion");
+            System.out.println("\njava Main '(a*|b*)c' 'abc'\n");
+            return;
+        }
+
+        String r = args[0];
+        String w = args[1];
+        compile(r, w);
     }
 }

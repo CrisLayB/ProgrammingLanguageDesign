@@ -1,7 +1,7 @@
 package test;
 
 import junit.framework.TestCase;
-import middleware.Types;
+import models.Types;
 
 public class TypesTest extends TestCase {
     

@@ -1,7 +1,5 @@
 package models;
 
-import middleware.Types;
-
 public class State {
     private int id; // id of this State
     private Types type;

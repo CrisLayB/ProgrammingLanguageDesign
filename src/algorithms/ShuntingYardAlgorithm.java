@@ -1,4 +1,4 @@
-package controllers;
+package algorithms;
 
 import java.util.Stack;
 import java.util.List;
@@ -7,8 +7,8 @@ import java.lang.Character;
 
 public class ShuntingYardAlgorithm {
 
-    private static List<Character> operators = Arrays.asList('|', '?', '+', '*', '^');
-    private static List<Character> operatorsBin = Arrays.asList('^', '|');
+    private static List<Character> operators = Arrays.asList('|', '?', '+', '*');
+    private static List<Character> operatorsBin = Arrays.asList('|');
     
     public static String concatenate(String expression){
         String result = "";

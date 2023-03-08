@@ -1,7 +1,5 @@
 package models;
 
-import middleware.Types;
-
 public class Transition {
     // Atributos
     private State stateOrigin;

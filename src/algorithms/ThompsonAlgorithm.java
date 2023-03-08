@@ -1,12 +1,12 @@
-package controllers;
+package algorithms;
 
 import java.util.Stack;
 
 import models.NFA;
 import models.State;
 import models.Symbol;
-import middleware.Types;
 import models.Transition;
+import models.Types;
 
 public class ThompsonAlgorithm {
     public static int num = -1;

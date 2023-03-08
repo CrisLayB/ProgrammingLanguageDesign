@@ -4,9 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import java.lang.Character;
+import algorithms.ShuntingYardAlgorithm;
 
-import controllers.ShuntingYardAlgorithm;
+import java.lang.Character;
 
 public class SYAlgorithm {
     @Test
