@@ -69,17 +69,21 @@ public class ThompsonAlgorithm {
 
     private static NFA concatenate(NFA nfa1, NFA nfa2){
         // Se copiara toda la data para tener toda la informacion del nfa2
+        System.out.println("NFA 1: " + nfa1.toString());
+        System.out.println("NFA 2: " + nfa2.toString());
         State tempState = nfa1.getStateFinal();
+        State tempFinalState = nfa2.getStateFinal();
         nfa1.getStateFinal().setType(Types.Transition);
         for (Transition transition : nfa2.getTransitions()) {
             transition.changeTypeStateOrigin(Types.Transition);
             nfa1.addTransition(transition);
             nfa1.addState(transition.getStateOrigin());
             nfa1.addState(transition.getStateFinal());            
-            nfa1.setStateFinal(transition.getStateFinal());
         }        
+        nfa1.setStateFinal(tempFinalState);
         Transition transition = new Transition(new Symbol((int)'E', 'E'), tempState, nfa2.getStateInitial());
         nfa1.addTransition(transition);
+        System.out.println("Resultado: " + nfa1.toString());
         return nfa1;
     }
 
@@ -110,7 +114,7 @@ public class ThompsonAlgorithm {
         nfa.setStateFinal(newStateFinal);
         // Agregar los estaods en la lista
         nfa.addState(newStateOrigin);
-        nfa.addState(newStateFinal);
+        nfa.addState(newStateFinal);        
         return nfa;
     }
 
@@ -145,6 +149,13 @@ public class ThompsonAlgorithm {
         // Actualizar informacion
         nfa1.setStateInitial(stateOrigin);
         nfa1.setStateFinal(stateFinal);
+
+        nfa1.convertAllStatesToTransitions();
+
+        // Agregar estados del or
+        nfa1.addState(stateOrigin);
+        nfa1.addState(stateFinal);
+
         return nfa1;
     }
 
@@ -154,7 +165,7 @@ public class ThompsonAlgorithm {
     }
 
     public static NFA plus(NFA nfa){
-        NFA nfaPlus = kleene(nfa);   
+        NFA nfaPlus = kleene(nfa);
         Symbol symbolTemp = nfaPlus.getSymbol(0);
         NFA nfaCopy = createNFA(symbolTemp.getId(), symbolTemp.getcId());
         return concatenate(nfaPlus, nfaCopy);

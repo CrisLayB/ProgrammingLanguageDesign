@@ -62,6 +62,9 @@ public class Automata {
     }
 
     public void addState(State state){
+        if(states.contains(state)){
+            states.remove(state);
+        }
         states.add(state);
     }
 
@@ -80,6 +83,12 @@ public class Automata {
         return transition.getSymbol();
     }
 
+    public void convertAllStatesToTransitions(){
+        for (State state : states) {
+            state.setType(Types.Transition);
+        }
+    }
+
     // ToString para ver el contenido del Automata
     @Override
     public String toString() {
@@ -91,6 +100,7 @@ public class Automata {
         for (State state : states) {
             information += state.toString() + "\n";
         }
+        information += "Cantidad Estados: " + states.size() + "\n";
         information += "Transiciones: \n";
         for (Transition transition : transitions) {
             information += transition.toString();

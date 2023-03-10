@@ -96,6 +96,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws Exception {
+        // compile("(a|b)*", "a");
         int amountArgs = args.length;
 
         // Si no ingreso ningun argumento
