@@ -1,8 +1,10 @@
 import algorithms.ShuntingYardAlgorithm;
 import algorithms.ThompsonAlgorithm;
+import algorithms.DFAConstruction;
 import controllers.Graphviz;
 import controllers.SyntaxChecker;
 import models.NFA;
+import models.DFA;
 
 /**
  * <h1>Diseño De Lenguajes de Programacion - UVG</h1>
@@ -29,14 +31,14 @@ public class Main {
         }
         
         // Concatenar la expresion para obtener las concatenaciones correctas
-        r = ShuntingYardAlgorithm.concatenate(r);
+        String rConcat = ShuntingYardAlgorithm.concatenate(r);
         
         // * ===========================================================================================
         // * INFIX A POSTFIX ===========================================================================
         // * ===========================================================================================
         
         // Implementar el Algoritmo Shunting Yard para obtener R'
-        String rPostfix = ShuntingYardAlgorithm.infixToPostfix(r);
+        String rPostfix = ShuntingYardAlgorithm.infixToPostfix(rConcat);
 
         // Mostrar Resultados de r'
         System.out.println("Expresion Regular (r): " + r);
@@ -56,13 +58,12 @@ public class Main {
         }
 
         // Mostrar Resultados
-        System.out.println("\nRESULTADOS:");
         System.out.println(nfa.toString());
 
         // TODO: Visualización del AFN
         
         // Escribir el codigo dot del automata a refresentar
-        String formatedCode = Graphviz.readContentNFA(nfa);        
+        String formatedCode = Graphviz.readContentNFA(nfa, r);        
 
         // Crear o sobreescribir el archivo
         if(!Graphviz.writeFileCode(formatedCode, "docs/automataAFN.dot")){
@@ -78,6 +79,9 @@ public class Main {
         // * ===========================================================================================
 
         // Algoritmo de Construccion de Subconjuntos
+        DFA dfaSubsetConstruction = DFAConstruction.subsetConstruction(nfa);
+
+        System.out.println(dfaSubsetConstruction.toString());
 
         // Algoritmo de Construccion directa de AFD
 
@@ -92,11 +96,10 @@ public class Main {
         // Simulacion de un AFN
 
         // Simulacion de un AFD
-
+        
     }
 
     public static void main(String[] args) throws Exception {
-        // compile("(a|b)*", "a");
         int amountArgs = args.length;
 
         // Si no ingreso ningun argumento

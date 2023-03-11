@@ -49,8 +49,7 @@ public class ThompsonAlgorithm {
                 default: // Crear nueva transicion
                     stack.add(createNFA(cAscii, c));
                     break;
-            }
-            
+            }            
         }
         
         return stack.pop();
@@ -69,8 +68,6 @@ public class ThompsonAlgorithm {
 
     private static NFA concatenate(NFA nfa1, NFA nfa2){
         // Se copiara toda la data para tener toda la informacion del nfa2
-        System.out.println("NFA 1: " + nfa1.toString());
-        System.out.println("NFA 2: " + nfa2.toString());
         State tempState = nfa1.getStateFinal();
         State tempFinalState = nfa2.getStateFinal();
         nfa1.getStateFinal().setType(Types.Transition);
@@ -83,7 +80,6 @@ public class ThompsonAlgorithm {
         nfa1.setStateFinal(tempFinalState);
         Transition transition = new Transition(new Symbol((int)'E', 'E'), tempState, nfa2.getStateInitial());
         nfa1.addTransition(transition);
-        System.out.println("Resultado: " + nfa1.toString());
         return nfa1;
     }
 

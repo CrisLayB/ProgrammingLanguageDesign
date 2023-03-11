@@ -11,9 +11,12 @@ import models.NFA;
 import models.Transition;
 
 public class Graphviz {        
-    public static String readContentNFA(NFA nfa){
+    public static String readContentNFA(NFA nfa, String r){
         String contentScript = "";
-        contentScript += "digraph \"Resultado Automata\" {\n";
+        contentScript += "digraph \"Resultado Automata AFN\" {\n";
+        contentScript += "label = \"" + r + "  [AFN]\"\n";
+        contentScript += "labelloc  =  t\n";
+        contentScript += "fontsize  = 25\n";
         contentScript += "rankdir=LR size=\"8,5\"\n";
         contentScript += "node [shape=doublecircle]\n";
         contentScript += nfa.getStateFinal().getId() + "\n";
@@ -43,7 +46,6 @@ public class Graphviz {
         return true;
     }
 
-    // dot -Tpng docs/automataAFN.dot -o img/resultsAFN.png && sxiv img/resultsAFN.png
     public static void createImgAutomata(String fileInputPath, String fileOutputPath){
         try {
             String[] cmd = new String[8];

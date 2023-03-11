@@ -1,19 +1,24 @@
 package models;
 
 public class State {
-    private int id; // id of this State
+    private String id; // id of this State
     private Types type;
 
-    public State(int id, Types type) {
+    public State(int id, Types type) { // Normalmente usado en NFA
+        this.id = id+"";
+        this.type = type;
+    }
+
+    public State(String id, Types type){ // Normalmente usado en DFA
         this.id = id;
         this.type = type;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

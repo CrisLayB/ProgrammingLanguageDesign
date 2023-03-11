@@ -5,29 +5,20 @@ import java.util.List;
 
 public class Automata {
     // Atributos
-    private State stateInitial;
-    private State stateFinal;
-    private List<State> states;
-    private List<Transition> transitions;
+    protected State stateInitial;    
+    protected List<State> states;
+    protected List<Transition> transitions;
     
     // Constructor
-    public Automata(Symbol symbol, State stateInitial, State stateFinal){
-        // Inicializar componentes
+    public Automata(State stateInitial){ 
         this.stateInitial = stateInitial;
-        this.stateFinal = stateFinal;
         states = new ArrayList<State>();
         transitions = new ArrayList<Transition>();
-        // Agregar nueva data
-        addFirstTransition(symbol, stateInitial, stateFinal);
     }
 
     // Getters
     public State getStateInitial() {
         return stateInitial;
-    }
-
-    public State getStateFinal() {
-        return stateFinal;
     }
 
     public List<State> getStates() {
@@ -43,12 +34,8 @@ public class Automata {
         this.stateInitial = stateInitial;
     }
 
-    public void setStateFinal(State stateFinal) {
-        this.stateFinal = stateFinal;
-    }
-
     // Metodos
-    private void addFirstTransition(Symbol symbol, State stateInitial, State stateFinal){
+    protected void addFirstTransition(Symbol symbol, State stateInitial, State stateFinal){
         // Crear primera transicion
         Transition transition = new Transition(symbol, stateInitial, stateFinal);
         transitions.add(transition);
@@ -68,25 +55,9 @@ public class Automata {
         states.add(state);
     }
 
-    public void concatenate(State state1, State stateFinal, Symbol symbol){
-        this.stateFinal = stateFinal;
-        states.remove(states.size() - 1);
-        states.add(state1);
-        states.add(stateFinal);
-        transitions.get(transitions.size() - 1).setStateFinal(state1);
-        Transition transition = new Transition(symbol, state1, stateFinal);
-        transitions.add(transition);
-    }
-
     public Symbol getSymbol(int numTransition){
         Transition transition = transitions.get(numTransition);
         return transition.getSymbol();
-    }
-
-    public void convertAllStatesToTransitions(){
-        for (State state : states) {
-            state.setType(Types.Transition);
-        }
     }
 
     // ToString para ver el contenido del Automata
@@ -94,17 +65,7 @@ public class Automata {
     public String toString() {
         String information = "";
         information += "-----------------------------------------------\n";
-        information += "Stado Inicial: " + this.stateInitial + "\n";
-        information += "Stado Final: " + this.stateFinal + "\n";
-        information += "Estados: \n";
-        for (State state : states) {
-            information += state.toString() + "\n";
-        }
-        information += "Cantidad Estados: " + states.size() + "\n";
-        information += "Transiciones: \n";
-        for (Transition transition : transitions) {
-            information += transition.toString();
-        }
+        information += "Automata Normal" + "\n";        
         information += "-----------------------------------------------\n";
         return information;
     }
