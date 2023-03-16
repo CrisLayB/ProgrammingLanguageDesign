@@ -1,7 +1,10 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Stack;
+import java.util.Set;
 
 public class DFA extends Automata {
     // Atributos
@@ -18,7 +21,7 @@ public class DFA extends Automata {
     public void AddFinalState(State state){
         statesFinal.add(state);
     }
-    
+        
     @Override
     public String toString() {
         String information = "";

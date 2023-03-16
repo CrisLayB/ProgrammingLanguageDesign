@@ -9,7 +9,8 @@ import models.Transition;
 import models.Types;
 
 public class ThompsonAlgorithm {
-    public static int num = -1;
+    private static int num = -1;
+    private static char epsilon = 'ε';
     
     public static NFA constructNFA(String postfixExpression) {
         Stack<NFA> stack = new Stack<NFA>();
@@ -78,7 +79,7 @@ public class ThompsonAlgorithm {
             nfa1.addState(transition.getStateFinal());            
         }        
         nfa1.setStateFinal(tempFinalState);
-        Transition transition = new Transition(new Symbol((int)'E', 'E'), tempState, nfa2.getStateInitial());
+        Transition transition = new Transition(new Symbol((int)epsilon, epsilon), tempState, nfa2.getStateInitial());
         nfa1.addTransition(transition);
         return nfa1;
     }
@@ -86,9 +87,9 @@ public class ThompsonAlgorithm {
     private static NFA kleene(NFA nfa){
         nfa.getStateInitial().setType(Types.Transition);
         nfa.getStateFinal().setType(Types.Transition);
-        // Crear la transicion que conecta con el estado final e inicial        
-        Symbol epsilon = new Symbol((int)'E', 'E');
-        Transition transitionBetween = new Transition(epsilon, nfa.getStateFinal(), nfa.getStateInitial());
+        // Crear la transicion que conecta con el estado final ε inicial        
+        Symbol epsilonSymbol = new Symbol((int)epsilon, epsilon);
+        Transition transitionBetween = new Transition(epsilonSymbol, nfa.getStateFinal(), nfa.getStateInitial());
         nfa.addTransition(transitionBetween);        
         // Crear los nuevos estados origen y finales
         num++;
@@ -97,9 +98,9 @@ public class ThompsonAlgorithm {
         State newStateFinal = new State(num, Types.Final);
 
         // Ahora tocara que crear tres nuevas transiciones
-        Transition transitionNewOrigin = new Transition(epsilon, newStateOrigin, newStateFinal);
-        Transition transitionToOldOrigin = new Transition(epsilon, newStateOrigin, nfa.getStateInitial());
-        Transition transitionToOldFinal = new Transition(epsilon, nfa.getStateFinal(), newStateFinal);
+        Transition transitionNewOrigin = new Transition(epsilonSymbol, newStateOrigin, newStateFinal);
+        Transition transitionToOldOrigin = new Transition(epsilonSymbol, newStateOrigin, nfa.getStateInitial());
+        Transition transitionToOldFinal = new Transition(epsilonSymbol, nfa.getStateFinal(), newStateFinal);
 
         // Actualizar toda la informacion
         nfa.addTransition(transitionNewOrigin);
@@ -130,11 +131,11 @@ public class ThompsonAlgorithm {
         State stateFinal = new State(num, Types.Final);
         
         // Crear nuevas transiciones
-        Transition transitionOriginUp = new Transition(new Symbol((int)'E', 'E'), stateOrigin, nfa1.getStateInitial());
-        Transition transitionOriginDown = new Transition(new Symbol((int)'E', 'E'), stateOrigin, nfa2.getStateInitial());
+        Transition transitionOriginUp = new Transition(new Symbol((int)epsilon, epsilon), stateOrigin, nfa1.getStateInitial());
+        Transition transitionOriginDown = new Transition(new Symbol((int)epsilon, epsilon), stateOrigin, nfa2.getStateInitial());
 
-        Transition transitionFinalUp = new Transition(new Symbol((int)'E', 'E'), nfa1.getStateFinal(), stateFinal);
-        Transition transitionFinalDown = new Transition(new Symbol((int)'E', 'E'), nfa2.getStateFinal(), stateFinal);
+        Transition transitionFinalUp = new Transition(new Symbol((int)epsilon, epsilon), nfa1.getStateFinal(), stateFinal);
+        Transition transitionFinalDown = new Transition(new Symbol((int)epsilon, epsilon), nfa2.getStateFinal(), stateFinal);
         
         // Agregar nuevas transiciones
         nfa1.addTransition(transitionOriginUp);
@@ -156,7 +157,7 @@ public class ThompsonAlgorithm {
     }
 
     public static NFA question(NFA nfa1){
-        NFA nfa2 = createNFA((int)'E', 'E');
+        NFA nfa2 = createNFA((int)epsilon, epsilon);
         return or(nfa1, nfa2);
     }
 

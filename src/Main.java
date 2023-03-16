@@ -103,7 +103,7 @@ public class Main {
         int amountArgs = args.length;
 
         // Si no ingreso ningun argumento
-        if (amountArgs == 0) {
+        if (amountArgs == 0) { // Caracter Epsilon: ε y si ascii es 949
             System.out.println("No ingresaste una expresion regular y tampoco una cadena de aceptacion a la par de ejecutable");
             System.out.println("Ejemplo de como ejecutar el programa e ingresar una expresion regular:");
             System.out.println("\njava Main '(a*|b*)c' 'abc'\n");
