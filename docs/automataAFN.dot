@@ -1,10 +1,10 @@
 digraph "Resultado Automata AFN" {
-label = "(a|b)*  [AFN]"
+label = "(a|b)*abd  [AFN]"
 labelloc  =  t
 fontsize  = 25
 rankdir=LR size="8,5"
 node [shape=doublecircle]
-7
+13
 node [shape=circle]
 6
 node [shape=none]
@@ -21,4 +21,10 @@ node [shape=circle]
 6 -> 7[label="ε"]
 6 -> 4[label="ε"]
 5 -> 7[label="ε"]
+8 -> 9[label="a"]
+7 -> 8[label="ε"]
+10 -> 11[label="b"]
+9 -> 10[label="ε"]
+12 -> 13[label="d"]
+11 -> 12[label="ε"]
 }

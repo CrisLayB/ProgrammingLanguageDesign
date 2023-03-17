@@ -16,4 +16,9 @@ public class Symbol {
     public char getcId() {
         return cId;
     }
+
+    @Override
+    public String toString() {
+        return "Simbolo: " + cId;
+    }
 }
