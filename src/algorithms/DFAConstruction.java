@@ -20,33 +20,6 @@ public class DFAConstruction {
         // Vamos a obtener nuestros clousures
         Set<State> s0 = eclousure(nfa.getTransitions(), nfa.getStateInitial());
                      
-        Set<Set<State>> dStates = new HashSet<Set<State>>();
-        dStates.add(s0);
-
-        Set<Set<State>>unmarked = new HashSet<Set<State>>();
-        unmarked.add(s0);
-
-        // while(!unmarked.isEmpty()){
-        //     Set<State> T = unmarked.iterator().next();
-        //     unmarked.remove(T);
-
-        //     // marcar T
-        //     for(State state: T){
-        //         state.markState();
-        //     }
-
-        //     // Revisar cada simbolo dentro del alfabeto del automata
-        //     for (Symbol symbol : nfa.getSymbols()) {
-        //         Set<State> U = eclosure(nfa.move(T, symbol, nfa));
-        //         // Set<State> U = ec
-        //         if (!dStates.contains(U)) {
-        //             // agregar U como un estado no marcado en Dstates
-        //             Dstates.add(U);
-        //             unmarked.add(U);
-        //         }
-        //     }
-        // }
-
         System.out.println("=======================");
         System.out.println("Seeee clousures:");
         System.out.println("-----------------------");
@@ -54,20 +27,17 @@ public class DFAConstruction {
             System.out.println(state.toString());
         }
         System.out.println("=======================");
-        
-        return new DFA(new State(Character.toString((char)stateAsciiId), Types.Initial));
-    }
 
-    private static Set<State> eclousure(List<State> states, Symbol symbol, NFA nfa){
-        Set<State> move = new HashSet<>();
-        for (State state : states) {
-            for (Transition t : nfa.getTransitions()) {
-                if (t.getSymbol() != null && t.getSymbol().equals(symbol)) {
-                    move.add(t.getStateFinal());
-                }
-            }
+        Set<Set<State>> dStates = new HashSet<Set<State>>();
+        dStates.add(s0);
+
+        Stack<State> unmarked = new Stack<State>();
+
+        while(!unmarked.isEmpty()){
+            
         }
-        return null;
+                
+        return new DFA(new State(Character.toString((char)stateAsciiId), Types.Initial));
     }
 
     private static Set<State> eclousure(List<Transition> transitions, State initialState){ 
@@ -93,7 +63,27 @@ public class DFAConstruction {
         return clousure;
     }
 
+    private static Set<State> eclousure(Set<State> moveStates, List<Transition> transitions){
+        Set<State> eclosureStates = new HashSet<>();
+        Stack<State> stack = new Stack<>();
+        stack.addAll(moveStates);
+        eclosureStates.addAll(moveStates);
 
+        while (!stack.isEmpty()) {
+            State state = stack.pop();
+            for (Transition transition : transitions) {
+                if (transition.getStateOrigin().equals(state) && transition.getSymbol().getcId() == 'E') {
+                    State nextState = transition.getStateFinal();
+                    if (!eclosureStates.contains(nextState)) {
+                        eclosureStates.add(nextState);
+                        stack.push(nextState);
+                    }
+                }
+            }
+        }
+
+        return eclosureStates;
+    }
 
     public static DFA directConstructionAFD(String r){ // Construccion de AFD desde expresion regular
         int stateAsciiId = 65;

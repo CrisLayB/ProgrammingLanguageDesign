@@ -94,32 +94,6 @@ public class Automata {
         return nextStates;
     }
 
-    public Set<State> move(Set<State> states, Symbol symbol, NFA nfa) {
-        Set<State> move = new HashSet<>();
-        for (State state : states) {
-            for (Transition t : nfa.getTransitionsFrom(state)) {
-                if (t.getSymbol() != null && t.getSymbol().equals(symbol)) {
-                    move.add(t.getStateFinal());
-                }
-            }
-        }
-        return move;
-    }
-
-    public Set<State> move(State e, Symbol s, List<Transition> transitionsNFA){
-        Set<State> nextStates = new HashSet<State>();
-
-        for (Transition transition : transitionsNFA) {
-            State stateOriginTransition = transition.getStateOrigin();
-            Symbol symbolTransition = transition.getSymbol();
-            if(stateOriginTransition.equals(e) && symbolTransition.equals(s)){
-                nextStates.add(transition.getStateFinal());
-            }
-        }
-        
-        return nextStates;
-    }
-
     // ToString para ver el contenido del Automata
     @Override
     public String toString() {
