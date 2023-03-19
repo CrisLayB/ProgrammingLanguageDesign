@@ -10,7 +10,7 @@ import models.Types;
 
 public class ThompsonAlgorithm {
     private static int num = -1;
-    private static char epsilon = 'ε';
+    private static char epsilon = 'E';
     
     public static NFA constructNFA(String postfixExpression) {
         Stack<NFA> stack = new Stack<NFA>();

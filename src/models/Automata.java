@@ -94,6 +94,22 @@ public class Automata {
         return nextStates;
     }
 
+    public Set<State> move(Set<State> e, Symbol s){
+        Set<State> nextStates = new HashSet<State>();
+
+        for (State state : e) {
+            for (Transition transition : transitions) {
+                State stateOriginTransition = transition.getStateOrigin();
+                Symbol symbolTransition = transition.getSymbol();
+                if(stateOriginTransition.equals(state) && symbolTransition.equals(s)){
+                    nextStates.add(transition.getStateFinal());
+                }
+            }
+        }
+        
+        return nextStates;
+    }
+
     // ToString para ver el contenido del Automata
     @Override
     public String toString() {
