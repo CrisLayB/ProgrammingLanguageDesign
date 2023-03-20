@@ -1,5 +1,5 @@
 digraph "Resultado Automata AFD" {
-	label = "(a|b)*a(a|b)(a|b)  [AFD]"
+	label = "(a|b)*abb  [AFD]"
 	labelloc  =  t
 	fontsize  = 25
 	rankdir=LR size="8,5"

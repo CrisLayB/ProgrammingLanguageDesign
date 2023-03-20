@@ -1,7 +1,7 @@
 import algorithms.ShuntingYardAlgorithm;
 import algorithms.ThompsonAlgorithm;
-// import algorithms.DFAConstruction;
 import algorithms.SubsetConstruction;
+import algorithms.DirectDFA;
 import controllers.Graphviz;
 import controllers.SyntaxChecker;
 import models.NFA;
@@ -52,27 +52,13 @@ public class Main {
 
         // Algoritmo de contruccion de Thompson
         NFA nfa = ThompsonAlgorithm.constructNFA(rPostfix);
-
-        if(nfa == null){
-            System.out.println("\nEl nfa procesador es invalido por la expresion ingresada\n");
-            return;
-        }
-
-        // Mostrar Resultados
         System.out.println(nfa.toString());
-
-        // TODO: Visualización del AFN
-        
-        // Escribir el codigo dot del automata a refresentar
         String formatedCode = Graphviz.readContentNFA(nfa, r);        
-
-        // Crear o sobreescribir el archivo
         if(!Graphviz.writeFileCode(formatedCode, "docs/automataAFN.dot")){
             System.out.println("No se pudo guardar el archivo.dot");
             return;
         }
         
-        // Crear la imagen para ver los resultados
         Graphviz.createImgAutomata("docs/automataAFN.dot", "img/resultsAFN.png");
 
         // * ===========================================================================================
@@ -80,13 +66,9 @@ public class Main {
         // * ===========================================================================================
 
         // Algoritmo de Construccion de Subconjuntos
-        // DFA dfaSubsetConstruction = DFAConstruction.subsetConstruction(nfa);
         DFA dfaSubsetConstruction = SubsetConstruction.nfaToDfa(nfa);
-
         System.out.println(dfaSubsetConstruction.toString());
-
         String formatedCodeDFA = Graphviz.readContentDFA(dfaSubsetConstruction, r);
-
         if(!Graphviz.writeFileCode(formatedCodeDFA, "docs/automataAFD.dot")){
             System.out.println("No se pudo guardar el archivo.dot");
             return;
@@ -94,12 +76,20 @@ public class Main {
 
         Graphviz.createImgAutomata("docs/automataAFD.dot", "img/resultsAFD.png");
 
-        // Algoritmo de Construccion directa de AFD
+        // * ===========================================================================================
+        // * CONSTRUCCION AFD DIRECTO (Automata Finito Determinista Directo) ===========================
+        // * ===========================================================================================
 
-        // Algoritmo de minimización de AFD
+        DFA dfaDirect = DirectDFA.regularExpressionToDFA(rPostfix);
+        System.out.println(dfaDirect.toString());
         
-        // TODO: Visualización del AFD
+        // * ===========================================================================================
+        // * ALGORITMO DE MINIMIZACION DE AFD ==========================================================
+        // * ===========================================================================================
+        
+        // Algoritmo de Hopcroft
 
+        
         // * ===========================================================================================
         // * SIMULACIONES ==============================================================================
         // * ===========================================================================================

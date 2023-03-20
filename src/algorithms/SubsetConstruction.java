@@ -62,12 +62,12 @@ public class SubsetConstruction {
             }
         }
         
-        System.out.println("CHECK DSTATES: ");
-        for (PairData<Set<State>,Integer> pairData : dStates) {
-            Set<State> one = pairData.first;
-            int two = pairData.second;
-            System.out.println(one.toString() + " and " + two);
-        }
+        // System.out.println("CHECK DSTATES: ");
+        // for (PairData<Set<State>,Integer> pairData : dStates) {
+        //     Set<State> one = pairData.first;
+        //     int two = pairData.second;
+        //     System.out.println(one.toString() + " and " + two);
+        // }
         
         return dfa;
     }
