@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Stack;
 
 public class Automata {
     // Atributos
@@ -74,24 +75,47 @@ public class Automata {
         return transition.getSymbol();
     }
 
-    public void addSymbol(Symbol newSymbol){
-        if(!symbols.contains(newSymbol) && newSymbol.getId() != 949){ // 949 es para evitar epsilon
-            symbols.add(newSymbol);
-        }
-    }
-
-    public Set<State> move(State e, Symbol s){
-        Set<State> nextStates = new HashSet<State>();
-
-        for (Transition transition : transitions) {
-            State stateOriginTransition = transition.getStateOrigin();
-            Symbol symbolTransition = transition.getSymbol();
-            if(stateOriginTransition.equals(e) && symbolTransition.equals(s)){
-                nextStates.add(transition.getStateFinal());
-            }
+    public void addSymbol(Symbol newSymbol){        
+        if(newSymbol.getId() == 949 || newSymbol.getId() == 69){
+            return;
         }
         
-        return nextStates;
+        if(symbols.size() == 0){
+            symbols.add(newSymbol);
+            return;
+        }
+
+        for (Symbol symbol : symbols) {
+            int symbolNum = symbol.getId();
+
+            if(symbolNum == newSymbol.getId()){
+                return;
+            }
+        }
+
+        symbols.add(newSymbol);
+    }
+
+    public Set<State> eclousure(Set<State> moveStates){
+        Set<State> eclosureStates = new HashSet<State>();
+        Stack<State> stack = new Stack<>();
+        stack.addAll(moveStates);
+        eclosureStates.addAll(moveStates);
+
+        while (!stack.isEmpty()) {
+            State state = stack.pop();
+            for (Transition transition : transitions) {
+                if (transition.getStateOrigin().equals(state) && transition.getSymbol().getcId() == 'E') {
+                    State nextState = transition.getStateFinal();
+                    if (!eclosureStates.contains(nextState)) {
+                        eclosureStates.add(nextState);
+                        stack.push(nextState);
+                    }
+                }
+            }
+        }
+
+        return eclosureStates;
     }
 
     public Set<State> move(Set<State> e, Symbol s){

@@ -1,6 +1,7 @@
 import algorithms.ShuntingYardAlgorithm;
 import algorithms.ThompsonAlgorithm;
-import algorithms.DFAConstruction;
+// import algorithms.DFAConstruction;
+import algorithms.SubsetConstruction;
 import controllers.Graphviz;
 import controllers.SyntaxChecker;
 import models.NFA;
@@ -79,9 +80,19 @@ public class Main {
         // * ===========================================================================================
 
         // Algoritmo de Construccion de Subconjuntos
-        DFA dfaSubsetConstruction = DFAConstruction.subsetConstruction(nfa);
+        // DFA dfaSubsetConstruction = DFAConstruction.subsetConstruction(nfa);
+        DFA dfaSubsetConstruction = SubsetConstruction.nfaToDfa(nfa);
 
         System.out.println(dfaSubsetConstruction.toString());
+
+        String formatedCodeDFA = Graphviz.readContentDFA(dfaSubsetConstruction, r);
+
+        if(!Graphviz.writeFileCode(formatedCodeDFA, "docs/automataAFD.dot")){
+            System.out.println("No se pudo guardar el archivo.dot");
+            return;
+        }
+
+        Graphviz.createImgAutomata("docs/automataAFD.dot", "img/resultsAFD.png");
 
         // Algoritmo de Construccion directa de AFD
 

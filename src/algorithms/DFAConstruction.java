@@ -6,7 +6,7 @@ import models.State;
 import models.Types;
 import models.Transition;
 import models.Symbol;
-import models.PairForDTran;
+import models.PairData;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -14,69 +14,75 @@ import java.util.Stack;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Queue;
+import java.util.LinkedList;
 
 public class DFAConstruction {
     
     public static DFA subsetConstruction(NFA nfa){ // Construccion de AFD desde AFN        
-        int stateAsciiId = 65;
-        
-        // Vamos a obtener nuestros clousures iniciales
-        Set<State> s0 = eclousure(nfa.getTransitions(), nfa.getStateInitial());
-        for (State state : s0) {
-            System.out.println("+++++> " + state.toString());
+        int stateNum = 1;
+        DFA dfa = new DFA(new State(stateNum, Types.Initial));
+
+        Map<Set<State>, State> dtran = new HashMap<Set<State>, State>();
+        Set<State> dStates = eclousure(nfa.getTransitions(), nfa.getStateInitial());
+        System.out.println("DStates =========================");
+        for (State state : dStates) {
+            System.out.println(state.toString());
         }
-                     
-        Set<Set<State>> dStates = new HashSet<>();
-        dStates.add(s0);
+        System.out.println("===================================");
+        Queue<Set<State>> unmarkedStates = new LinkedList<Set<State>>();
+        unmarkedStates.add(dStates);
+        stateNum++;
+        dtran.put(dStates, new State(stateNum, Types.Initial));
 
-        Stack<Set<State>> unmarked = new Stack<>();
-        unmarked.push(s0);
-
-        // HashMap<Symbol, Set<State>> dTran = new HashMap<>();
-        Map<PairForDTran<Set<State>, Symbol>, Set<State>> dTran = new HashMap<PairForDTran<Set<State>, Symbol>, Set<State>>();
-        
-        while(!unmarked.empty()){
-            Set<State> T = unmarked.pop();
+        while(!unmarkedStates.isEmpty()){
+            Set<State> T = unmarkedStates.remove();
+            // dtran.put(T, new State(stateNum, Types.Initial));
             for (Symbol a : nfa.getSymbols()) {
-                // Set<State> U = eclousure(T, nfa.getTransitions());
                 Set<State> U = eclousure(nfa.move(T, a), nfa.getTransitions());
-                if(!dStates.contains(U)){
-                    dStates.add(U);
-                    // unmarked.push(U);
-                }                
-                dTran.put(new PairForDTran<Set<State>, Symbol>(T, a), U);
+                if(!dtran.containsKey(U)){
+                    unmarkedStates.add(U);
+                    stateNum++;
+                    dtran.put(U, new State(stateNum, Types.Initial));
+                }
+                // Transition transition = new Transition(a, dtran.get(T), dtran.get(U));
+                // dfa.addTransition(transition);
             }
         }
 
-        System.out.println("===///////////////////////////////");
-        for (Set<State> set : dStates) {
-            System.out.println("===========================");
-            for (State s : set) {
-                System.out.println(s.toString());
+        for(Map.Entry<Set<State>, State> result : dtran.entrySet()){
+            System.out.println("+++++++++++++++++++++++++++++++++++++");
+            Set<State> statesDTran = result.getKey();
+            State stateDTran = result.getValue();
+            System.out.println("-----> " + stateDTran.toString());
+            for (State set : statesDTran) {
+                System.out.println(set.toString());
             }
         }
-        System.out.println("============================");
-        System.out.println("VER RESULTADOS DE DTRAN: ");
-        for(Map.Entry<PairForDTran<Set<State>, Symbol>, Set<State>> result : dTran.entrySet()){
-            PairForDTran<Set<State>, Symbol> key = result.getKey();
-            Set<State> statesDTrain = key.first;
-            Symbol symbolDTrain = key.second;
-            Set<State> value = result.getValue();
-            System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
-            System.out.println("--> " + symbolDTrain.toString());
-            for (State s1 : statesDTrain) {
-                System.out.println(s1.toString());
-            }
-            System.out.println("------------------------------");
-            for (State s1 : value) {
-                System.out.println(s1.toString());
-            }
-            System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
-        }
-        System.out.println("============================");
+        
+        return dfa;
+    }
 
-                
-        return new DFA(new State(Character.toString((char)stateAsciiId), Types.Initial));
+    private static Set<State> eclousure(Set<State> moveStates, List<Transition> transitionsNFA){
+        Set<State> eclosureStates = new HashSet<>();
+        Stack<State> stack = new Stack<>();
+        stack.addAll(moveStates);
+        eclosureStates.addAll(moveStates);
+
+        while (!stack.isEmpty()) {
+            State state = stack.pop();
+            for (Transition transition : transitionsNFA) {
+                if (transition.getStateOrigin().equals(state) && transition.getSymbol().getcId() == 'E') {
+                    State nextState = transition.getStateFinal();
+                    if (!eclosureStates.contains(nextState)) {
+                        eclosureStates.add(nextState);
+                        stack.push(nextState);
+                    }
+                }
+            }
+        }
+
+        return eclosureStates;
     }
 
     private static Set<State> eclousure(List<Transition> transitions, State initialState){ 
@@ -100,28 +106,6 @@ public class DFAConstruction {
         }
 
         return clousure;
-    }
-
-    private static Set<State> eclousure(Set<State> moveStates, List<Transition> transitionsNFA){
-        Set<State> eclosureStates = new HashSet<>();
-        Stack<State> stack = new Stack<>();
-        stack.addAll(moveStates);
-        eclosureStates.addAll(moveStates);
-
-        while (!stack.isEmpty()) {
-            State state = stack.pop();
-            for (Transition transition : transitionsNFA) {
-                if (transition.getStateOrigin().equals(state) && transition.getSymbol().getcId() == 'E') {
-                    State nextState = transition.getStateFinal();
-                    if (!eclosureStates.contains(nextState)) {
-                        eclosureStates.add(nextState);
-                        stack.push(nextState);
-                    }
-                }
-            }
-        }
-
-        return eclosureStates;
     }
 
     public static DFA directConstructionAFD(String r){ // Construccion de AFD desde expresion regular
