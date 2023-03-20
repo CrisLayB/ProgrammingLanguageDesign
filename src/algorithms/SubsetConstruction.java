@@ -23,12 +23,12 @@ public class SubsetConstruction {
         PairData<Set<State>,Integer> initalDState = new PairData<Set<State>,Integer>(nfa.eclousure(s0), counter);
         dStates.add(initalDState);
 
-        System.out.println("0 CHECK DSTATES: ");
-        for (PairData<Set<State>,Integer> pairData : dStates) {
-            Set<State> one = pairData.first;
-            int two = pairData.second;
-            System.out.println(one.toString() + " and " + two);
-        }
+        // System.out.println("0 CHECK DSTATES: ");
+        // for (PairData<Set<State>,Integer> pairData : dStates) {
+        //     Set<State> one = pairData.first;
+        //     int two = pairData.second;
+        //     System.out.println(one.toString() + " and " + two);
+        // }
 
         Stack<PairData<Set<State>, Integer>> unmarked = new Stack<>();
         unmarked.add(initalDState);

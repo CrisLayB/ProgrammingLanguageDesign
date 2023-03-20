@@ -48,7 +48,7 @@ public class ThompsonAlgorithm {
                     break;
                 
                 default: // Crear nueva transicion
-                    stack.add(createNFA(cAscii, c));
+                    stack.add(createNFA(c));
                     break;
             }            
         }
@@ -56,8 +56,8 @@ public class ThompsonAlgorithm {
         return stack.pop();
     }
 
-    private static NFA createNFA(int cAscii, char c){
-        Symbol symbol = new Symbol(cAscii, c);
+    private static NFA createNFA(char c){
+        Symbol symbol = new Symbol(c);
         num++;
         State state1 = new State(num, Types.Initial);
         num++;
@@ -81,7 +81,7 @@ public class ThompsonAlgorithm {
             nfa1.addSymbol(transition.getSymbol());
         }        
         nfa1.setStateFinal(tempFinalState);
-        Transition transition = new Transition(new Symbol((int)epsilon, epsilon), tempState, nfa2.getStateInitial());
+        Transition transition = new Transition(new Symbol(epsilon), tempState, nfa2.getStateInitial());
         nfa1.addTransition(transition);
         return nfa1;
     }
@@ -90,7 +90,7 @@ public class ThompsonAlgorithm {
         nfa.getStateInitial().setType(Types.Transition);
         nfa.getStateFinal().setType(Types.Transition);
         // Crear la transicion que conecta con el estado final ε inicial        
-        Symbol epsilonSymbol = new Symbol((int)epsilon, epsilon);
+        Symbol epsilonSymbol = new Symbol(epsilon);
         Transition transitionBetween = new Transition(epsilonSymbol, nfa.getStateFinal(), nfa.getStateInitial());
         nfa.addTransition(transitionBetween);        
         // Crear los nuevos estados origen y finales
@@ -134,11 +134,11 @@ public class ThompsonAlgorithm {
         State stateFinal = new State(num, Types.Final);
         
         // Crear nuevas transiciones
-        Transition transitionOriginUp = new Transition(new Symbol((int)epsilon, epsilon), stateOrigin, nfa1.getStateInitial());
-        Transition transitionOriginDown = new Transition(new Symbol((int)epsilon, epsilon), stateOrigin, nfa2.getStateInitial());
+        Transition transitionOriginUp = new Transition(new Symbol(epsilon), stateOrigin, nfa1.getStateInitial());
+        Transition transitionOriginDown = new Transition(new Symbol(epsilon), stateOrigin, nfa2.getStateInitial());
 
-        Transition transitionFinalUp = new Transition(new Symbol((int)epsilon, epsilon), nfa1.getStateFinal(), stateFinal);
-        Transition transitionFinalDown = new Transition(new Symbol((int)epsilon, epsilon), nfa2.getStateFinal(), stateFinal);
+        Transition transitionFinalUp = new Transition(new Symbol(epsilon), nfa1.getStateFinal(), stateFinal);
+        Transition transitionFinalDown = new Transition(new Symbol(epsilon), nfa2.getStateFinal(), stateFinal);
         
         // Agregar nuevas transiciones
         nfa1.addTransition(transitionOriginUp);
@@ -160,7 +160,7 @@ public class ThompsonAlgorithm {
     }
 
     public static NFA question(NFA nfa1){
-        NFA nfa2 = createNFA((int)epsilon, epsilon);
+        NFA nfa2 = createNFA(epsilon);
         return or(nfa1, nfa2);
     }
 
@@ -168,7 +168,7 @@ public class ThompsonAlgorithm {
         NFA nfaPlus = kleene(nfa);
         Symbol symbolTemp = nfaPlus.getSymbol(0);
         nfaPlus.addSymbol(symbolTemp);
-        NFA nfaCopy = createNFA(symbolTemp.getId(), symbolTemp.getcId());
+        NFA nfaCopy = createNFA(symbolTemp.getcId());
         return concatenate(nfaPlus, nfaCopy);
     }
 }
