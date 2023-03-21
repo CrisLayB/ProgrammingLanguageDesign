@@ -130,7 +130,12 @@ abstract public class Automata {
         for (Transition transition : transitions) {
             State originState = transition.getStateOrigin();
             Symbol tSymbol = transition.getSymbol();
-            if(originState.equals(e) && tSymbol.equals(s)){
+            // if(originState.getId().equals(e.getId())){
+            //     if(tSymbol.getId() == s.getId()){
+            //         return transition.getStateFinal();
+            //     }
+            // }
+            if(originState.getId().equals(e.getId()) && tSymbol.getcId() == s.getcId()){
                 return transition.getStateFinal();
             }
         }

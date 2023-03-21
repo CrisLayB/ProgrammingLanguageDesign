@@ -113,15 +113,18 @@ public class DFA extends Automata {
 
     @Override
     public boolean simulate(String w) {
-        State s = getStateInitial();
+        State s = this.stateInitial;
 
         for (int i = 0; i < w.length(); i++) {
             char c = w.charAt(i);
             s = move(s, new Symbol(c));
         }
 
-        if(statesFinal.contains(s)){
-            return true;
+        for (State state : statesFinal) { // Revisar si "s" esta dentro de estados finales
+            String checkStateFinal = state.getId();
+            if(s.getId().equals(checkStateFinal)){
+                return true;
+            }
         }
         
         return false;
