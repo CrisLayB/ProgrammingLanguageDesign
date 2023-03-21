@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Stack;
 
-public class Automata {
+abstract public class Automata {
     // Atributos
     protected State stateInitial;    
     protected List<State> states;
@@ -112,8 +112,8 @@ public class Automata {
         while (!stack.isEmpty()) {
             State state = stack.pop();
             for (Transition transition : transitions) {
-                if (transition.getStateOrigin().equals(state)) {
-                    // if (transition.getStateOrigin().equals(state) && transition.getSymbol().getcId() == 'E') {
+                if (transition.getStateOrigin().equals(state) && transition.getSymbol().getcId() == 'E') {
+                    // if (transition.getStateOrigin().equals(state)) {
                     State nextState = transition.getStateFinal();
                     if (!eclosureStates.contains(nextState)) {
                         eclosureStates.add(nextState);
@@ -143,15 +143,27 @@ public class Automata {
         for (State state : e) {
             for (Transition transition : transitions) {
                 State stateOriginTransition = transition.getStateOrigin();
-                Symbol symbolTransition = transition.getSymbol();
-                if(stateOriginTransition.equals(state) && symbolTransition.equals(s)){
-                    nextStates.add(transition.getStateFinal());
+                // Se revisara si el id del estado origen de la transicion es igual al id de uno de los estados de e
+                if(stateOriginTransition.getId().equals(state.getId())){
+                    Symbol symbolTransition = transition.getSymbol();
+                    State stateFinalTransition = transition.getStateFinal();
+                    // Si dado caso los ids coinciden y el estado final de la transicion no esta ingresada
+                    // Entonces se agregara el estado final de la transicion a siguientes estados
+                    if(symbolTransition.getId() == s.getId()){
+                        if(!nextStates.contains(stateFinalTransition)){
+                            nextStates.add(stateFinalTransition);
+                        }
+                    }
                 }
             }
         }
         
         return nextStates;
     }
+
+    // TODO: Metodos abstractos
+
+    public abstract boolean simulate(String w);
 
     // ToString para ver el contenido del Automata
     @Override

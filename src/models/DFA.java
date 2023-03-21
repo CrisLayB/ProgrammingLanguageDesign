@@ -110,6 +110,22 @@ public class DFA extends Automata {
         }
         states.add(state);
     }
+
+    @Override
+    public boolean simulate(String w) {
+        State s = getStateInitial();
+
+        for (int i = 0; i < w.length(); i++) {
+            char c = w.charAt(i);
+            s = move(s, new Symbol(c));
+        }
+
+        if(statesFinal.contains(s)){
+            return true;
+        }
+        
+        return false;
+    }
         
     @Override
     public String toString() {
@@ -137,4 +153,5 @@ public class DFA extends Automata {
         information += "-----------------------------------------------\n";
         return information;
     }
+
 }

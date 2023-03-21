@@ -1,5 +1,9 @@
 package models;
 
+import java.util.Set;
+import java.util.HashSet;
+import java.util.ArrayList;
+
 public class NFA extends Automata {
     // Atributos
     private State stateFinal;
@@ -28,6 +32,24 @@ public class NFA extends Automata {
         for (State state : states) {
             state.setType(Types.Transition);
         }
+    }
+
+    @Override
+    public boolean simulate(String w) {
+        Set<State> initialStateSet = new HashSet<State>();
+        initialStateSet.add(getStateInitial());
+        Set<State> S = eclousure(initialStateSet);
+        
+        for (int i = 0; i < w.length(); i++) {            
+            Symbol c = new Symbol(w.charAt(i));
+            S = eclousure(move(S, c));
+        }
+        
+        if(S.contains(this.stateFinal)){
+            return true;
+        }
+
+        return false;
     }
 
     @Override

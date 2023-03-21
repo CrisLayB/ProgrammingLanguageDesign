@@ -126,8 +126,15 @@ public class Main {
         // * ===========================================================================================
 
         // Simulacion de un AFN
+        String simAFN = (nfa.simulate(w)) 
+            ? "La cadena " + w + " *SI* es parte de la lenguaje generado [NFA Simulation]" 
+            : "La cadena " + w + " *NO* es parte de la lenguaje generado [NFA Simulation]";
+        System.out.println(simAFN);
 
         // Simulacion de un AFD
-        
+        String simDFA1 = (dfaSubsetConstruction.simulate(w)) 
+            ? "La cadena " + w + " *SI* es parte de la lenguaje generado [DFA Simulation]" 
+            : "La cadena " + w + " *NO* es parte de la lenguaje generado [DFA Simulation]";
+        System.out.println(simDFA1);
     }    
 }
