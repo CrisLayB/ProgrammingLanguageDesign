@@ -1,10 +1,14 @@
+import algorithms.MinimizationDFA;
 import algorithms.ShuntingYardAlgorithm;
 import algorithms.ThompsonAlgorithm;
-import algorithms.SubsetConstruction;
-import algorithms.DirectDFA;
+// import algorithms.DirectDFA;
 import controllers.Graphviz;
 import controllers.SyntaxChecker;
 import models.NFA;
+// import models.State;
+// import models.Symbol;
+// import models.Transition;
+// import models.Types;
 import models.DFA;
 
 /**
@@ -21,6 +25,31 @@ import models.DFA;
 
 public class Main {
 
+    public static void main(String[] args) throws Exception {
+        int amountArgs = args.length;
+
+        // Si no ingreso ningun argumento
+        if (amountArgs == 0) { // Caracter Epsilon: ε y si ascii es 949
+            System.out.println("No ingresaste una expresion regular y tampoco una cadena de aceptacion a la par de ejecutable");
+            System.out.println("Ejemplo de como ejecutar el programa e ingresar una expresion regular:");
+            System.out.println("\njava Main '(a*|b*)c' 'abc'\n");
+            return;
+        }
+
+        // Si solo le falto ingresar una cadena de aceptacion
+        if (amountArgs == 1){
+            System.out.println("¡Hey! Te falto ingresar una cadena de aceptacion");
+            System.out.println("\njava Main '(a*|b*)c' 'abc'\n");
+            return;
+        }
+
+        String r = args[0];
+        String w = args[1];
+        compile(r, w);
+
+        // dirtyTest();
+    }
+    
     private static void compile(String r, String w) throws Exception {
         // Se evaluara los errores sintaxicos de la expresion antes de continuar
         String checkExpression = SyntaxChecker.checkExpression(r);
@@ -66,7 +95,7 @@ public class Main {
         // * ===========================================================================================
 
         // Algoritmo de Construccion de Subconjuntos
-        DFA dfaSubsetConstruction = SubsetConstruction.nfaToDfa(nfa);
+        DFA dfaSubsetConstruction = new DFA(nfa);
         System.out.println(dfaSubsetConstruction.toString());
         String formatedCodeDFA = Graphviz.readContentDFA(dfaSubsetConstruction, r);
         if(!Graphviz.writeFileCode(formatedCodeDFA, "docs/automataAFD.dot")){
@@ -80,15 +109,17 @@ public class Main {
         // * CONSTRUCCION AFD DIRECTO (Automata Finito Determinista Directo) ===========================
         // * ===========================================================================================
 
-        DFA dfaDirect = DirectDFA.regularExpressionToDFA(rPostfix);
-        System.out.println(dfaDirect.toString());
+        // DFA dfaDirect = DirectDFA.regularExpressionToDFA(rPostfix);
+        // System.out.println(dfaDirect.toString());
         
         // * ===========================================================================================
         // * ALGORITMO DE MINIMIZACION DE AFD ==========================================================
         // * ===========================================================================================
         
         // Algoritmo de Hopcroft
-
+        System.out.println("\nDFA Minimizado");
+        DFA dfaMini = MinimizationDFA.minimizingDFA(dfaSubsetConstruction);
+        System.out.println(dfaMini.toString());
         
         // * ===========================================================================================
         // * SIMULACIONES ==============================================================================
@@ -98,28 +129,5 @@ public class Main {
 
         // Simulacion de un AFD
         
-    }
-
-    public static void main(String[] args) throws Exception {
-        int amountArgs = args.length;
-
-        // Si no ingreso ningun argumento
-        if (amountArgs == 0) { // Caracter Epsilon: ε y si ascii es 949
-            System.out.println("No ingresaste una expresion regular y tampoco una cadena de aceptacion a la par de ejecutable");
-            System.out.println("Ejemplo de como ejecutar el programa e ingresar una expresion regular:");
-            System.out.println("\njava Main '(a*|b*)c' 'abc'\n");
-            return;
-        }
-
-        // Si solo le falto ingresar una cadena de aceptacion
-        if (amountArgs == 1){
-            System.out.println("¡Hey! Te falto ingresar una cadena de aceptacion");
-            System.out.println("\njava Main '(a*|b*)c' 'abc'\n");
-            return;
-        }
-
-        String r = args[0];
-        String w = args[1];
-        compile(r, w);
-    }
+    }    
 }

@@ -14,6 +14,12 @@ public class Automata {
     protected List<Transition> transitions;
     
     // Constructor
+    public Automata(){
+        states = new ArrayList<State>();
+        symbols = new ArrayList<>();
+        transitions = new ArrayList<Transition>();
+    }
+    
     public Automata(State stateInitial){ 
         this.stateInitial = stateInitial;
         states = new ArrayList<State>();
@@ -95,6 +101,7 @@ public class Automata {
 
         symbols.add(newSymbol);
     }
+    
 
     public Set<State> eclousure(Set<State> moveStates){
         Set<State> eclosureStates = new HashSet<State>();
@@ -105,7 +112,8 @@ public class Automata {
         while (!stack.isEmpty()) {
             State state = stack.pop();
             for (Transition transition : transitions) {
-                if (transition.getStateOrigin().equals(state) && transition.getSymbol().getcId() == 'E') {
+                if (transition.getStateOrigin().equals(state)) {
+                    // if (transition.getStateOrigin().equals(state) && transition.getSymbol().getcId() == 'E') {
                     State nextState = transition.getStateFinal();
                     if (!eclosureStates.contains(nextState)) {
                         eclosureStates.add(nextState);
@@ -118,6 +126,17 @@ public class Automata {
         return eclosureStates;
     }
 
+    public State move(State e, Symbol s){
+        for (Transition transition : transitions) {
+            State originState = transition.getStateOrigin();
+            Symbol tSymbol = transition.getSymbol();
+            if(originState.equals(e) && tSymbol.equals(s)){
+                return transition.getStateFinal();
+            }
+        }
+        return null;
+    }
+    
     public Set<State> move(Set<State> e, Symbol s){
         Set<State> nextStates = new HashSet<State>();
 

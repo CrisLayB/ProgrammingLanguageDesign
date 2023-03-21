@@ -41,7 +41,7 @@ public class NFA extends Automata {
         for (State state : states) {
             information += state.toString() + "\n";
         }
-        information += "Simbolos: \n";
+        information += "Simbolos (Alfabeto): \n";
         for (Symbol symbol : symbols) {
             information += symbol.toString() + "\n";
         }
