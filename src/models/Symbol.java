@@ -1,6 +1,6 @@
 package models;
 
-public class Symbol {
+public class Symbol implements Comparable<Symbol>{
     private int id; // id = ASCII de C_id;
     private char cId;
 
@@ -19,6 +19,11 @@ public class Symbol {
 
     @Override
     public String toString() {
-        return "Simbolo: " + cId;
+        return "" + cId;
+    }
+
+    @Override
+    public int compareTo(Symbol other) {
+        return Integer.compare(this.id, other.id);
     }
 }

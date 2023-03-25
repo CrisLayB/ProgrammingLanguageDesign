@@ -118,6 +118,7 @@ public class DFA extends Automata {
         for (int i = 0; i < w.length(); i++) {
             char c = w.charAt(i);
             s = move(s, new Symbol(c));
+            if(s == null) return false;
         }
 
         for (State state : statesFinal) { // Revisar si "s" esta dentro de estados finales

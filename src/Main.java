@@ -1,14 +1,10 @@
 import algorithms.MinimizationDFA;
 import algorithms.ShuntingYardAlgorithm;
 import algorithms.ThompsonAlgorithm;
-// import algorithms.DirectDFA;
+import algorithms.DirectDFA;
 import controllers.Graphviz;
 import controllers.SyntaxChecker;
 import models.NFA;
-// import models.State;
-// import models.Symbol;
-// import models.Transition;
-// import models.Types;
 import models.DFA;
 
 /**
@@ -107,8 +103,9 @@ public class Main {
         // * CONSTRUCCION AFD DIRECTO (Automata Finito Determinista Directo) ===========================
         // * ===========================================================================================
 
-        // DFA dfaDirect = DirectDFA.regularExpressionToDFA(rPostfix);
-        // System.out.println(dfaDirect.toString());
+        System.out.println("\nConstruccion afd direct (y arbol)");
+        DFA dfaDirect = DirectDFA.regularExpressionToDFA(rPostfix);
+        System.out.println(dfaDirect.toString());
         
         // * ===========================================================================================
         // * ALGORITMO DE MINIMIZACION DE AFD ==========================================================
@@ -124,13 +121,13 @@ public class Main {
         // * ===========================================================================================
 
         // Simulacion de un AFN
-        String simAFN = (nfa.simulate(w)) 
+        String simAFN = (nfa.simulate(w))
             ? "La cadena " + w + " *SI* es parte de la lenguaje generado [NFA Simulation]" 
             : "La cadena " + w + " *NO* es parte de la lenguaje generado [NFA Simulation]";
         System.out.println(simAFN);
 
         // Simulacion de un AFD
-        String simDFA1 = (dfaSubsetConstruction.simulate(w)) 
+        String simDFA1 = (dfaSubsetConstruction.simulate(w))
             ? "La cadena " + w + " *SI* es parte de la lenguaje generado [DFA Simulation]" 
             : "La cadena " + w + " *NO* es parte de la lenguaje generado [DFA Simulation]";
         System.out.println(simDFA1);

@@ -7,6 +7,7 @@ import models.State;
 import models.Symbol;
 import models.Transition;
 import models.Types;
+import models.AsciiSymbol;
 
 public class ThompsonAlgorithm {
     private static int num = -1;
@@ -19,38 +20,31 @@ public class ThompsonAlgorithm {
             char c = postfixExpression.charAt(i);
             int cAscii = (int)c;
 
-            switch (cAscii) {
-                case 42: // '*'
-                    NFA nfaKleen = stack.pop();
-                    stack.add(kleene(nfaKleen));
-                    break;
-
-                case 43: // '+'
-                    NFA nfaPlus = stack.pop();
-                    stack.add(plus(nfaPlus));
-                    break;
-
-                case 46: // '.'
-                    NFA nfaDot2 = stack.pop();
-                    NFA nfaDot1 = stack.pop();
-                    stack.add(concatenate(nfaDot1, nfaDot2));                    
-                    break;
-
-                case 63: // '?'
-                    NFA nfaQuestion = stack.pop();
-                    stack.add(question(nfaQuestion));
-                    break;
-
-                case 124: // '|'
-                    NFA nfaOr2 = stack.pop();
-                    NFA nfaOr1 = stack.pop();
-                    stack.add(or(nfaOr1, nfaOr2));
-                    break;
-                
-                default: // Crear nueva transicion
-                    stack.add(createNFA(c));
-                    break;
-            }            
+            if(cAscii == AsciiSymbol.Kleene.ascii){
+                NFA nfaKleen = stack.pop();
+                stack.add(kleene(nfaKleen));
+            }
+            else if(cAscii == AsciiSymbol.Plus.ascii){
+                NFA nfaPlus = stack.pop();
+                stack.add(plus(nfaPlus));
+            }
+            else if(cAscii == AsciiSymbol.Dot.ascii){
+                NFA nfaDot2 = stack.pop();
+                NFA nfaDot1 = stack.pop();
+                stack.add(concatenate(nfaDot1, nfaDot2));  
+            }
+            else if(cAscii == AsciiSymbol.Interrogation.ascii){
+                NFA nfaQuestion = stack.pop();
+                stack.add(question(nfaQuestion));
+            }
+            else if(cAscii == AsciiSymbol.Or.ascii){
+                NFA nfaOr2 = stack.pop();
+                NFA nfaOr1 = stack.pop();
+                stack.add(or(nfaOr1, nfaOr2));
+            }
+            else{
+                stack.add(createNFA(c));
+            } 
         }
         
         return stack.pop();

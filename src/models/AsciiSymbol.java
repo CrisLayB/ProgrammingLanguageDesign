@@ -7,6 +7,8 @@ package models;
  * | : 124
  * + : 43
  * ? : 63
+ * # : 35
+ * . : 46
  * E : 69
  */
 public enum AsciiSymbol {
@@ -16,6 +18,8 @@ public enum AsciiSymbol {
     Or('|'),
     Plus('+'),
     Interrogation('?'),
+    Numeral('#'),
+    Dot('.'),
     Epsilon('E');
         
     public final char c;
