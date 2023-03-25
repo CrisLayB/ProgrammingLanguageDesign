@@ -1,6 +1,7 @@
 package algorithms;
 
 import models.DFA;
+import models.PairData;
 import models.State;
 import models.Symbol;
 
@@ -10,6 +11,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Queue;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.HashMap;
 
 public class MinimizationDFA {
     public static DFA minimizingDFA(DFA dfa){
@@ -23,23 +26,24 @@ public class MinimizationDFA {
         partitions.add(notAceptedStates);
 
         Queue<Set<State>> queue = new LinkedList<>(partitions);
+        List<List<Set<State>>> L = new ArrayList<>();
         
-         while (!queue.isEmpty()) {
-            List<List<Set<State>>> L = new ArrayList<>();
-            List<Set<State>> Ds = new ArrayList<>();
-            Set<State> G = queue.poll();
-            for (State s : G) {
-                for (Symbol a : dfa.getSymbols()) {
-                    State t = dfa.move(s, a);
-                    for (Set<State> h : partitions) {
-                        if(h.contains(t)){
-                            Ds.add(h);
-                        }
+        while(!queue.isEmpty()){
+            Set<State> newPartition = queue.poll();
+            
+            for (Symbol symbol : dfa.getSymbols()) {
+                List<Set<State>> Ds = new ArrayList<>();
+                Set<State> t = dfa.move(newPartition, symbol);
+                for (Set<State> h : queue) {
+                    if(t.equals(h)){
+                        Ds.add(h);
                     }
-                    // Agregar Ds a la lista L
-                    L.add(Ds);
                 }
-            }
+                L.add(Ds);
+            }            
+            
+            int i = 0;
+            
         }
 
         return dfaMin;

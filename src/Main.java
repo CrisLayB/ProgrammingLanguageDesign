@@ -46,8 +46,6 @@ public class Main {
         String r = args[0];
         String w = args[1];
         compile(r, w);
-
-        // dirtyTest();
     }
     
     private static void compile(String r, String w) throws Exception {
