@@ -1,16 +1,22 @@
 package models;
 
 import java.util.Stack;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class SyntaxTree {
     private TreeNode<Symbol> root;
     private Stack<Symbol> regexSymbols;
     private int count;
+    private List<Symbol> symbols;
     
-    public SyntaxTree(Stack<Symbol> symbols){
-        regexSymbols = symbols;
+    // * ---> CONSTRUCTOR
+    public SyntaxTree(Stack<Symbol> regexSymbols){
+        this.regexSymbols = regexSymbols;
         count = 0;
+        symbols = new ArrayList<Symbol>();
         createSyntaxTree();
     }
 
@@ -42,12 +48,8 @@ public class SyntaxTree {
                 stackTreeNodes.push(node);
             }
 
-            // * ---> KLEENE, PLUS, INTERROGATION
-            else if(
-                symbol.getId() == AsciiSymbol.Kleene.ascii ||
-                symbol.getId() == AsciiSymbol.Plus.ascii || 
-                symbol.getId() == AsciiSymbol.Interrogation.ascii
-            ){
+            // * ---> KLEENE
+            else if( symbol.getId() == AsciiSymbol.Kleene.ascii ){
                 TreeNode<Symbol> node = new TreeNode<Symbol>(symbol, stackTreeNodes.pop(), null);
 
                 if(!node.left.isNull()){
@@ -55,36 +57,74 @@ public class SyntaxTree {
                 }        
             }
 
+            // * ---> PLUS
+
+            // * ---> INTERROGATION
+
             // * ---> NORMAL SYMBOL
             else{ // Almacenar un symbolo normal
-                TreeNode<Symbol> node = new TreeNode<Symbol>(symbol, ++count);
-
-                // Revisar si es Epsilon
-                if(symbol.getId() == AsciiSymbol.Epsilon.ascii){
-                    node = new TreeNode<Symbol>(null);
-                }
-                
-                stackTreeNodes.add(node);
+                if(symbol.getId() != AsciiSymbol.Numeral.ascii && !symbolExistsInAlphabet(symbol)){
+                    symbols.add(symbol);
+                }                    
+                stackTreeNodes.add(new TreeNode<Symbol>(symbol, ++count));
             }
         }
         root = stackTreeNodes.pop();
     }
-
-    public Set<Integer> getFirstPos(TreeNode<Symbol> pRoot){
-        return null;
-    }
-
+    
+    // * ---> GETTERS
     public TreeNode<Symbol> getRoot() {
         return root;
     }
 
-    // ! PROBABLEMENTE EN VEZ DE INT/INTEGER ESTO TERMINE SIENDO STATE
+    public List<Symbol> getSymbols(){
+        return symbols;
+    }
 
-    public Symbol getSymbol(int p){
+    // * ---> METODOS
+    private boolean symbolExistsInAlphabet(Symbol symbolCheck){
+        for (Symbol symbol : symbols) {
+            if(symbolCheck.getId() == symbol.getId()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // firstpos(node)
+
+    // lastpos(node)
+
+    // nullable(node)
+
+    // followpos(position)
+
+    // ! ================================================
+    
+    public Set<Integer> getFirstpos(TreeNode<Symbol> root){
         return null;
     }
 
-    public Set<Integer> getFollowpos(int p){
-        return null;
+    public boolean getNullable(TreeNode<Symbol> root){
+        if(root == null) return false;
+
+        
+        
+        return false;
+    }
+
+    public Set<Integer> getFollowpos(int pos){
+        Set<Integer> followpos = new HashSet<>();
+        for (Integer integer : followpos) {
+            if(integer == pos){
+                followpos.add(integer);
+            }
+        }
+        return followpos;
+    }
+
+    public char getVal(int position){
+        Symbol symb = regexSymbols.get(position);
+        return symb.getcId();
     }
 }

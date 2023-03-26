@@ -31,7 +31,8 @@ public class BTreePrinter {
         List<TreeNode<T>> newNodes = new ArrayList<TreeNode<T>>();
         for (TreeNode<T> node : nodes) {
             if (node != null) {
-                System.out.print(node.value);
+                String res = (node.invalidPos()) ? node.value.toString() : node.value + "-" + node.pos;
+                System.out.print(res);
                 newNodes.add(node.left);
                 newNodes.add(node.right);
             } else {
