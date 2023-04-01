@@ -1,6 +1,6 @@
 // Importar codigo java propio
 import controllers.AdminFiles;
-import controllers.Tokenizer;
+import controllers.LexicalAnalyzer;
 
 // Importar librerias de java framework collections
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class Yal {
         System.out.println("========================================================");
 
         // Procesar la data
-        Tokenizer tokenizer = new Tokenizer(yalContent);
+        LexicalAnalyzer tokenizer = new LexicalAnalyzer(yalContent);
         tokenizer.process();
     }
 }

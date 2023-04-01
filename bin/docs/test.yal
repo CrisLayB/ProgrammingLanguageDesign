@@ -1,1 +1,1 @@
-(* Lexer para Gramática No. 1 - Expresiones aritméticas simples para variables *)
+let delim = [' ''\t''\n']
