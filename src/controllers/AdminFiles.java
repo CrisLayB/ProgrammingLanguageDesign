@@ -1,17 +1,24 @@
 package controllers;
 
-// Librerias para leer el contenido del archivo
+// Para revisar y sobreescribir el contenido del archivo
 import java.io.BufferedWriter;
 import java.io.Writer;
 import java.io.OutputStreamWriter;
 import java.io.FileOutputStream;
+
+// Leer archivos
+import java.io.BufferedReader;
+import java.io.FileReader;
+
+// Para retornar la data
+import java.util.ArrayList;
 
 // Para leer el contenido del Automata
 import models.NFA;
 import models.DFA;
 import models.Transition;
 
-public class Graphviz {        
+public class AdminFiles {        
     public static String readContentNFA(NFA nfa, String r){
         String contentScript = "";
         contentScript += "digraph \"Resultado Automata AFN\" {\n";
@@ -66,6 +73,24 @@ public class Graphviz {
         return true;
     }
 
+    public static ArrayList<String> readFileContent(String file){
+        ArrayList<String> lines = new ArrayList<>();
+        BufferedReader bf;
+        
+        try {
+            bf = new BufferedReader(new FileReader(file));
+            String bfRead;
+
+            while((bfRead = bf.readLine()) != null){
+                lines.add(bfRead);
+            }
+        } catch (Exception e) {
+            lines = null;
+        }
+
+        return lines;
+    }
+    
     public static void createImgAutomata(String fileInputPath, String fileOutputPath){
         try {
             String[] cmd = new String[8];

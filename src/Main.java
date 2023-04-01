@@ -2,20 +2,18 @@ import algorithms.MinimizationDFA;
 import algorithms.ShuntingYardAlgorithm;
 import algorithms.ThompsonAlgorithm;
 import algorithms.DirectDFA;
-import controllers.Graphviz;
+import controllers.AdminFiles;
 import controllers.SyntaxChecker;
 import models.NFA;
 import models.DFA;
 
 /**
  * <h1>Diseño De Lenguajes de Programacion - UVG</h1>
- * <p>
- * Main
- * <p>
+ * <h2> Main </h2>
+ * Programa donde se lleva a cabo la creacion de automatas finitos.
  * 
  * Creado por:
- * 
- * @author Cristian Laynez
+ * @author Cristian Laynez - 201281
  * @since 2023
  **/
 
@@ -76,13 +74,13 @@ public class Main {
         // Algoritmo de contruccion de Thompson
         NFA nfa = ThompsonAlgorithm.constructNFA(rPostfix);
         System.out.println(nfa.toString());
-        String formatedCode = Graphviz.readContentNFA(nfa, r);        
-        if(!Graphviz.writeFileCode(formatedCode, "docs/automataAFN.dot")){
+        String formatedCode = AdminFiles.readContentNFA(nfa, r);        
+        if(!AdminFiles.writeFileCode(formatedCode, "docs/automataAFN.dot")){
             System.out.println("No se pudo guardar el archivo.dot");
             return;
         }
         
-        Graphviz.createImgAutomata("docs/automataAFN.dot", "img/resultsAFN.png");
+        AdminFiles.createImgAutomata("docs/automataAFN.dot", "img/resultsAFN.png");
 
         // * ===========================================================================================
         // * CONSTRUCCION DE AFD (Automata Finito Determinista) ========================================
@@ -91,13 +89,13 @@ public class Main {
         // Algoritmo de Construccion de Subconjuntos
         DFA dfaSubsetConstruction = new DFA(nfa);
         System.out.println(dfaSubsetConstruction.toString());
-        String formatedCodeDFA = Graphviz.readContentDFA(dfaSubsetConstruction, r);
-        if(!Graphviz.writeFileCode(formatedCodeDFA, "docs/automataAFD.dot")){
+        String formatedCodeDFA = AdminFiles.readContentDFA(dfaSubsetConstruction, r);
+        if(!AdminFiles.writeFileCode(formatedCodeDFA, "docs/automataAFD.dot")){
             System.out.println("No se pudo guardar el archivo.dot");
             return;
         }
 
-        Graphviz.createImgAutomata("docs/automataAFD.dot", "img/resultsAFD.png");
+        AdminFiles.createImgAutomata("docs/automataAFD.dot", "img/resultsAFD.png");
 
         // * ===========================================================================================
         // * CONSTRUCCION AFD DIRECTO (Automata Finito Determinista Directo) ===========================
