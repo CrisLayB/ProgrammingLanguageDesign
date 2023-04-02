@@ -45,6 +45,8 @@ public class Yal {
         // Procesar la data
         LexicalAnalyzer tokenizer = new LexicalAnalyzer(yalContent);
         tokenizer.process();
+        System.out.println("\n=======> let obtenidos:\n");
         tokenizer.seeIds();
+        System.out.println("\n=======> Rule obteniods:\n");
     }
 }

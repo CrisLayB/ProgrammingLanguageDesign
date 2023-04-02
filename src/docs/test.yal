@@ -9,4 +9,8 @@ let digit = ['0'-'9']
 let id = letter(letter|digit)*
 let number = digits(.digits)?('E'['+''-']?digits)?
 
+rule tokens = 
+    ws
+  | id        { return ID }
+
 (* Introducir cualquier trailer aqui *)

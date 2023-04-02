@@ -3,7 +3,7 @@ package models;
 import java.util.ArrayList;
 
 public class RuleContent {    
-    private ArrayList<String> args;
+    private ArrayList<String> args;    
     private ArrayList<PairData<String, String>> bufferAndActions;
 
     // ---> Constructurres
@@ -25,6 +25,11 @@ public class RuleContent {
         return bufferAndActions;
     }
 
+    // --> Setters
+    public void setArgs(ArrayList<String> args) {
+        this.args = args;
+    }
+
     // --> Metodos
     @Override
     public String toString() {
@@ -38,6 +43,11 @@ public class RuleContent {
             }
         }
 
+        // Mostrar regex temporal
+        for (PairData<String, String> buffer : bufferAndActions) {
+            information += buffer;
+        }
+        information += "\n";
         // Mostrar los buffers junto con sus acciones
         for (PairData<String, String> buffer : bufferAndActions) {
             String nameBuffer = buffer.first;

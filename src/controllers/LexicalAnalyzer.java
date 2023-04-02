@@ -17,22 +17,25 @@ public class LexicalAnalyzer {
     
     public void process(){
         String identifier = "";
+        boolean defineRule = false;
+        boolean allowEmptyEntry = false;
+        int ruleController = 0;
+        RuleContent ruleContent = null;
+
         for (String string : code) { // Obtener linea por linea
             String buff = "";
             boolean isOpen = false;
             boolean ignore = false;
             // Manejadores que nos ayudaran a controlar let
             int letController = 0;
-            boolean allowEmptyEntry = false;
 
             for (int i = 0; i < string.length(); i++) { // Analizar linea en especifico
                 char letter = string.charAt(i);
-                // System.out.println(letter); // ! Para DEBUG
+                // System.out.println("===>" + letter + "<==="); // ! Para DEBUG
                 // Por si el buffer tiene elementos dentro entonces se analizara si la estructura es valida
-                boolean allow = (letter == ' ' && allowEmptyEntry == false);                
+                boolean allow = (letter == ' ' && allowEmptyEntry == false && !buff.isBlank());                
                 if(allow && isOpen == false && buff.length() != 0){
-                    // System.out.println("COMPLETE: " + buff); // ! Para DEBUG
-                                        
+                    System.out.println("COMPLETE: >" + buff + "<"); // ! Para DEBUG                                        
                     switch (buff) {
                         // nueva variable
                         case "let":
@@ -43,10 +46,11 @@ public class LexicalAnalyzer {
                         
                         // nueva funcion tipo rule
                         case "rule":
-                            // empezar a guardar el resto de elementos
-
-                            // se tiene que velar que sea ["id", "="] o ["id", "=", "resto de elementos y acciones"]
-                            
+                            // se tiene que velar que sea ["id", "args", "=", "Resto de elementos y acciones"] 
+                            // o ["id", "=", "resto de elementos y acciones"]
+                            ruleController = 4;
+                            defineRule = true;
+                            buff = "";
                             break;
                         
                         // abrir parentesis
@@ -70,7 +74,6 @@ public class LexicalAnalyzer {
                                             System.out.println("Id invalido porque se ingreso un token");
                                             return;
                                         }                                        
-                                        // ids.put(buff, ""); // asignar nombre de id
                                         identifier = buff;
                                         letController -= 1;
                                         break;
@@ -92,19 +95,79 @@ public class LexicalAnalyzer {
                                 buff = "";
                             }
 
+                            // Add instructions to rule
+                            else if(defineRule == true){
+                                switch (ruleController) {
+                                        case 4: // obtener id de la funcion rule
+                                            if(SymbolTable.tokens.contains(buff)){ // revisar que el id no sea parte de los tokens
+                                                System.out.println("Id invalido porque se ingreso un token");
+                                                return;
+                                            }                         
+                                            identifier = buff;
+                                            System.out.println("********** ID ASIGNADO A RULE >" + identifier + "<");
+                                            ruleController -= 1;
+                                        break;
+                                    case 3: // verificar si recibe parametros (por medio de [) o signo de asignacion
+                                        if(buff.equals("[")){ // Si dado caso se encuentran argumentos
+                                            // // llevar a cabo operacion de argumentos
+                                            // // !...
+                                            // // Ingresar argumentos detectados
+                                            // ruleContent = new RuleContent(null);
+                                            ruleController -= 1;
+                                        }
+                                        else if(buff.equals("=")){
+                                            System.out.println("************** TODO EN ORDEN CON EL SIGNO DE ASIGNACION");                  
+                                            ruleContent = new RuleContent();
+                                            ruleController = 1; // Continuar ya que todo esta en orden
+                                            System.err.println(ruleController);
+                                        }
+                                        else{
+                                            System.out.println("INVALIDO >" + buff + "<");                                            
+                                            return;
+                                        }
+                                        break;
+                                    case 2: // verficiar si recibe un signo de asignacion
+                                        System.out.println("REVISAR =");
+                                        if(!buff.equals("=")){
+                                            System.out.println("se esperaba un signo de asignacion =");
+                                            return;
+                                        }                      
+                                        System.out.println("************** TODO EN ORDEN CON EL SIGNO");                  
+                                        ruleController -= 1; // Continuar ya que todo esta en orden
+                                        System.out.println(ruleController);
+                                        break;
+                                    case 1:
+                                        // Asignar y revisar que los elemenots procesados sean validos
+                                        addRuleContent(identifier, buff, ruleContent);
+                                        break;
+                                }
+                                buff = "";
+                            }
+
                             // Si nada coincide entonces estamos ante un token invalido
-                            else System.out.println("Token invalido");
+                            else {
+                                System.out.println("Token invalido");
+                                buff = "";
+                            }
                             break;
                     }                    
                 }                
                 else{
-                    if(ignore == false) buff += letter;                    
+                    if(ignore == false) {
+                        if(letter == ' ' && allowEmptyEntry == false){
+                            // do nothing... to be honest i hate dirty code
+                        }else{
+                            buff += letter;
+                        }
+                    }
                 }
             }
 
             // Si dado caso el buffer termino lleno y falto procesar informacion
             if(buff.length() != 0){
-                // System.out.println(letController + " COMPLETE JEJE: " + buff); // ! Para DEBUG
+                System.out.println(letController + " COMPLETE JEJE: >" + buff + "<"); // ! Para DEBUG
+
+                // * ----> si falta agregar algo a la variable "let"
                 if(letController != 0){
                     // Para obtener lo que hizo falta del contenido del operador
                     if(letController == 1){
@@ -112,8 +175,19 @@ public class LexicalAnalyzer {
                         identifier = ""; // reset name id
                     }
                 }
+                letController = 0;
+                allowEmptyEntry = false;
+
+                // * ----> si falta agregar algo a la varible "rule"
+                if(ruleController != 0){
+                    addRuleContent(identifier, buff, ruleContent);
+                }
             }
         }
+    }
+
+    private void addRuleContent(String id, String content, RuleContent ruleContent){
+        System.out.println("====> ELEMENTO A AGREGAR: >" + content + "<");
     }
 
     private void addId(String id, String content){
