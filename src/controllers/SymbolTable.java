@@ -25,6 +25,7 @@ public class SymbolTable {
     );    
     public static List<String> startingTokens = Arrays.asList(
         "let",
-        "rule"
+        "rule",
+        "("
     );
 }
