@@ -45,5 +45,6 @@ public class Yal {
         // Procesar la data
         LexicalAnalyzer tokenizer = new LexicalAnalyzer(yalContent);
         tokenizer.process();
+        tokenizer.seeIds();
     }
 }
