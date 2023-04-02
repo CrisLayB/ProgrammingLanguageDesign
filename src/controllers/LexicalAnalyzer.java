@@ -1,39 +1,15 @@
 package controllers;
 
-import java.util.List;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 import models.RuleContent;
 
-import java.util.HashMap;
-
 public class LexicalAnalyzer {
-    // Tokends a definir
-    /*
-     * let
-     * letter
-     * number
-     * .
-     * (
-     * )
-     * *
-     * [
-     * ]
-     * '
-     * -
-     * "
-     * =
-     * |
-     * rule
-     * +
-     * ?
-     */
-
     private ArrayList<String> code;
-    private Map<String, String> ids = new HashMap<String, String>();
-    private Map<String, RuleContent> rules = new HashMap<String, RuleContent>();
+    private Map<String, String> ids = new LinkedHashMap<String, String>();
+    private Map<String, RuleContent> rules = new LinkedHashMap<String, RuleContent>();
         
     public LexicalAnalyzer(ArrayList<String> code){
         this.code = code;
@@ -51,13 +27,11 @@ public class LexicalAnalyzer {
 
             for (int i = 0; i < string.length(); i++) { // Analizar linea en especifico
                 char letter = string.charAt(i);
-                System.out.println(letter);
-
+                // System.out.println(letter); // ! Para DEBUG
                 // Por si el buffer tiene elementos dentro entonces se analizara si la estructura es valida
-                // if(letter == ' ' && isOpen == false && buff.length() != 0){
                 boolean allow = (letter == ' ' && allowEmptyEntry == false);                
                 if(allow && isOpen == false && buff.length() != 0){
-                    System.out.println("COMPLETE: " + buff);
+                    // System.out.println("COMPLETE: " + buff); // ! Para DEBUG
                                         
                     switch (buff) {
                         // nueva variable
@@ -109,11 +83,7 @@ public class LexicalAnalyzer {
                                         allowEmptyEntry = true;
                                         break;
                                     case 1: // se espera recibir contenido
-                                        System.out.println("JAJA");
-                                        String processContent = buff;
-                                        // Se procedera a agregar el nuevo contenido
-                                        // Ahora se procedera a agregar el nuevo contenido
-                                        ids.put(identifier, processContent);
+                                        addId(identifier, buff);
                                         identifier = ""; // reset name id
                                         letController -= 1;
                                         allowEmptyEntry = false;
@@ -132,11 +102,85 @@ public class LexicalAnalyzer {
                 }
             }
 
-            // Si dado caso el buffer termino lleno
+            // Si dado caso el buffer termino lleno y falto procesar informacion
             if(buff.length() != 0){
-                System.out.println(letController + " COMPLETE JEJE: " + buff);
+                // System.out.println(letController + " COMPLETE JEJE: " + buff); // ! Para DEBUG
+                if(letController != 0){
+                    // Para obtener lo que hizo falta del contenido del operador
+                    if(letController == 1){
+                        addId(identifier, buff);
+                        identifier = ""; // reset name id
+                    }
+                }
             }
         }
+    }
+
+    private void addId(String id, String content){
+        String processContent = "";
+        boolean isOpen = false;
+        int countOrs = 0;
+        // ! --> Se procesara lo que hay dentro para ver si hay algo especial
+        for (int i = 0; i < content.length(); i++) {
+            char letterOfContent = content.charAt(i);
+            // Detectar si estamos ante un conjunto
+            if(letterOfContent == '['){
+                processContent += "(";
+            }
+            else if(letterOfContent == ']'){
+                processContent += ")";
+            }            
+            else if(letterOfContent == '\'' && isOpen == false){
+                isOpen = true;
+            }
+            // Detectar si estamos ante un rango a implementar
+            else if(letterOfContent == '-' && isOpen == false){
+                char beforeRange = content.charAt(i-2);
+                char afterRange = content.charAt(i+2);
+                int numBeforeRange = (int)beforeRange;
+                int numAfterRange = (int)afterRange;
+                for (int j = numBeforeRange+1; j < numAfterRange; j++) {
+                    processContent += "|" + j;
+                }
+            }
+            else if(letterOfContent == '\'' && isOpen == true){
+                isOpen = false;
+                countOrs++;
+            }            
+            else{
+                if(isOpen == true){ // Esto quiere decir que se esta ingresando elementos a un conjunto
+                    if(letterOfContent == '\\'){
+                        char nextLetter = content.charAt(i+1);
+                        char letterJ = ' ';
+                        if(nextLetter == 't'){
+                            i++;
+                            letterJ = '\t';
+                        }
+                        if(nextLetter == 'n'){
+                            i++;
+                            letterJ = '\n';
+                        }
+                        if(countOrs > 0 && processContent.charAt(processContent.length()-1) != '('){ 
+                            processContent += '|';
+                        }
+                        processContent += (int)letterJ;
+                    }
+                    else{
+                        if(countOrs > 0 && processContent.charAt(processContent.length()-1) != '('){ 
+                            processContent += '|';             
+                        }
+                        processContent  += (int)letterOfContent;
+                    }
+                }
+                else{ // Ingresar elemento al buffer de forma normal
+                    processContent += letterOfContent;
+                }
+            }
+        }
+        
+        // ! --> Se guardara el nuevo contenido
+        // System.out.println("AGREGAR: " + id); // ! Para DEBUG
+        ids.put(id, processContent);
     }
     
     public void seeIds(){
