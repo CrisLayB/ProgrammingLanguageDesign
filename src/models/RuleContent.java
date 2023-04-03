@@ -3,34 +3,43 @@ package models;
 import java.util.ArrayList;
 
 public class RuleContent {    
-    private ArrayList<String> args;    
-    private ArrayList<PairData<String, String>> bufferAndActions;
+    private ArrayList<String> args;
+    private ArrayList<String> namesBuffer;
+    private ArrayList<String> actions;
 
     // ---> Constructurres
     public RuleContent(){
-        bufferAndActions = new ArrayList<PairData<String, String>>();
+        namesBuffer = new ArrayList<>();
+        actions = new ArrayList<>();
     }
 
     public RuleContent(ArrayList<String> args){
         this.args = args;
-        bufferAndActions = new ArrayList<PairData<String, String>>();
+        namesBuffer = new ArrayList<>();
+        actions = new ArrayList<>();
     }
 
     // --> Getters
     public ArrayList<String> getArgs() {
         return args;
     }
-
-    public ArrayList<PairData<String, String>> getBufferAndActions() {
-        return bufferAndActions;
-    }
-
+    
     // --> Setters
     public void setArgs(ArrayList<String> args) {
         this.args = args;
     }
 
     // --> Metodos
+    public void addNameBuffer(String buffer){
+        if(namesBuffer.contains(buffer)) return; // Para evitar repetir
+        namesBuffer.add(buffer);
+    }
+
+    public void addAction(String action){
+        if(actions.contains(action)) return;
+        actions.add(action);
+    }
+    
     @Override
     public String toString() {
         String information = "";
@@ -43,16 +52,11 @@ public class RuleContent {
             }
         }
 
-        // Mostrar regex temporal
-        for (PairData<String, String> buffer : bufferAndActions) {
-            information += buffer;
-        }
-        information += "\n";
-        // Mostrar los buffers junto con sus acciones
-        for (PairData<String, String> buffer : bufferAndActions) {
-            String nameBuffer = buffer.first;
-            String action = buffer.second;
-            information += nameBuffer + " {" + action + "}\n";
+        // Mostrar los buffers con sus respectivas acciones
+        for (int i = 0; i < namesBuffer.size(); i++) {            
+            information += (actions.get(i) == null) 
+                ? namesBuffer.get(i) + "\n" 
+                : namesBuffer.get(i) + " & " + actions.get(i) + "\n";
         }
 
         return information;
