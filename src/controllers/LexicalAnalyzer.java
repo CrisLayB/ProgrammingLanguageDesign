@@ -3,6 +3,8 @@ package controllers;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Arrays;
 
 import models.RuleContent;
 
@@ -10,6 +12,7 @@ public class LexicalAnalyzer {
     private ArrayList<String> code;
     private Map<String, String> ids = new LinkedHashMap<String, String>();
     private Map<String, RuleContent> rules = new LinkedHashMap<String, RuleContent>();
+    private static List<Character> signsOperation = Arrays.asList('(', ')', '+', '.', '*', '?', '|');
         
     public LexicalAnalyzer(ArrayList<String> code){
         this.code = code;
@@ -86,6 +89,11 @@ public class LexicalAnalyzer {
                                         allowEmptyEntry = true;
                                         break;
                                     case 1: // se espera recibir contenido
+                                        // Revisar que el id del valor detectado de let no sea un valor numerico
+                                        if(!isNumeric(identifier)) {
+                                            System.out.println("No se permite un valor numerico como un id de let");
+                                            return;
+                                        }
                                         addId(identifier, buff);
                                         identifier = ""; // reset name id
                                         letController -= 1;
@@ -253,8 +261,35 @@ public class LexicalAnalyzer {
         }
         
         // ! --> Se guardara el nuevo contenido
-        // System.out.println("AGREGAR: " + id); // ! Para DEBUG
-        ids.put(id, processContent);
+        ids.put(id, remplaceIdsForValues(processContent));
+    }
+
+    private String remplaceIdsForValues(String processContent){
+        String buffer = "";
+        String temp = ""; // Para apoyarnos a realizar el remplazo de variables
+        for (int i = 0; i < processContent.length(); i++) {
+            char letter = processContent.charAt(i);
+            if(signsOperation.contains(letter)){
+                System.out.println("SIGNO: " + letter + " y lo que el buffer completo: " + temp);
+                if(ids.containsKey(temp)){ // detectar si esta dentro de las variables
+                    buffer += ids.get(temp);
+                    temp = "";
+                }
+                else if(isNumeric(temp)){ // detectar si es un ascii (realmente un numero)
+                    buffer += temp;
+                    temp = "";
+                }
+                buffer += letter;
+            }
+            else{
+                temp += letter;
+            }
+        }
+        return buffer;
+    }
+
+    private boolean isNumeric(String str){
+        return str.matches("-?\\d+(\\.\\d+)?");
     }
     
     public void seeIds(){
