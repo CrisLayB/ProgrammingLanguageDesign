@@ -25,7 +25,7 @@ public class Yal {
             System.out.println("\njava Yal 'src/docs/slr-1.yal'\n");
             return;
         }
-
+        
         // Vamos a obtener todo el contenido del archivo
         ArrayList<String> yalContent = AdminFiles.readFileContent(args[0]);
 
@@ -44,9 +44,8 @@ public class Yal {
 
         // Procesar la data
         LexicalAnalyzer tokenizer = new LexicalAnalyzer(yalContent);
-        tokenizer.process();
-        System.out.println("\n=======> let obtenidos:\n");
-        tokenizer.seeIds();
-        System.out.println("\n=======> Rule obteniods:\n");
+        System.out.println("Expresion regular: ");
+        String regularExpression = tokenizer.getRegularExpression();
+        System.out.println(regularExpression);
     }
 }

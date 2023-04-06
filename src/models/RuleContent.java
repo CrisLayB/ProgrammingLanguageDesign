@@ -6,6 +6,7 @@ public class RuleContent {
     private ArrayList<String> args;
     private ArrayList<String> namesBuffer;
     private ArrayList<String> actions;
+    private String regex = "";
 
     // ---> Constructurres
     public RuleContent(){
@@ -23,6 +24,10 @@ public class RuleContent {
     public ArrayList<String> getArgs() {
         return args;
     }
+
+    public String getRegex() {
+        return regex;
+    }
     
     // --> Setters
     public void setArgs(ArrayList<String> args) {
@@ -39,6 +44,10 @@ public class RuleContent {
         if(actions.contains(action)) return;
         actions.add(action);
     }
+
+    public void updateRegex(String expression){
+        regex += expression;
+    }
     
     @Override
     public String toString() {
@@ -54,9 +63,11 @@ public class RuleContent {
 
         // Mostrar los buffers con sus respectivas acciones
         for (int i = 0; i < namesBuffer.size(); i++) {            
-            information += (actions.get(i) == null) 
-                ? namesBuffer.get(i) + "\n" 
-                : namesBuffer.get(i) + " & " + actions.get(i) + "\n";
+            information += namesBuffer.get(i);
+            information += "\n";
+            // information += (actions.get(i) == null) 
+            //     ? namesBuffer.get(i) + "\n" 
+            //     : namesBuffer.get(i) + " & " + actions.get(i) + "\n";
         }
 
         return information;

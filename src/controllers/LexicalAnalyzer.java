@@ -12,13 +12,33 @@ public class LexicalAnalyzer {
     private ArrayList<String> code;
     private Map<String, String> ids = new LinkedHashMap<String, String>();
     private Map<String, RuleContent> rules = new LinkedHashMap<String, RuleContent>();
-    private static List<Character> signsOperation = Arrays.asList('(', ')', '+', '.', '*', '?', '|');
+    private static List<Character> signsOperation = Arrays.asList('(', ')', '+', '.', '*', '?', '|');        
+    private String regularExpression = ""; // Esto podria cambiar a ArrayList si se solicitaran mas expressiones y/o reglas    
         
+    // --> Constructor
     public LexicalAnalyzer(ArrayList<String> code){
         this.code = code;
+        // Llamar a las funciones para realizar el proceso
+        process();
+        System.out.println("\n=======> let obtenidos:\n");
+        seeIds();
+        System.out.println("\n=======> Rule obtenidos:\n");
+        seeRules();
+        // Vamos a obtener los valores reales de la regla definida
+        getValuesRegularExpression();
+    }
+
+    // --> Getters
+    public String getRegularExpression() {
+        return regularExpression;
+    }
+
+    public Map<String, RuleContent> getRules() {
+        return rules;
     }
     
-    public void process(){
+    // Metodos privados para la interpretacion del codigo yal
+    private void process(){
         String identifier = "";
         boolean defineRule = false;
         boolean allowEmptyEntry = false;
@@ -194,8 +214,55 @@ public class LexicalAnalyzer {
         }
     }
 
+    private void getValuesRegularExpression(){
+        String aux = "", result = "";
+        for (int i = 0; i < regularExpression.length(); i++) {
+            char letter = regularExpression.charAt(i);
+            if(letter == '|'){
+                result += (ids.containsKey(aux)) ? ids.get(aux) : aux;
+                result += "|";
+                aux = "";
+            }
+            else{
+                aux += letter;
+            }
+            
+        }
+        regularExpression = result;
+    }
+
     private void addRuleContent(String id, String content, RuleContent ruleContent){
         System.out.println("====> ELEMENTO A AGREGAR: >" + content + "<");
+        if(!rules.containsKey(id)){ 
+            rules.put(id, ruleContent);
+        }
+
+        RuleContent tempRuleContent = rules.get(id);
+        // Determinar si se guardara una variable
+        if(ids.containsKey(content)){
+            tempRuleContent.addNameBuffer(content);
+            tempRuleContent.updateRegex(content);
+        }
+        // Determinar si se abrira una accion
+        if(content.equals("{")){
+
+        }
+        // Determianr si se terminara de guardar dicha accion
+        if(content.equals("}")){
+            
+        }
+        // Determinar si se guardara un "|"
+        if(content.equals("|")){
+            tempRuleContent.updateRegex(content);
+        }
+        // Determinar si se guardara un char
+        if(content.length() == 3){
+            if(content.charAt(0) == '\'' && content.charAt(2) == '\''){
+                String charDetected = content.charAt(1) + "";
+                tempRuleContent.addNameBuffer(charDetected);
+                tempRuleContent.updateRegex(charDetected);
+            }
+        }
     }
 
     private void addId(String id, String content){
@@ -270,7 +337,6 @@ public class LexicalAnalyzer {
         for (int i = 0; i < processContent.length(); i++) {
             char letter = processContent.charAt(i);
             if(signsOperation.contains(letter)){
-                System.out.println("SIGNO: " + letter + " y lo que el buffer completo: " + temp);
                 if(ids.containsKey(temp)){ // detectar si esta dentro de las variables
                     buffer += ids.get(temp);
                     temp = "";
@@ -292,7 +358,7 @@ public class LexicalAnalyzer {
         return str.matches("-?\\d+(\\.\\d+)?");
     }
     
-    public void seeIds(){
+    private void seeIds(){
         for(Map.Entry<String, String> id: ids.entrySet()){
             String nameId = id.getKey();
             String contentId = id.getValue();
@@ -300,12 +366,17 @@ public class LexicalAnalyzer {
         }
     }
 
-    public void seeRules(){
+    private void seeRules(){
         for(Map.Entry<String, RuleContent> rule: rules.entrySet()){
             String ruleName = rule.getKey();
             RuleContent ruleContent = rule.getValue();
             System.out.println("============================");
-            System.out.println(ruleName + " " + ruleContent.toString());
+            System.out.println("Temporal Regex: ");
+            System.out.println(ruleContent.getRegex());
+            regularExpression = ruleContent.getRegex();
+            System.out.println("============================");
+            System.out.println("---> Rule: " + ruleName);
+            System.out.println(ruleContent.toString());
         }
     }
 }
