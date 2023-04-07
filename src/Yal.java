@@ -1,6 +1,7 @@
 // Importar codigo java propio
 import controllers.AdminFiles;
-import controllers.LexicalAnalyzer;
+import controllers.YalReader;
+import algorithms.ShuntingYardAlgorithm;
 
 // Importar librerias de java framework collections
 import java.util.ArrayList;
@@ -41,11 +42,24 @@ public class Yal {
             System.out.println(string);
         }
         System.out.println("========================================================");
-
-        // Procesar la data
-        LexicalAnalyzer tokenizer = new LexicalAnalyzer(yalContent);
-        System.out.println("Expresion regular: ");
-        String regularExpression = tokenizer.getRegularExpression();
-        System.out.println(regularExpression);
+        
+        YalReader tokenizer = new YalReader(yalContent); // Procesar la data
+        ArrayList<String> regex = tokenizer.process(); // Obtener regex
+        tokenizer.seeIds(); // Ver detalles de los ids
+        tokenizer.seeRules(); // Ver detalles de las reglas        
+        System.out.println("Regex Expression: ");
+        for (String string : regex) { // Vamos a ver toda la expresion regex
+            System.out.print(string);
+        }
+        System.out.println("\n\nPostfix Expression: ");
+        ArrayList<String> regexPostfix = ShuntingYardAlgorithm.infixToPostfix(regex);
+        if(regexPostfix == null){
+            System.out.println("F");
+            return;
+        }
+        for (String string : regexPostfix) {
+            System.out.print(string+",");
+        }
+        System.out.println("");
     }
 }

@@ -8,37 +8,30 @@ import java.util.Arrays;
 
 import models.RuleContent;
 
-public class LexicalAnalyzer {
+public class YalReader {
     private ArrayList<String> code;
-    private Map<String, String> ids = new LinkedHashMap<String, String>();
-    private Map<String, RuleContent> rules = new LinkedHashMap<String, RuleContent>();
-    private static List<Character> signsOperation = Arrays.asList('(', ')', '+', '.', '*', '?', '|');        
-    private String regularExpression = ""; // Esto podria cambiar a ArrayList si se solicitaran mas expressiones y/o reglas    
-        
+    private Map<String, String> ids;
+    private Map<String, RuleContent> rules;
+    private static List<Character> signsOperation;        
+    // private String regularExpression = ""; // Esto podria cambiar a ArrayList si se solicitaran mas expressiones y/o reglas
+    private ArrayList<String> regexExpression;
+
     // --> Constructor
-    public LexicalAnalyzer(ArrayList<String> code){
+    public YalReader(ArrayList<String> code){
         this.code = code;
-        // Llamar a las funciones para realizar el proceso
-        process();
-        System.out.println("\n=======> let obtenidos:\n");
-        seeIds();
-        System.out.println("\n=======> Rule obtenidos:\n");
-        seeRules();
-        // Vamos a obtener los valores reales de la regla definida
-        getValuesRegularExpression();
+        ids = new LinkedHashMap<String, String>();
+        rules = new LinkedHashMap<String, RuleContent>();
+        signsOperation = Arrays.asList('(', ')', '+', '.', '*', '?', '|');        
+        regexExpression = new ArrayList<String>();
     }
 
     // --> Getters
-    public String getRegularExpression() {
-        return regularExpression;
-    }
-
     public Map<String, RuleContent> getRules() {
         return rules;
     }
     
     // Metodos privados para la interpretacion del codigo yal
-    private void process(){
+    public ArrayList<String> process(){
         String identifier = "";
         boolean defineRule = false;
         boolean allowEmptyEntry = false;
@@ -93,7 +86,7 @@ public class LexicalAnalyzer {
                                     case 3: // se espera un nombre de id para let
                                         if(SymbolTable.tokens.contains(buff)){ // revisar que el id no sea parte de los tokens
                                             System.out.println("Id invalido porque se ingreso un token");
-                                            return;
+                                            return null;
                                         }                                        
                                         identifier = buff;
                                         letController -= 1;
@@ -101,7 +94,7 @@ public class LexicalAnalyzer {
                                     case 2: // se espera recibir un signo de asignacion
                                         if(!buff.equals("=")){
                                             System.out.println("se esperaba un signo de asignacion =");
-                                            return;
+                                            return null;
                                         }                                        
                                         letController -= 1; // Continuar ya que todo esta en orden
                                         allowEmptyEntry = true;
@@ -110,7 +103,7 @@ public class LexicalAnalyzer {
                                         // Revisar que el id del valor detectado de let no sea un valor numerico
                                         if(!isNumeric(identifier)) {
                                             System.out.println("No se permite un valor numerico como un id de let");
-                                            return;
+                                            return null;
                                         }
                                         addId(identifier, buff);
                                         identifier = ""; // reset name id
@@ -127,7 +120,7 @@ public class LexicalAnalyzer {
                                         case 4: // obtener id de la funcion rule
                                             if(SymbolTable.tokens.contains(buff)){ // revisar que el id no sea parte de los tokens
                                                 System.out.println("Id invalido porque se ingreso un token");
-                                                return;
+                                                return null;
                                             }                         
                                             identifier = buff;
                                             ruleController -= 1;
@@ -147,14 +140,14 @@ public class LexicalAnalyzer {
                                         }
                                         else{
                                             System.out.println("INVALIDO >" + buff + "<");                                            
-                                            return;
+                                            return null;
                                         }
                                         break;
                                     case 2: // verficiar si recibe un signo de asignacion
                                         System.out.println("REVISAR =");
                                         if(!buff.equals("=")){
                                             System.out.println("se esperaba un signo de asignacion =");
-                                            return;
+                                            return null;
                                         }                                    
                                         ruleController -= 1; // Continuar ya que todo esta en orden
                                         break;
@@ -204,23 +197,67 @@ public class LexicalAnalyzer {
                 }
             }
         }
+        
+        getValuesRegularExpression(ruleContent.getRegex());
+        return regexExpression;
     }
 
-    private void getValuesRegularExpression(){
+    private void getValuesRegularExpression(String regularExpression){        
         String aux = "", result = "";
         for (int i = 0; i < regularExpression.length(); i++) {
-            char letter = regularExpression.charAt(i);
+            char letter = regularExpression.charAt(i);       
             if(letter == '|'){
-                result += (ids.containsKey(aux)) ? ids.get(aux) : aux;
-                result += "|";
+                if(ids.containsKey(aux)){
+                    result += ids.get(aux);
+                    addValueToRegex(aux, ids.get(aux));
+                }
+                else{
+                    result += (int)aux.charAt(0);
+                    addAsciiToRegex((int)aux.charAt(0));
+                }
+                result += "|";              
+                regexExpression.add("|");
                 aux = "";
             }
             else{
                 aux += letter;
-            }
-            
+            }            
         }
+        result += (int)regularExpression.charAt(regularExpression.length() - 1);
+        addAsciiToRegex((int)regularExpression.charAt(regularExpression.length() - 1));
         regularExpression = result;
+    }
+
+    private void addValueToRegex(String id, String value){
+        String temp = "";        
+        regexExpression.add("(");
+        regexExpression.add("(");
+        for (int index = 0; index < value.length(); index++) {
+            char letter = value.charAt(index);
+            if(signsOperation.contains(letter)){
+                regexExpression.add(letter+"");
+            }
+            else{
+                temp += letter;
+                char checkNext = value.charAt(index+1);
+                if(signsOperation.contains(checkNext)){
+                    regexExpression.add(temp);
+                    temp = "";
+                }
+            }
+        }
+        regexExpression.add(")");
+        regexExpression.add("·");
+        regexExpression.add("#" + id);
+        regexExpression.add(")");
+    }
+
+    private void addAsciiToRegex(int value){
+        regexExpression.add("(");
+        regexExpression.add(value+"");
+        regexExpression.add("·");
+        regexExpression.add("#"+value);
+        regexExpression.add(")");
     }
 
     private void addRuleContent(String id, String content, RuleContent ruleContent){
@@ -375,7 +412,7 @@ public class LexicalAnalyzer {
         return str.matches("-?\\d+(\\.\\d+)?");
     }
     
-    private void seeIds(){
+    public void seeIds(){
         for(Map.Entry<String, String> id: ids.entrySet()){
             String nameId = id.getKey();
             String contentId = id.getValue();
@@ -383,14 +420,13 @@ public class LexicalAnalyzer {
         }
     }
 
-    private void seeRules(){
+    public void seeRules(){
         for(Map.Entry<String, RuleContent> rule: rules.entrySet()){
             String ruleName = rule.getKey();
             RuleContent ruleContent = rule.getValue();
             System.out.println("============================");
             System.out.println("Temporal Regex: ");
             System.out.println(ruleContent.getRegex());
-            regularExpression = ruleContent.getRegex();
             System.out.println("============================");
             System.out.println("---> Rule: " + ruleName);
             System.out.println(ruleContent.toString());

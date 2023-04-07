@@ -2,6 +2,7 @@ package algorithms;
 
 import java.util.Stack;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.lang.Character;
 
@@ -61,17 +62,63 @@ public class ShuntingYardAlgorithm {
         return output;
     }
 
+    public static ArrayList<String> infixToPostfix(ArrayList<String> expression){
+        Stack<String> stack = new Stack<>();
+        ArrayList<String> output = new ArrayList<String>();
+
+        for (String c : expression) {
+            // Si se escanea el parentesis de inicio entonces se jalara al stack
+            if(c.equals("(")) stack.push(c);
+
+            // Si se escanea el parentesis de cierre entonces se sacaran todo
+            // los operadores del stack hasta encontrar el parentesis de inicio
+            else if(c.equals(")")){
+                while(!stack.isEmpty() && !stack.peek().equals("(")) output.add(stack.pop());
+                stack.pop();
+            }
+
+            // Si es un valor u operador se instanceraa en el stack y se ordenara los
+            // operadores dependiendo del nivel de precedencia
+            else{
+                while(!stack.isEmpty()  && precedence(c) <= precedence(stack.peek()) && leftAssociativity(c)){
+                    output.add(stack.pop());
+                }
+                stack.push(c);
+            }
+        }
+
+        // Se sacaran el resto de los operadores pendientes
+        while(!stack.isEmpty()){
+            if(stack.peek().equals("(")) return null;
+            output.add(stack.pop());
+        }
+        
+        return output;
+    }
+
     private static int precedence(char c){
         if(c == '(') return 1;
         if(c == '|') return 2;
         if(c == '·') return 3;
         if(c == '?' || c == '*' || c == '+') return 4;
-        if(c == '^') return 5;
+        return 6;
+    }
+
+    private static int precedence(String c){
+        if(c.equals("(") ) return 1;
+        if(c.equals("|") ) return 2;
+        if(c.equals("·") ) return 3;
+        if(c.equals("?")  || c.equals("*")  || c.equals("+") ) return 4;
         return 6;
     }
 
     private static boolean leftAssociativity(char c){
-        if(c == '+' || c == '|' || c == '^' || c == '·' || c == '*' || c == '?') return true;
+        if(c == '+' || c == '|' || c == '·' || c == '*' || c == '?') return true;
+        return false;
+    }
+
+    private static boolean leftAssociativity(String c){
+        if(c.equals("+")  || c.equals("|")  || c.equals("·")  || c.equals("*")  || c.equals("?") ) return true;
         return false;
     }
 }
