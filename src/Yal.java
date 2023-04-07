@@ -1,6 +1,8 @@
 // Importar codigo java propio
 import controllers.AdminFiles;
 import controllers.YalReader;
+import models.Transition;
+import models.Tree;
 import algorithms.ShuntingYardAlgorithm;
 
 // Importar librerias de java framework collections
@@ -27,7 +29,7 @@ public class Yal {
             return;
         }
         
-        // Vamos a obtener todo el contenido del archivo
+        // * ====> Vamos a obtener todo el contenido del archivo
         ArrayList<String> yalContent = AdminFiles.readFileContent(args[0]);
 
         if(yalContent == null){ // Si dado caso no se detecta de fomra correcta el codigo yal
@@ -42,9 +44,10 @@ public class Yal {
             System.out.println(string);
         }
         System.out.println("========================================================");
-        
+                
+        // * ====> Obtener Regex del yal
         YalReader tokenizer = new YalReader(yalContent); // Procesar la data
-        ArrayList<String> regex = tokenizer.process(); // Obtener regex
+        ArrayList<String> regex = tokenizer.process(); 
         tokenizer.seeIds(); // Ver detalles de los ids
         tokenizer.seeRules(); // Ver detalles de las reglas        
         System.out.println("Regex Expression: ");
@@ -61,5 +64,13 @@ public class Yal {
             System.out.print(string+",");
         }
         System.out.println("");
+
+        // * ====> Obtener el arbol sintatico
+        Tree regexTree = new Tree();
+        regexTree.createSyntaxTree(regexPostfix);
+        regexTree.generateTransitions(regexTree.getRoot());
+        for (Transition transition : regexTree.getTransitions()) {
+            System.out.println(transition.toString());
+        }
     }
 }

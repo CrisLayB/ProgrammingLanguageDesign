@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 public class SyntaxTree {
-    private TreeNode<Symbol> root;
+    private Node<Symbol> root;
     private Stack<Symbol> regexSymbols;
     private int count;
     private List<Symbol> symbols;
@@ -21,59 +21,36 @@ public class SyntaxTree {
     }
 
     private void createSyntaxTree(){
-        Stack<TreeNode<Symbol>> stackTreeNodes = new Stack<TreeNode<Symbol>>();
+        Stack<Node<Symbol>> stack = new Stack<Node<Symbol>>();
         for (Symbol symbol : regexSymbols) {
             // * ---> EPSILON
             if(symbol.getId() == AsciiSymbol.Epsilon.ascii){
-                stackTreeNodes.push(new TreeNode<>()); // Ingresar nullable
+                stack.push(new Node<>()); // Ingresar nullable
             }
-
-            // * ---> PUNTO
-            else if(symbol.getId() == AsciiSymbol.Dot.ascii){
-                TreeNode<Symbol> right = stackTreeNodes.pop();
-                TreeNode<Symbol> left = stackTreeNodes.pop();
-                
-                if(right.isNull() != true && left.isNull() != true){
-                    stackTreeNodes.add(new TreeNode<Symbol>(symbol, left, right));
-                }
+            // * ---> OR, PUNTO
+            else if(symbol.getId() == AsciiSymbol.Dot.ascii || symbol.getId() == AsciiSymbol.Or.ascii){
+                Node<Symbol> right = stack.pop();
+                Node<Symbol> left = stack.pop();                
+                stack.add(new Node<Symbol>(symbol, left, right));
             }
-
-            // * ---> OR 
-            else if( symbol.getId() == AsciiSymbol.Or.ascii){
-                TreeNode<Symbol> right = stackTreeNodes.pop();
-                TreeNode<Symbol> left = stackTreeNodes.pop();
-                TreeNode<Symbol> node = (right.isNull() && left.isNull()) 
-                    ? new TreeNode<Symbol>() 
-                    : new TreeNode<Symbol>(symbol, left, right);
-                stackTreeNodes.push(node);
-            }
-
-            // * ---> KLEENE
+            // * ---> KLEENE, PLUS, INTERROGATION
             else if( symbol.getId() == AsciiSymbol.Kleene.ascii ){
-                TreeNode<Symbol> node = new TreeNode<Symbol>(symbol, stackTreeNodes.pop(), null);
-
-                if(!node.left.isNull()){
-                    stackTreeNodes.push(node);
-                }        
+                Node<Symbol> node = new Node<Symbol>(symbol, stack.pop(), null);
+                stack.add(node);
             }
-
-            // * ---> PLUS
-
-            // * ---> INTERROGATION
-
             // * ---> NORMAL SYMBOL
             else{ // Almacenar un symbolo normal
                 if(symbol.getId() != AsciiSymbol.Numeral.ascii && !symbolExistsInAlphabet(symbol)){
                     symbols.add(symbol);
                 }                    
-                stackTreeNodes.add(new TreeNode<Symbol>(symbol, ++count));
+                stack.add(new Node<Symbol>(symbol, ++count));
             }
         }
-        root = stackTreeNodes.pop();
+        root = stack.pop();
     }
     
     // * ---> GETTERS
-    public TreeNode<Symbol> getRoot() {
+    public Node<Symbol> getRoot() {
         return root;
     }
 
@@ -90,26 +67,13 @@ public class SyntaxTree {
         }
         return false;
     }
-
-    // firstpos(node)
-
-    // lastpos(node)
-
-    // nullable(node)
-
-    // followpos(position)
-
-    // ! ================================================
     
-    public Set<Integer> getFirstpos(TreeNode<Symbol> root){
+    public Set<Integer> getFirstpos(Node<Symbol> root){
         return null;
     }
 
-    public boolean getNullable(TreeNode<Symbol> root){
+    public boolean getNullable(Node<Symbol> root){
         if(root == null) return false;
-
-        
-        
         return false;
     }
 

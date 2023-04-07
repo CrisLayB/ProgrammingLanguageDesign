@@ -11,13 +11,13 @@ import java.util.List;
 
 public class BTreePrinter {
 
-    public static <T extends Comparable<?>> void printNode(TreeNode<T> root) {
+    public static <T extends Comparable<?>> void printNode(Node<T> root) {
         int maxLevel = BTreePrinter.maxLevel(root);
 
         printNodeInternal(Collections.singletonList(root), 1, maxLevel);
     }
 
-    private static <T extends Comparable<?>> void printNodeInternal(List<TreeNode<T>> nodes, int level, int maxLevel) {
+    private static <T extends Comparable<?>> void printNodeInternal(List<Node<T>> nodes, int level, int maxLevel) {
         if (nodes.isEmpty() || BTreePrinter.isAllElementsNull(nodes))
             return;
 
@@ -28,8 +28,8 @@ public class BTreePrinter {
 
         BTreePrinter.printWhitespaces(firstSpaces);
 
-        List<TreeNode<T>> newNodes = new ArrayList<TreeNode<T>>();
-        for (TreeNode<T> node : nodes) {
+        List<Node<T>> newNodes = new ArrayList<Node<T>>();
+        for (Node<T> node : nodes) {
             if (node != null) {
                 String res = (node.invalidPos()) ? node.value.toString() : node.value + "-" + node.pos;
                 System.out.print(res);
@@ -79,7 +79,7 @@ public class BTreePrinter {
             System.out.print(" ");
     }
 
-    private static <T extends Comparable<?>> int maxLevel(TreeNode<T> node) {
+    private static <T extends Comparable<?>> int maxLevel(Node<T> node) {
         if (node == null)
             return 0;
 

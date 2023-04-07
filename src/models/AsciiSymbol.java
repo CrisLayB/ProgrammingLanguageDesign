@@ -8,7 +8,7 @@ package models;
  * + : 43
  * ? : 63
  * # : 35
- * . : 46
+ * · : 
  * E : 69
  */
 public enum AsciiSymbol {
