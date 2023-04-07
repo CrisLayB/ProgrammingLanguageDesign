@@ -80,7 +80,7 @@ public class Main {
             return;
         }
         
-        AdminFiles.createImgAutomata("docs/automataAFN.dot", "img/resultsAFN.png");
+        AdminFiles.createImgDot("docs/automataAFN.dot", "img/resultsAFN.png");
 
         // * ===========================================================================================
         // * CONSTRUCCION DE AFD (Automata Finito Determinista) ========================================
@@ -95,7 +95,7 @@ public class Main {
             return;
         }
 
-        AdminFiles.createImgAutomata("docs/automataAFD.dot", "img/resultsAFD.png");
+        AdminFiles.createImgDot("docs/automataAFD.dot", "img/resultsAFD.png");
 
         // * ===========================================================================================
         // * CONSTRUCCION AFD DIRECTO (Automata Finito Determinista Directo) ===========================

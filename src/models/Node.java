@@ -3,7 +3,7 @@ package models;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Node<E extends Comparable<?>> {
+public class Node<E> {
     // -> Atributos
     protected E value;
     protected Node<E> left, right;

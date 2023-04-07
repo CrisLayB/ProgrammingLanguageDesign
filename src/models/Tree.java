@@ -6,32 +6,33 @@ import java.util.List;
 import java.util.Arrays;
 
 public class Tree {
-    private Node<String> root;
-    private ArrayList<Transition> transitions;
+    private Node<PairData<String, String>> root;
+    private ArrayList<String> transitions;
 
     public Tree(){
-        transitions = new ArrayList<Transition>();
+        transitions = new ArrayList<String>();
     }
 
-    public void createSyntaxTree(ArrayList<String> regexPostfix){
-        Stack<Node<String>> stack = new Stack<Node<String>>();
+    public void createSyntaxTree(ArrayList<PairData<String, String>> regexPostfix){
+        Stack<Node<PairData<String, String>>> stack = new Stack<Node<PairData<String, String>>>();
         List<String> signsAvoid = Arrays.asList("+", "*", "?", "|", "·");
-        for (String symbol : regexPostfix) {
+        for (PairData<String, String> s : regexPostfix) {
+            String symbol = s.second;
             // * ---> Valor normal
             if(!signsAvoid.contains(symbol)){
-                Node<String> node = new Node<String>(symbol);
+                Node<PairData<String, String>> node = new Node<PairData<String, String>>(s);
                 stack.push(node);
             }
             // * ---> OR, DOT
             else if(symbol.equals("|") || symbol.equals("·")){
-                Node<String> right = stack.pop();
-                Node<String> left = stack.pop();
-                Node<String> node = new Node<String>(symbol, left, right);
+                Node<PairData<String, String>> right = stack.pop();
+                Node<PairData<String, String>> left = stack.pop();
+                Node<PairData<String, String>> node = new Node<PairData<String, String>>(s, left, right);
                 stack.push(node);
             }
             // * ---> KLEENE, PLUS, INTERROGATION
             else if(symbol.equals("*") || symbol.equals("+") || symbol.equals("?")){
-                Node<String> node = new Node<>(symbol, stack.pop(), null);
+                Node<PairData<String, String>> node = new Node<>(s, stack.pop(), null);
                 stack.push(node);
             }
         }
@@ -39,31 +40,27 @@ public class Tree {
     }  
 
     // * ---> GETTERS
-    public Node<String> getRoot() {
+    public Node<PairData<String, String>> getRoot() {
         return root;
     }
 
-    public ArrayList<Transition> getTransitions() {
+    public ArrayList<String> getTransitions() {
         return transitions;
     }
 
     // * ---> METODOS
-    public void generateTransitions(Node<String> node){
-        // https://graphviz.org/Gallery/directed/Genetic_Programming.html // Para preparar arbol
-        if(node != null){
+    public void generateTransitions(Node<PairData<String, String>> node){        
+        if(node != null){            
+            transitions.add(node.value.first + " [label=\"" + node.value.second + "\"];");
             if(node.left != null){
                 transitions.add(
-                    new Transition(new Symbol('L'), 
-                    new State(node.value, Types.Transition), 
-                    new State(node.left.value, Types.Transition))
+                    node.value.first + " -> " + node.left.value.first + ";"
                 );
                 generateTransitions(node.left);
             }
             if(node.right != null){
                 transitions.add(
-                    new Transition(new Symbol('R'), 
-                    new State(node.value, Types.Transition), 
-                    new State(node.right.value, Types.Transition))
+                    node.value.first + " -> " + node.right.value.first + ";"
                 );
                 generateTransitions(node.right);
             }

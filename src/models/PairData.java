@@ -1,6 +1,6 @@
 package models;
 
-public class PairData<K, E> {
+public class PairData<K, E>{
     public K first;
     public E second;
 

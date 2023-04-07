@@ -60,6 +60,17 @@ public class AdminFiles {
         return contentScript;
     }
 
+    public static String readContentTree(ArrayList<String> information){
+        String contentScript = "";
+        contentScript += "digraph \"Arbol Sintatico\" {\n";
+        // Ahora vamos a obtener la informacion
+        for (String info : information) {
+            contentScript += info + "\n";
+        }
+        contentScript += "\n}";    
+        return contentScript;
+    }
+
     public static boolean writeFileCode(String content, String file){
         Writer out = null;
         try {
@@ -91,7 +102,7 @@ public class AdminFiles {
         return lines;
     }
     
-    public static void createImgAutomata(String fileInputPath, String fileOutputPath){
+    public static void createImgDot(String fileInputPath, String fileOutputPath){
         try {
             String[] cmd = new String[8];
             cmd[0] = "dot";

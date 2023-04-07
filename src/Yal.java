@@ -1,8 +1,8 @@
 // Importar codigo java propio
 import controllers.AdminFiles;
-import controllers.YalReader;
-import models.Transition;
+import controllers.YalChecker;
 import models.Tree;
+import models.PairData;
 import algorithms.ShuntingYardAlgorithm;
 
 // Importar librerias de java framework collections
@@ -46,7 +46,7 @@ public class Yal {
         System.out.println("========================================================");
                 
         // * ====> Obtener Regex del yal
-        YalReader tokenizer = new YalReader(yalContent); // Procesar la data
+        YalChecker tokenizer = new YalChecker(yalContent); // Procesar la data
         ArrayList<String> regex = tokenizer.process(); 
         tokenizer.seeIds(); // Ver detalles de los ids
         tokenizer.seeRules(); // Ver detalles de las reglas        
@@ -60,17 +60,28 @@ public class Yal {
             System.out.println("F");
             return;
         }
+        // Mostrar todas las expresions de postfix y agregar ids para cada elemento
+        ArrayList<PairData<String, String>> regexExpression = new ArrayList<PairData<String, String>>();
+        int idCounter = 0;        
         for (String string : regexPostfix) {
-            System.out.print(string+",");
+            System.out.print(string + ",");
+            regexExpression.add(new PairData<String,String>("n"+idCounter, string));
+            idCounter++;
         }
         System.out.println("");
 
         // * ====> Obtener el arbol sintatico
         Tree regexTree = new Tree();
-        regexTree.createSyntaxTree(regexPostfix);
+        regexTree.createSyntaxTree(regexExpression);
         regexTree.generateTransitions(regexTree.getRoot());
-        for (Transition transition : regexTree.getTransitions()) {
-            System.out.println(transition.toString());
+        
+        ArrayList<String> transitionsTree = regexTree.getTransitions();
+        String scriptTree = AdminFiles.readContentTree(transitionsTree);
+        String fileSintaxTree = "docs/SintaxTree.dot";
+        if(!AdminFiles.writeFileCode(scriptTree, fileSintaxTree)){
+            System.out.println("No se pudo guardar ni sobreescribir el archivo .dot");
+            return;
         }
+        AdminFiles.createImgDot(fileSintaxTree, "img/resultsSintaxTree.png");
     }
 }

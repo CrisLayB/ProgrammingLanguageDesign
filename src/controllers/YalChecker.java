@@ -8,26 +8,20 @@ import java.util.Arrays;
 
 import models.RuleContent;
 
-public class YalReader {
+public class YalChecker {
     private ArrayList<String> code;
     private Map<String, String> ids;
     private Map<String, RuleContent> rules;
     private static List<Character> signsOperation;        
-    // private String regularExpression = ""; // Esto podria cambiar a ArrayList si se solicitaran mas expressiones y/o reglas
     private ArrayList<String> regexExpression;
 
     // --> Constructor
-    public YalReader(ArrayList<String> code){
+    public YalChecker(ArrayList<String> code){
         this.code = code;
         ids = new LinkedHashMap<String, String>();
         rules = new LinkedHashMap<String, RuleContent>();
         signsOperation = Arrays.asList('(', ')', '+', '.', '*', '?', '|');        
         regexExpression = new ArrayList<String>();
-    }
-
-    // --> Getters
-    public Map<String, RuleContent> getRules() {
-        return rules;
     }
     
     // Metodos privados para la interpretacion del codigo yal
