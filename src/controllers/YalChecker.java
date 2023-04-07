@@ -138,7 +138,6 @@ public class YalChecker {
                                         }
                                         break;
                                     case 2: // verficiar si recibe un signo de asignacion
-                                        System.out.println("REVISAR =");
                                         if(!buff.equals("=")){
                                             System.out.println("se esperaba un signo de asignacion =");
                                             return null;
@@ -230,6 +229,11 @@ public class YalChecker {
             char letter = value.charAt(index);
             if(signsOperation.contains(letter)){
                 regexExpression.add(letter+"");
+                // Revisar si la expresion se va a concatenar
+                if(letter == ')'){
+                    char next = value.charAt(index + 1); // ! Aguas con esta condicion
+                    if(next == '(') regexExpression.add("·");
+                }
             }
             else{
                 temp += letter;

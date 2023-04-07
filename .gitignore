@@ -31,3 +31,6 @@ replay_pid*
 
 # Bin
 /.bin
+
+# .txt
+*.txt
