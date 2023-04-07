@@ -54,11 +54,9 @@ public class LexicalAnalyzer {
 
             for (int i = 0; i < string.length(); i++) { // Analizar linea en especifico
                 char letter = string.charAt(i);
-                // System.out.println("===>" + letter + "<==="); // ! Para DEBUG
                 // Por si el buffer tiene elementos dentro entonces se analizara si la estructura es valida
                 boolean allow = (letter == ' ' && allowEmptyEntry == false && !buff.isBlank());                
                 if(allow && isOpen == false && buff.length() != 0){
-                    System.out.println("COMPLETE: >" + buff + "<"); // ! Para DEBUG                                        
                     switch (buff) {
                         // nueva variable
                         case "let":
@@ -132,7 +130,6 @@ public class LexicalAnalyzer {
                                                 return;
                                             }                         
                                             identifier = buff;
-                                            System.out.println("********** ID ASIGNADO A RULE >" + identifier + "<");
                                             ruleController -= 1;
                                         break;
                                     case 3: // verificar si recibe parametros (por medio de [) o signo de asignacion
@@ -144,7 +141,6 @@ public class LexicalAnalyzer {
                                             ruleController -= 1;
                                         }
                                         else if(buff.equals("=")){
-                                            System.out.println("************** TODO EN ORDEN CON EL SIGNO DE ASIGNACION");                  
                                             ruleContent = new RuleContent();
                                             ruleController = 1; // Continuar ya que todo esta en orden
                                             System.err.println(ruleController);
@@ -159,10 +155,8 @@ public class LexicalAnalyzer {
                                         if(!buff.equals("=")){
                                             System.out.println("se esperaba un signo de asignacion =");
                                             return;
-                                        }                      
-                                        System.out.println("************** TODO EN ORDEN CON EL SIGNO");                  
+                                        }                                    
                                         ruleController -= 1; // Continuar ya que todo esta en orden
-                                        System.out.println(ruleController);
                                         break;
                                     case 1:
                                         // Asignar y revisar que los elemenots procesados sean validos
@@ -193,8 +187,6 @@ public class LexicalAnalyzer {
 
             // Si dado caso el buffer termino lleno y falto procesar informacion
             if(buff.length() != 0){
-                System.out.println(letController + " COMPLETE JEJE: >" + buff + "<"); // ! Para DEBUG
-
                 // * ----> si falta agregar algo a la variable "let"
                 if(letController != 0){
                     // Para obtener lo que hizo falta del contenido del operador
@@ -232,7 +224,6 @@ public class LexicalAnalyzer {
     }
 
     private void addRuleContent(String id, String content, RuleContent ruleContent){
-        System.out.println("====> ELEMENTO A AGREGAR: >" + content + "<");
         if(!rules.containsKey(id)){ 
             rules.put(id, ruleContent);
         }
@@ -268,6 +259,7 @@ public class LexicalAnalyzer {
     private void addId(String id, String content){
         String processContent = "";
         boolean isOpen = false;
+        boolean isOpenStr = false;
         int countOrs = 0;
         // ! --> Se procesara lo que hay dentro para ver si hay algo especial
         for (int i = 0; i < content.length(); i++) {
@@ -296,6 +288,12 @@ public class LexicalAnalyzer {
                 isOpen = false;
                 countOrs++;
             }            
+            else if(letterOfContent == '"' && isOpenStr == false){
+                isOpenStr = true;
+            }
+            else if(letterOfContent == '"' && isOpenStr == true){
+                isOpenStr = false;
+            }
             else{
                 if(isOpen == true){ // Esto quiere decir que se esta ingresando elementos a un conjunto
                     if(letterOfContent == '\\'){
@@ -321,6 +319,26 @@ public class LexicalAnalyzer {
                         processContent  += (int)letterOfContent;
                     }
                 }
+                else if(isOpenStr == true){
+                    if(letterOfContent == '\\'){
+                        char nextLetter = content.charAt(i+1);
+                        char letterJ = ' ';
+                        if(nextLetter == 't'){
+                            i++;
+                            letterJ = '\t';
+                        }
+                        if(nextLetter == 'n'){
+                            i++;
+                            letterJ = '\n';
+                        }
+
+                        processContent += (int)letterJ;
+                        char checkClose = content.charAt(i+1); // Revisar si se cerrara parentesis
+                        if(checkClose != '"'){
+                            processContent += '|';
+                        }
+                    }
+                }
                 else{ // Ingresar elemento al buffer de forma normal
                     processContent += letterOfContent;
                 }
@@ -332,8 +350,7 @@ public class LexicalAnalyzer {
     }
 
     private String remplaceIdsForValues(String processContent){
-        String buffer = "";
-        String temp = ""; // Para apoyarnos a realizar el remplazo de variables
+        String buffer = "", temp = ""; // Para apoyarnos a realizar el remplazo de variables
         for (int i = 0; i < processContent.length(); i++) {
             char letter = processContent.charAt(i);
             if(signsOperation.contains(letter)){

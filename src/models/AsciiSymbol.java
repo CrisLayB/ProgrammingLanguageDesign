@@ -19,7 +19,7 @@ public enum AsciiSymbol {
     Plus('+'),
     Interrogation('?'),
     Numeral('#'),
-    Dot('.'),
+    Dot('·'),
     Epsilon('E');
         
     public final char c;

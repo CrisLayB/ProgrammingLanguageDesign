@@ -18,7 +18,7 @@ public class ShuntingYardAlgorithm {
                 char cNext = expression.charAt(i+1);
                 result += c;
                 if(c != '(' && cNext != ')' && !operators.contains(cNext) && !operatorsBin.contains(c)){
-                    result += '.';
+                    result += '·';
                 }
             }
         }
@@ -64,14 +64,14 @@ public class ShuntingYardAlgorithm {
     private static int precedence(char c){
         if(c == '(') return 1;
         if(c == '|') return 2;
-        if(c == '.') return 3;
+        if(c == '·') return 3;
         if(c == '?' || c == '*' || c == '+') return 4;
         if(c == '^') return 5;
         return 6;
     }
 
     private static boolean leftAssociativity(char c){
-        if(c == '+' || c == '|' || c == '^' || c == '.' || c == '*' || c == '?') return true;
+        if(c == '+' || c == '|' || c == '^' || c == '·' || c == '*' || c == '?') return true;
         return false;
     }
 }
