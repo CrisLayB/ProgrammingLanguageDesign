@@ -210,7 +210,6 @@ public class YalChecker {
                 }
                 else{
                     if(aux.length() != 0){ // Para evitar que se arruine el algoritmo
-                        System.out.println("CHECK: " + aux.charAt(0));
                         result += (int)aux.charAt(0);
                         addAsciiToRegex((int)aux.charAt(0));
                     }

@@ -8,6 +8,10 @@ Diseño de Lenguajes de Programación - Sección 10
 
 Cristian Fernando Laynez Bachez - 201281
 
+## Video demostracion del lab C
+
+Pido disculpas de antemano, ya que mientras publicaba el video me percaté que no se subio porque mi cuenta no estaba "verificada" pero ya logré solucionar el problema. Acá esta el nuevo enlace :) https://youtu.be/YEkfNJHETtQ
+
 ## Tecnologías
 
 Este proyecto fue creado y desarrolllado con:
