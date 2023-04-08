@@ -12,7 +12,9 @@ public class YalChecker {
     private ArrayList<String> code;
     private Map<String, String> ids;
     private Map<String, RuleContent> rules;
-    private static List<Character> signsOperation;        
+    private static List<Character> signsOperation;
+    private static List<Character> signsForAddParenthesis;
+    private static List<Character> allowedTokens;
     private ArrayList<String> regexExpression;
 
     // --> Constructor
@@ -20,7 +22,9 @@ public class YalChecker {
         this.code = code;
         ids = new LinkedHashMap<String, String>();
         rules = new LinkedHashMap<String, RuleContent>();
-        signsOperation = Arrays.asList('(', ')', '+', '.', '*', '?', '|');        
+        signsOperation = Arrays.asList('(', ')', '+', '.', '*', '?', '|');
+        signsForAddParenthesis = Arrays.asList('+', '?');
+        allowedTokens = Arrays.asList('_');
         regexExpression = new ArrayList<String>();
     }
     
@@ -205,8 +209,11 @@ public class YalChecker {
                     addValueToRegex(aux, ids.get(aux));
                 }
                 else{
-                    result += (int)aux.charAt(0);
-                    addAsciiToRegex((int)aux.charAt(0));
+                    if(aux.length() != 0){ // Para evitar que se arruine el algoritmo
+                        System.out.println("CHECK: " + aux.charAt(0));
+                        result += (int)aux.charAt(0);
+                        addAsciiToRegex((int)aux.charAt(0));
+                    }
                 }
                 result += "|";              
                 regexExpression.add("|");
@@ -221,7 +228,7 @@ public class YalChecker {
         regularExpression = result;
     }
 
-    private void addValueToRegex(String id, String value){
+    private void addValueToRegex(String id, String value){ // Para agregar los correspondientes ids y concatenasiones
         String temp = "";        
         regexExpression.add("(");
         regexExpression.add("(");
@@ -230,17 +237,21 @@ public class YalChecker {
             if(signsOperation.contains(letter)){
                 regexExpression.add(letter+"");
                 // Revisar si la expresion se va a concatenar
-                if(letter == ')'){
-                    char next = value.charAt(index + 1); // ! Aguas con esta condicion
-                    if(next == '(') regexExpression.add("·");
+                if(letter == ')' || letter == '.' || letter == '?'){
+                    // Si dado caso llegamos al limite entonces vamos a saltarnos este paso
+                    if(index < value.length() - 1){ 
+                        char next = value.charAt(index + 1);
+                        if(next == '(') regexExpression.add("·");
+                    }
                 }
             }
-            else{
+            else{ // Para ir detectando los numeros ascii
                 temp += letter;
                 char checkNext = value.charAt(index+1);
                 if(signsOperation.contains(checkNext)){
                     regexExpression.add(temp);
                     temp = "";
+                    if(checkNext == '(') regexExpression.add("·");
                 }
             }
         }
@@ -250,7 +261,7 @@ public class YalChecker {
         regexExpression.add(")");
     }
 
-    private void addAsciiToRegex(int value){
+    private void addAsciiToRegex(int value){ // Agregar ids y concatenacion correspondientes del int
         regexExpression.add("(");
         regexExpression.add(value+"");
         regexExpression.add("·");
@@ -396,13 +407,21 @@ public class YalChecker {
                 else if(isNumeric(temp)){ // detectar si es un ascii (realmente un numero)
                     buffer += temp;
                     temp = "";
-                }
+                }                
                 buffer += letter;
+            }
+            else if(allowedTokens.contains(letter)){ 
+                buffer += (int)letter;
             }
             else{
                 temp += letter;
             }
+        }        
+        // Revisar si es uno de los signos definidos para ver si necesita parentesis
+        if(signsForAddParenthesis.contains(buffer.charAt(buffer.length() - 1))){
+            return "(" + buffer + ")";
         }
+
         return buffer;
     }
 
