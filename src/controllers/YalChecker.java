@@ -9,6 +9,7 @@ import java.util.Arrays;
 import models.RuleContent;
 
 public class YalChecker {
+    // --> Atributos
     private ArrayList<String> code;
     private Map<String, String> ids;
     private Map<String, RuleContent> rules;
@@ -365,7 +366,8 @@ public class YalChecker {
                     }
                 }
                 else if(isOpenStr == true){
-                    if(letterOfContent == '\\'){
+                    // System.out.println("CARACTER: " + letterOfContent);
+                    if(letterOfContent == '\\'){ // ! Analizar caracteres especiales
                         char nextLetter = content.charAt(i+1);
                         char letterJ = ' ';
                         if(nextLetter == 't'){
@@ -378,6 +380,13 @@ public class YalChecker {
                         }
 
                         processContent += (int)letterJ;
+                        char checkClose = content.charAt(i+1); // Revisar si se cerrara parentesis
+                        if(checkClose != '"'){
+                            processContent += '|';
+                        }
+                    }
+                    else if(Character.isDigit(letterOfContent)){ // ! Ver si es numero
+                        processContent += (int)letterOfContent;
                         char checkClose = content.charAt(i+1); // Revisar si se cerrara parentesis
                         if(checkClose != '"'){
                             processContent += '|';

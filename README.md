@@ -8,16 +8,12 @@ Diseño de Lenguajes de Programación - Sección 10
 
 Cristian Fernando Laynez Bachez - 201281
 
-## Video demostracion del lab C
-
-Pido disculpas de antemano, ya que mientras publicaba el video me percaté que no se subio porque mi cuenta no estaba "verificada" pero ya logré solucionar el problema. Acá esta el nuevo enlace :) https://youtu.be/YEkfNJHETtQ
-
 ## Tecnologías
 
 Este proyecto fue creado y desarrolllado con:
 
 - Java
-- JUnit
+- JUnit (Este solo fue para llevar a cabo pruebas unitarias)
 - Graphviz
 
 ## Librerias y Herramientas Necesarias
@@ -33,28 +29,28 @@ Implementar el path: https://stackoverflow.com/questions/35064304/runtimeerror-m
 
 Nos servirá para ver de una manera visual las simulaciones.
 
-## Setup
+## Ejecucion de Automatas
 
 Para correr este proyecto debes de compilar el archivo Main.java y ejecutar el main con los argumentos solicitados (en este caso sería la expresion regular y la cadena de aceptación) de la siguiente manera:
-
-### Opcion 1 (Ejecutar por cmd/powershell/terminal)
 
 ```
 cd src
 javac Main.java
-java Main '(a*|b*)c' 'abc'
+java Main 'expresion_regular' 'cadena_aceptacion'
 ```
 
-![Alt text](/img/img1.png 'Corriendo Programa terminal')
-
-### Opcion 2 (Ejemplo dentro de VSCode)
-
-Con solo dar click en el boton de Run que esta encima del metodo main ya puedes correrlo.
-
+Ejemplo:
 ```
-& 'C:\Program Files\Java\jdk-14.0.1\bin\java.exe' '@C:\Users\CRISTI~1\AppData\Local\Temp\cp_1an12v5kdyar8p68zla384s3a.argfile' 'Main' 'aaab*'
+java Main 'a(a|b)*c' 'abc'
 ```
-
-![Alt text](/img/img2.png 'Corriendo Programa en vscode')
 
 ![Alt text](/img/img3.png 'Corriendo Programa en vscode actualizado')
+
+## Ejecucion del Analizador Yal
+
+Para correr esta parte de este proyecto debes de compilar el archivo Yal.java y ejecutar esta clase con sus correspondientes argumentos (en este caso seria el archivo yal a analizar):
+
+```
+java Yal 'direccion_archivo.yal'
+```
+
