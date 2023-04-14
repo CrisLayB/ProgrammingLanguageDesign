@@ -16,6 +16,7 @@ public class YalChecker {
     private static List<Character> signsOperation;
     private static List<Character> signsForAddParenthesis;
     private static List<Character> allowedTokens;
+    private static List<Integer> notAllowedSymbols;
     private ArrayList<String> regexExpression;
 
     // --> Constructor
@@ -26,6 +27,7 @@ public class YalChecker {
         signsOperation = Arrays.asList('(', ')', '+', '.', '*', '?', '|');
         signsForAddParenthesis = Arrays.asList('+', '?', '*');
         allowedTokens = Arrays.asList('_');
+        notAllowedSymbols = Arrays.asList(32, 9, 10);
         regexExpression = new ArrayList<String>();
     }
     
@@ -47,7 +49,8 @@ public class YalChecker {
             for (int i = 0; i < string.length(); i++) { // Analizar linea en especifico
                 char letter = string.charAt(i);
                 // Por si el buffer tiene elementos dentro entonces se analizara si la estructura es valida
-                boolean allow = (letter == ' ' && allowEmptyEntry == false && !buff.isBlank());                
+                // boolean allow = (letter == ' ' && allowEmptyEntry == false && !buff.isBlank());
+                boolean allow = (notAllowedSymbols.contains((int)letter) && allowEmptyEntry == false && !buff.isBlank());                
                 if(allow && isOpen == false && buff.length() != 0){
                     switch (buff) {
                         // nueva variable
@@ -104,7 +107,9 @@ public class YalChecker {
                                             System.out.println("No se permite un valor numerico como un id de let");
                                             return null;
                                         }
-                                        addId(identifier, buff);
+                                        String result = addId(buff);
+                                        if(result.equals("-1")) return null;
+                                        ids.put(identifier, remplaceIdsForValues(result));
                                         identifier = ""; // reset name id
                                         letController -= 1;
                                         allowEmptyEntry = false;
@@ -159,15 +164,17 @@ public class YalChecker {
 
                             // Si nada coincide entonces estamos ante un token invalido
                             else {
-                                System.out.println("Token invalido");
-                                buff = "";
+                                System.out.println(string);
+                                System.out.println("Token invalido: " + buff);
+                                return null;                                
                             }
                             break;
                     }                    
                 }                
                 else{
                     if(ignore == false) {
-                        if(letter == ' ' && allowEmptyEntry == false){
+                        // if(letter == ' ' && allowEmptyEntry == false)
+                        if(notAllowedSymbols.contains((int)letter) && allowEmptyEntry == false){
                             // do nothing... to be honest i hate dirty code
                         }else{
                             buff += letter;
@@ -182,7 +189,9 @@ public class YalChecker {
                 if(letController != 0){
                     // Para obtener lo que hizo falta del contenido del operador
                     if(letController == 1){
-                        addId(identifier, buff);
+                        String result = addId(buff);
+                        if(result.equals("-1")) return null;
+                        ids.put(identifier, remplaceIdsForValues(result));
                         identifier = ""; // reset name id
                     }
                 }
@@ -317,7 +326,7 @@ public class YalChecker {
         }
     }
 
-    private void addId(String id, String content){
+    private String addId(String content){
         String processContent = "";
         boolean isOpen = false;
         boolean isOpenStr = false;
@@ -333,7 +342,16 @@ public class YalChecker {
                 processContent += ")";
             }            
             else if(letterOfContent == '\'' && isOpen == false){
-                isOpen = true;
+                if(content.charAt(i+2) == '\'')
+                    isOpen = true;
+                else if(content.charAt(i+1) == '\\' || content.charAt(i+3) == '\''){
+                    isOpen = true;
+                }
+                else {
+                    System.out.println(content);
+                    System.out.println("No definiste de forma correcta el char");
+                    return "-1";
+                }
             }
             // Detectar si estamos ante un rango a implementar
             else if(letterOfContent == '-' && isOpen == false){
@@ -415,7 +433,8 @@ public class YalChecker {
         }
         
         // ! --> Se guardara el nuevo contenido
-        ids.put(id, remplaceIdsForValues(processContent));
+        return processContent;
+        // ids.put(id, remplaceIdsForValues(processContent));
     }
 
     private String remplaceIdsForValues(String processContent){

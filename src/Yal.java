@@ -48,6 +48,9 @@ public class Yal {
         // * ====> Obtener Regex del yal
         YalChecker tokenizer = new YalChecker(yalContent); // Procesar la data
         ArrayList<String> regex = tokenizer.process(); 
+        if(regex == null){
+            return;
+        }
         tokenizer.seeIds(); // Ver detalles de los ids
         tokenizer.seeRules(); // Ver detalles de las reglas        
         System.out.println("Regex Expression: ");
