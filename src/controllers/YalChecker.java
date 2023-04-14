@@ -24,7 +24,7 @@ public class YalChecker {
         ids = new LinkedHashMap<String, String>();
         rules = new LinkedHashMap<String, RuleContent>();
         signsOperation = Arrays.asList('(', ')', '+', '.', '*', '?', '|');
-        signsForAddParenthesis = Arrays.asList('+', '?');
+        signsForAddParenthesis = Arrays.asList('+', '?', '*');
         allowedTokens = Arrays.asList('_');
         regexExpression = new ArrayList<String>();
     }
@@ -79,7 +79,7 @@ public class YalChecker {
                             break;
                         
                         default: // Ninguno de los tokens iniciales son validos
-                            // Verificar si algo se ira a let
+                            // Verificar si algo se ira a **LET**
                             if(letController != 0){
                                 switch (letController) {
                                     case 3: // se espera un nombre de id para let
@@ -113,7 +113,7 @@ public class YalChecker {
                                 buff = "";
                             }
 
-                            // Add instructions to rule
+                            // Add instructions to **RULE**
                             else if(defineRule == true){
                                 switch (ruleController) {
                                         case 4: // obtener id de la funcion rule
@@ -210,9 +210,13 @@ public class YalChecker {
                     addValueToRegex(aux, ids.get(aux));
                 }
                 else{
-                    if(aux.length() != 0){ // Para evitar que se arruine el algoritmo
+                    if(aux.length() == 1){ // Si dado caso solo tiene un digito
                         result += (int)aux.charAt(0);
-                        addAsciiToRegex((int)aux.charAt(0));
+                        addAsciiToRegex(((int)aux.charAt(0))+"");
+                    }
+                    if(aux.length() > 1){
+                        result += aux;
+                        addAsciiToRegex(aux);
                     }
                 }
                 result += "|";              
@@ -224,7 +228,7 @@ public class YalChecker {
             }            
         }
         result += (int)regularExpression.charAt(regularExpression.length() - 1);
-        addAsciiToRegex((int)regularExpression.charAt(regularExpression.length() - 1));
+        addAsciiToRegex(((int)regularExpression.charAt(regularExpression.length() - 1)+""));
         regularExpression = result;
     }
 
@@ -261,11 +265,11 @@ public class YalChecker {
         regexExpression.add(")");
     }
 
-    private void addAsciiToRegex(int value){ // Agregar ids y concatenacion correspondientes del int
+    private void addAsciiToRegex(String value){ // Agregar ids y concatenacion correspondientes del int
         regexExpression.add("(");
         regexExpression.add(value+"");
         regexExpression.add("·");
-        regexExpression.add("#"+value);
+        regexExpression.add("#" + value);
         regexExpression.add(")");
     }
 
@@ -275,7 +279,7 @@ public class YalChecker {
         }
 
         RuleContent tempRuleContent = rules.get(id);
-        // Determinar si se guardara una variable
+        // Determinar si se guardara contenido de *LET*s definidos
         if(ids.containsKey(content)){
             tempRuleContent.addNameBuffer(content);
             tempRuleContent.updateRegex(content);
@@ -292,12 +296,23 @@ public class YalChecker {
         if(content.equals("|")){
             tempRuleContent.updateRegex(content);
         }
-        // Determinar si se guardara un char
+        // Determinar si se guardara un CHAR
         if(content.length() == 3){
             if(content.charAt(0) == '\'' && content.charAt(2) == '\''){
                 String charDetected = content.charAt(1) + "";
                 tempRuleContent.addNameBuffer(charDetected);
                 tempRuleContent.updateRegex(charDetected);
+            }
+        }
+        // Determinar si se guardara un STRING
+        if(content.length() > 3){
+            if(content.charAt(0) == '"' && content.charAt(content.length() - 1) == '"'){
+                String saveToken = "";
+                for (int i = 1; i < content.length() - 1; i++) {
+                    saveToken += content.charAt(i);
+                }
+                tempRuleContent.addNameBuffer(saveToken);
+                tempRuleContent.updateRegex(saveToken);
             }
         }
     }
