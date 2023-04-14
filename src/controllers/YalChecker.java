@@ -109,6 +109,7 @@ public class YalChecker {
                                         }
                                         String result = addId(buff);
                                         if(result.equals("-1")) return null;
+                                        System.out.println("! =====> " + result);
                                         ids.put(identifier, remplaceIdsForValues(result));
                                         identifier = ""; // reset name id
                                         letController -= 1;
@@ -173,7 +174,6 @@ public class YalChecker {
                 }                
                 else{
                     if(ignore == false) {
-                        // if(letter == ' ' && allowEmptyEntry == false)
                         if(notAllowedSymbols.contains((int)letter) && allowEmptyEntry == false){
                             // do nothing... to be honest i hate dirty code
                         }else{
@@ -191,6 +191,7 @@ public class YalChecker {
                     if(letController == 1){
                         String result = addId(buff);
                         if(result.equals("-1")) return null;
+                        System.out.println("! =====> " + result);
                         ids.put(identifier, remplaceIdsForValues(result));
                         identifier = ""; // reset name id
                     }
@@ -427,14 +428,13 @@ public class YalChecker {
                     }
                 }
                 else{ // Ingresar elemento al buffer de forma normal
-                    processContent += letterOfContent;
+                    if(!notAllowedSymbols.contains((int)letterOfContent)) // Vamos a saltar los espacios
+                        processContent += letterOfContent;
                 }
             }
         }
         
-        // ! --> Se guardara el nuevo contenido
-        return processContent;
-        // ids.put(id, remplaceIdsForValues(processContent));
+        return processContent; // Vamos a pasar el contenido
     }
 
     private String remplaceIdsForValues(String processContent){
