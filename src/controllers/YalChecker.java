@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Arrays;
 
 import models.RuleContent;
+import models.Colors;
 
 public class YalChecker {
     // --> Atributos
@@ -49,7 +50,6 @@ public class YalChecker {
             for (int i = 0; i < string.length(); i++) { // Analizar linea en especifico
                 char letter = string.charAt(i);
                 // Por si el buffer tiene elementos dentro entonces se analizara si la estructura es valida
-                // boolean allow = (letter == ' ' && allowEmptyEntry == false && !buff.isBlank());
                 boolean allow = (notAllowedSymbols.contains((int)letter) && allowEmptyEntry == false && !buff.isBlank());                
                 if(allow && isOpen == false && buff.length() != 0){
                     switch (buff) {
@@ -87,7 +87,9 @@ public class YalChecker {
                                 switch (letController) {
                                     case 3: // se espera un nombre de id para let
                                         if(SymbolTable.tokens.contains(buff)){ // revisar que el id no sea parte de los tokens
-                                            System.out.println("Id invalido porque se ingreso un token");
+                                            System.out.println(Colors.RED + string);
+                                            System.out.println(buff);
+                                            System.out.println("ERROR: Id invalido porque se ingreso un token" + Colors.RESET);
                                             return null;
                                         }                                        
                                         identifier = buff;
@@ -95,7 +97,9 @@ public class YalChecker {
                                         break;
                                     case 2: // se espera recibir un signo de asignacion
                                         if(!buff.equals("=")){
-                                            System.out.println("se esperaba un signo de asignacion =");
+                                            System.out.println(Colors.RED + string);
+                                            System.out.println(buff);
+                                            System.out.println("ERROR: Se esperaba un signo de asignacion =" + Colors.RESET);
                                             return null;
                                         }                                        
                                         letController -= 1; // Continuar ya que todo esta en orden
@@ -104,12 +108,13 @@ public class YalChecker {
                                     case 1: // se espera recibir contenido
                                         // Revisar que el id del valor detectado de let no sea un valor numerico
                                         if(!isNumeric(identifier)) {
-                                            System.out.println("No se permite un valor numerico como un id de let");
+                                            System.out.println(Colors.RED + string);
+                                            System.out.println(identifier);
+                                            System.out.println("ERROR: No se permite un valor numerico como un id de let" + Colors.RESET);
                                             return null;
                                         }
                                         String result = addId(buff);
                                         if(result.equals("-1")) return null;
-                                        System.out.println("! =====> " + result);
                                         ids.put(identifier, remplaceIdsForValues(result));
                                         identifier = ""; // reset name id
                                         letController -= 1;
@@ -124,7 +129,9 @@ public class YalChecker {
                                 switch (ruleController) {
                                         case 4: // obtener id de la funcion rule
                                             if(SymbolTable.tokens.contains(buff)){ // revisar que el id no sea parte de los tokens
-                                                System.out.println("Id invalido porque se ingreso un token");
+                                                System.out.println(Colors.RED + string);
+                                                System.out.println(Colors.RED + buff);
+                                                System.out.println("ERROR: Id invalido porque se ingreso un nombre de un token");
                                                 return null;
                                             }                         
                                             identifier = buff;
@@ -144,20 +151,23 @@ public class YalChecker {
                                             System.err.println(ruleController);
                                         }
                                         else{
-                                            System.out.println("INVALIDO >" + buff + "<");                                            
+                                            System.out.println(Colors.RED + string);
+                                            System.out.println("ERROR: INVALIDO >" + buff + "<" + Colors.RESET);                                            
                                             return null;
                                         }
                                         break;
                                     case 2: // verficiar si recibe un signo de asignacion
                                         if(!buff.equals("=")){
-                                            System.out.println("se esperaba un signo de asignacion =");
+                                            System.out.println(Colors.RED + string);
+                                            System.out.println("ERROR: se esperaba un signo de asignacion =" + Colors.RESET);
                                             return null;
                                         }                                    
                                         ruleController -= 1; // Continuar ya que todo esta en orden
                                         break;
                                     case 1:
                                         // Asignar y revisar que los elemenots procesados sean validos
-                                        addRuleContent(identifier, buff, ruleContent);
+                                        boolean ruleResult = addRuleContent(identifier, buff, ruleContent);
+                                        if(ruleResult == false) return null;
                                         break;
                                 }
                                 buff = "";
@@ -165,8 +175,8 @@ public class YalChecker {
 
                             // Si nada coincide entonces estamos ante un token invalido
                             else {
-                                System.out.println(string);
-                                System.out.println("Token invalido: " + buff);
+                                System.out.println(Colors.RED + string);
+                                System.out.println("ERROR: Token invalido: " + buff + Colors.RESET);
                                 return null;                                
                             }
                             break;
@@ -191,7 +201,6 @@ public class YalChecker {
                     if(letController == 1){
                         String result = addId(buff);
                         if(result.equals("-1")) return null;
-                        System.out.println("! =====> " + result);
                         ids.put(identifier, remplaceIdsForValues(result));
                         identifier = ""; // reset name id
                     }
@@ -201,7 +210,8 @@ public class YalChecker {
 
                 // * ----> si falta agregar algo a la varible "rule"
                 if(ruleController != 0){
-                    addRuleContent(identifier, buff, ruleContent);
+                    boolean ruleResult = addRuleContent(identifier, buff, ruleContent);
+                    if(ruleResult == false) return null;
                 }
             }
         }
@@ -237,8 +247,15 @@ public class YalChecker {
                 aux += letter;
             }            
         }
-        result += (int)regularExpression.charAt(regularExpression.length() - 1);
-        addAsciiToRegex(((int)regularExpression.charAt(regularExpression.length() - 1)+""));
+        // Verificar longitud de aux por si se almacenara un ascii o un String en el arbol
+        if(aux.length() == 1){
+            result += (int)regularExpression.charAt(regularExpression.length() - 1);
+            addAsciiToRegex(((int)regularExpression.charAt(regularExpression.length() - 1)+""));
+        }
+        if(aux.length() > 1){
+            result += aux;
+            addAsciiToRegex(aux);
+        }
         regularExpression = result;
     }
 
@@ -283,7 +300,7 @@ public class YalChecker {
         regexExpression.add(")");
     }
 
-    private void addRuleContent(String id, String content, RuleContent ruleContent){
+    private boolean addRuleContent(String id, String content, RuleContent ruleContent){
         if(!rules.containsKey(id)){ 
             rules.put(id, ruleContent);
         }
@@ -307,16 +324,27 @@ public class YalChecker {
             tempRuleContent.updateRegex(content);
         }
         // Determinar si se guardara un CHAR
-        if(content.length() == 3){
-            if(content.charAt(0) == '\'' && content.charAt(2) == '\''){
-                String charDetected = content.charAt(1) + "";
-                tempRuleContent.addNameBuffer(charDetected);
-                tempRuleContent.updateRegex(charDetected);
+        if(content.charAt(0) == '\''){
+            if(content.length() != 3) {
+                System.out.println("\n" + Colors.RED + content);
+                System.out.println("ERROR: Se espera a que el char tenga una letra y cierre con una comilla simple" + Colors.RESET);
+                return false;
             }
+            
+            if(content.charAt(2) != '\''){
+                System.out.println("\n" + Colors.RED + content);
+                System.out.println("ERROR: Se esperaba a que cerraras tu expresion con comillas simples" + Colors.RESET);    
+                return false;
+            }
+
+            // Si todo sale en orden entonces se guardara de forma exitosa el char detectado
+            String charDetected = content.charAt(1) + "";
+            tempRuleContent.addNameBuffer(charDetected);
+            tempRuleContent.updateRegex(charDetected);
         }
         // Determinar si se guardara un STRING
-        if(content.length() > 3){
-            if(content.charAt(0) == '"' && content.charAt(content.length() - 1) == '"'){
+        if(content.charAt(0) == '"'){
+            if(content.length() >= 3 && content.charAt(content.length() - 1) == '"'){
                 String saveToken = "";
                 for (int i = 1; i < content.length() - 1; i++) {
                     saveToken += content.charAt(i);
@@ -325,6 +353,8 @@ public class YalChecker {
                 tempRuleContent.updateRegex(saveToken);
             }
         }
+
+        return true;
     }
 
     private String addId(String content){
@@ -350,7 +380,7 @@ public class YalChecker {
                 }
                 else {
                     System.out.println(content);
-                    System.out.println("No definiste de forma correcta el char");
+                    System.out.println("ERROR: No definiste de forma correcta el char");
                     return "-1";
                 }
             }
