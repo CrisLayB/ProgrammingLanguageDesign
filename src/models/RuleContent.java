@@ -7,6 +7,9 @@ public class RuleContent {
     private ArrayList<String> namesBuffer;
     private ArrayList<String> actions;
     private String regex = "";
+    // help for inserta a new Action
+    private boolean addAction = false;
+    private String bufferForAction = "";
 
     // ---> Constructurres
     public RuleContent(){
@@ -28,6 +31,10 @@ public class RuleContent {
     public String getRegex() {
         return regex;
     }
+
+    public boolean getAddAction(){
+        return addAction;
+    }
     
     // --> Setters
     public void setArgs(ArrayList<String> args) {
@@ -39,14 +46,30 @@ public class RuleContent {
         if(namesBuffer.contains(buffer)) return; // Para evitar repetir
         namesBuffer.add(buffer);
     }
-
-    public void addAction(String action){
-        if(actions.contains(action)) return;
-        actions.add(action);
-    }
-
+    
     public void updateRegex(String expression){
         regex += expression;
+    }
+
+    public void addAction(){        
+        actions.add(bufferForAction);
+        bufferForAction = ""; // Reiniciar buffer para la accion
+    }
+
+    public void allowAddAction(){
+        addAction = true;
+    }
+
+    public void stopAddAction(){
+        addAction = false;
+    }
+
+    public void updateBufferForAction(String expression){        
+        bufferForAction += (bufferForAction.length() == 0) ? expression : " " + expression;
+    }
+
+    public boolean emptyAction(){
+        return (bufferForAction.length() == 0 && actions.isEmpty());
     }
     
     @Override
@@ -63,11 +86,8 @@ public class RuleContent {
 
         // Mostrar los buffers con sus respectivas acciones
         for (int i = 0; i < namesBuffer.size(); i++) {            
-            information += namesBuffer.get(i);
+            information += "[" + namesBuffer.get(i) + "] CODE: " + actions.get(i);
             information += "\n";
-            // information += (actions.get(i) == null) 
-            //     ? namesBuffer.get(i) + "\n" 
-            //     : namesBuffer.get(i) + " & " + actions.get(i) + "\n";
         }
 
         return information;

@@ -305,7 +305,22 @@ public class YalChecker {
             rules.put(id, ruleContent);
         }
 
-        RuleContent tempRuleContent = rules.get(id);
+        RuleContent tempRuleContent = rules.get(id); // Obtener la rule definida
+
+        // ==> Se determinara si se guardara un elemento para action o no
+        if(tempRuleContent.getAddAction()){ // Siempre y cuando se haya dado permiso                
+            if(content.equals("}")){
+                tempRuleContent.stopAddAction(); // Se detiene si este encuentra corchehte de cierre
+                tempRuleContent.addAction();
+                // Luego se unira todas las palabras encontradas en el action
+                return true;
+            }
+            // Se estara actualizando el buffer para la accion
+            ruleContent.updateBufferForAction(content);
+            return true;
+        }
+        
+        // ==> Guardar un nuevo token
         // Determinar si se guardara contenido de *LET*s definidos
         if(ids.containsKey(content)){
             tempRuleContent.addNameBuffer(content);
@@ -313,15 +328,16 @@ public class YalChecker {
         }
         // Determinar si se abrira una accion
         if(content.equals("{")){
-
-        }
-        // Determianr si se terminara de guardar dicha accion
-        if(content.equals("}")){
-            
-        }
+            tempRuleContent.allowAddAction();
+        }        
         // Determinar si se guardara un "|"
         if(content.equals("|")){
             tempRuleContent.updateRegex(content);
+            // Si dado caso no hay nada en los actions entonces se creara una action vacia
+            if(tempRuleContent.emptyAction()){ // Si el id no tiene una accion en concreto
+                ruleContent.updateBufferForAction("return null");
+                tempRuleContent.addAction();
+            }
         }
         // Determinar si se guardara un CHAR
         if(content.charAt(0) == '\''){
@@ -509,7 +525,7 @@ public class YalChecker {
         }
     }
 
-    public void seeRules(){
+    public void seeRules(){        
         for(Map.Entry<String, RuleContent> rule: rules.entrySet()){
             String ruleName = rule.getKey();
             RuleContent ruleContent = rule.getValue();
@@ -519,6 +535,7 @@ public class YalChecker {
             System.out.println("============================");
             System.out.println("---> Rule: " + ruleName);
             System.out.println(ruleContent.toString());
+            System.out.println("============================");
         }
     }
 }

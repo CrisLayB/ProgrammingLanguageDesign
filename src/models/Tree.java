@@ -83,7 +83,9 @@ public class Tree {
     
     public void generateTransitions(Node<PairData<String, String>> node){        
         if(node != null){        
-            String information = (node.invalidPos()) ? node.value.second + "-" + node.nullable: node.value.second + "-" + node.pos + "-" + node.nullable;
+            String information = node.value.second;
+            // String information = (node.invalidPos()) ?  node.value.second : node.value.second + "-" + node.pos;
+            // String information = (node.invalidPos()) ? node.value.second + "-" + node.nullable: node.value.second + "-" + node.pos + "-" + node.nullable;
             transitions.add(node.value.first + " [label=\"" + information + "\"];");
             if(node.left != null){
                 transitions.add(
