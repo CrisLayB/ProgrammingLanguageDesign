@@ -103,6 +103,10 @@ public class Main {
 
         System.out.println("\nConstruccion afd direct (y arbol)");
         DFA dfaDirect = DirectDFA.regularExpressionToDFA(rPostfix);
+        if(dfaDirect == null){
+            System.out.println("Un error ocurrio con el AFD directo :)");
+            return;
+        }
         System.out.println(dfaDirect.toString());
         
         // * ===========================================================================================

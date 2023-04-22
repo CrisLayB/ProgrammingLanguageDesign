@@ -7,20 +7,22 @@ import java.util.Arrays;
 
 public class Tree {
     private Node<PairData<String, String>> root;
-    private ArrayList<String> transitions;
+    private ArrayList<String> transitions;  
+    private int count;
+;    private List<String> signsAvoid = Arrays.asList("+", "*", "?", "|", "·");
 
     public Tree(){
-        transitions = new ArrayList<String>();
+        transitions = new ArrayList<String>();        
+        count = 0;
     }
 
     public void createSyntaxTree(ArrayList<PairData<String, String>> regexPostfix){
         Stack<Node<PairData<String, String>>> stack = new Stack<Node<PairData<String, String>>>();
-        List<String> signsAvoid = Arrays.asList("+", "*", "?", "|", "·");
         for (PairData<String, String> s : regexPostfix) {
             String symbol = s.second;
             // * ---> Valor normal
             if(!signsAvoid.contains(symbol)){
-                Node<PairData<String, String>> node = new Node<PairData<String, String>>(s);
+                Node<PairData<String, String>> node = new Node<PairData<String, String>>(s, ++count);
                 stack.push(node);
             }
             // * ---> OR, DOT
@@ -49,9 +51,40 @@ public class Tree {
     }
 
     // * ---> METODOS
+    public void postorderTraversal(Node<PairData<String, String>> node){
+        if(node != null){
+            postorderTraversal(node.left);
+            postorderTraversal(node.right);
+
+            // Vamos a determinar si este es un null o no
+            System.out.print(node.value.second + " "); // Visitar el nodo
+
+            if(!signsAvoid.contains(node.value.second)){ // Nodo normal
+                node.nullable = 0; // False
+            }
+            else if(node.value.second.equals("|")){
+                int c1 = node.left.nullable;
+                int c2 = node.right.nullable;
+                node.nullable = (c1 == 1 || c2 == 1) ? 1 : 0;
+            }
+            else if(node.value.second.equals("·")){
+                int c1 = node.left.nullable;
+                int c2 = node.right.nullable;
+                node.nullable = (c1 == 1 && c2 == 1) ? 1 : 0;
+            }
+            else if(node.value.second.equals("+")){
+                node.nullable = (node.left.value.second.equals("E")) ? 1 : 0;
+            }
+            else if(node.value.second.equals("?")){
+                node.nullable = (node.left.value.second.equals("E")) ? 0 : 1;
+            }
+        }
+    }
+    
     public void generateTransitions(Node<PairData<String, String>> node){        
-        if(node != null){            
-            transitions.add(node.value.first + " [label=\"" + node.value.second + "\"];");
+        if(node != null){        
+            String information = (node.invalidPos()) ? node.value.second + "-" + node.nullable: node.value.second + "-" + node.pos + "-" + node.nullable;
+            transitions.add(node.value.first + " [label=\"" + information + "\"];");
             if(node.left != null){
                 transitions.add(
                     node.value.first + " -> " + node.left.value.first + ";"
