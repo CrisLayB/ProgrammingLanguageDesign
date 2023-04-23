@@ -8,7 +8,8 @@ import java.util.Stack;
 
 abstract public class Automata {
     // Atributos
-    protected State stateInitial;    
+    protected State stateInitial;
+    protected List<State> statesFinal;    
     protected List<State> states;
     protected List<Symbol> symbols;
     protected List<Transition> transitions;

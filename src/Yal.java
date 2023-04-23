@@ -3,6 +3,8 @@ import controllers.AdminFiles;
 import controllers.YalChecker;
 import models.Tree;
 import models.PairData;
+import models.DFA;
+import algorithms.DirectDFA;
 import algorithms.ShuntingYardAlgorithm;
 
 // Importar librerias de java framework collections
@@ -71,12 +73,13 @@ public class Yal {
             regexExpression.add(new PairData<String,String>("n"+idCounter, string));
             idCounter++;
         }
+        regexExpression.add(new PairData<String,String>("n"+idCounter, "#"));
+        idCounter++;
+        regexExpression.add(new PairData<String,String>("n"+idCounter, "·"));
         System.out.println("");
 
         // * ====> Obtener el arbol sintatico
-        Tree regexTree = new Tree();
-        regexTree.createSyntaxTree(regexExpression);
-        regexTree.generateTransitions(regexTree.getRoot());
+        Tree regexTree = new Tree(regexExpression);
         
         ArrayList<String> transitionsTree = regexTree.getTransitions();
         String scriptTree = AdminFiles.readContentTree(transitionsTree);
@@ -86,5 +89,13 @@ public class Yal {
             return;
         }
         AdminFiles.createImgDot(fileSintaxTree, "img/resultsSintaxTree.png");
+
+        // * ====> Crear un automata
+        DFA dfa = DirectDFA.regularExpressionToDFA(regexTree);
+
+        
+        // * ====> Crear el scanner con todos los datos generados
+        // String javaProgram = "docs/scanner.java";
+        
     }
 }

@@ -6,6 +6,10 @@ import controllers.AdminFiles;
 import controllers.SyntaxChecker;
 import models.NFA;
 import models.DFA;
+import models.PairData;
+import models.Tree;
+
+import java.util.ArrayList;
 
 /**
  * <h1>Diseño De Lenguajes de Programacion - UVG</h1>
@@ -102,7 +106,21 @@ public class Main {
         // * ===========================================================================================
 
         System.out.println("\nConstruccion afd direct (y arbol)");
-        DFA dfaDirect = DirectDFA.regularExpressionToDFA(rPostfix);
+
+        ArrayList<PairData<String, String>> regexExpression = new ArrayList<PairData<String, String>>();
+        int idCounter = 0;        
+        for (int i = 0; i < rPostfix.length(); i++) {
+            String string = rPostfix.charAt(i) + "";
+            regexExpression.add(new PairData<String,String>("n"+idCounter, string));
+            idCounter++;
+        }
+        regexExpression.add(new PairData<String,String>("n"+idCounter, "#"));
+        idCounter++;
+        regexExpression.add(new PairData<String,String>("n"+idCounter, "·"));
+        
+        Tree treePostfix = new Tree(regexExpression);
+        
+        DFA dfaDirect = DirectDFA.regularExpressionToDFA(treePostfix);
         if(dfaDirect == null){
             System.out.println("Un error ocurrio con el AFD directo :)");
             return;

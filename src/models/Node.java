@@ -91,6 +91,16 @@ public class Node<E> {
     }
 
     // -> Metodos
+    public void addFirstPos(int number){
+        if(firstpos.contains(number)) return;
+        firstpos.add(number);
+    }
+
+    public void addLastPos(int number){
+        if(lastpos.contains(number)) return;
+        lastpos.add(number);
+    }
+    
     public String traverse(){
         String information = "";
 

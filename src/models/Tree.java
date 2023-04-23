@@ -9,14 +9,18 @@ public class Tree {
     private Node<PairData<String, String>> root;
     private ArrayList<String> transitions;  
     private int count;
-;    private List<String> signsAvoid = Arrays.asList("+", "*", "?", "|", "·");
+    private List<String> signsAvoid = Arrays.asList("+", "*", "?", "|", "·");
 
-    public Tree(){
+    public Tree(ArrayList<PairData<String, String>> regexPostfix){
         transitions = new ArrayList<String>();        
-        count = 0;
+        count = 0;        
+        createSyntaxTree(regexPostfix); 
+        nullableTraversal(root); 
+        firstposAndLastPosTraversal(root);
+        generateTransitions(root);
     }
 
-    public void createSyntaxTree(ArrayList<PairData<String, String>> regexPostfix){
+    private void createSyntaxTree(ArrayList<PairData<String, String>> regexPostfix){
         Stack<Node<PairData<String, String>>> stack = new Stack<Node<PairData<String, String>>>();
         for (PairData<String, String> s : regexPostfix) {
             String symbol = s.second;
@@ -42,48 +46,126 @@ public class Tree {
     }  
 
     // * ---> GETTERS
-    public Node<PairData<String, String>> getRoot() {
-        return root;
-    }
-
     public ArrayList<String> getTransitions() {
         return transitions;
     }
 
     // * ---> METODOS
-    public void postorderTraversal(Node<PairData<String, String>> node){
+    private void nullableTraversal(Node<PairData<String, String>> node){
         if(node != null){
-            postorderTraversal(node.left);
-            postorderTraversal(node.right);
-
-            // Vamos a determinar si este es un null o no
-            System.out.print(node.value.second + " "); // Visitar el nodo
-
-            if(!signsAvoid.contains(node.value.second)){ // Nodo normal
-                node.nullable = 0; // False
+            nullableTraversal(node.left);
+            nullableTraversal(node.right);
+            
+            // * => Determinar todos los nullables
+            
+            if(!signsAvoid.contains(node.value.second)){ // False
+                node.nullable = 0; 
             }
-            else if(node.value.second.equals("|")){
+            else if(node.value.second.equals("E")){ // True
+                node.nullable = 1;
+            }
+            else if(node.value.second.equals("|")){ // nullable(c1) | nullable(c2)
                 int c1 = node.left.nullable;
                 int c2 = node.right.nullable;
                 node.nullable = (c1 == 1 || c2 == 1) ? 1 : 0;
             }
-            else if(node.value.second.equals("·")){
+            else if(node.value.second.equals("·")){ // nullable(c1) & nullable(c2)
                 int c1 = node.left.nullable;
                 int c2 = node.right.nullable;
                 node.nullable = (c1 == 1 && c2 == 1) ? 1 : 0;
             }
-            else if(node.value.second.equals("+")){
-                node.nullable = (node.left.value.second.equals("E")) ? 1 : 0;
+            else if(node.value.second.equals("*") || node.value.second.equals("?")){ // True
+                node.nullable = 1;                
             }
-            else if(node.value.second.equals("?")){
-                node.nullable = (node.left.value.second.equals("E")) ? 0 : 1;
+            else if(node.value.second.equals("+")){
+                node.nullable = (node.left.nullable == 1) ? 1 : 0;
+            }
+        }
+    }
+
+    private void firstposAndLastPosTraversal(Node<PairData<String, String>> node){
+        if(node != null){
+            firstposAndLastPosTraversal(node.left);
+            firstposAndLastPosTraversal(node.right);
+
+            // Empezar a obtener las primeras posiciones
+            if(!signsAvoid.contains(node.value.second)){ // i
+                if (node.value.second.equals("#")){ // Hoja
+
+                }
+                else if(node.value.second.equals("E")){ // Epsilon
+
+                } 
+                else{ // Simbolo normal
+                    node.addFirstPos(node.pos);
+                    node.addLastPos(node.pos);
+                }
+            }
+            else if(node.value.second.equals("|")){ // firstPos(c1) U firstPos(c2)
+                // -> Realizar union de FIRST POSES
+                for (int firstPos : node.left.getFirstPoses()) {
+                    node.addFirstPos(firstPos);
+                }
+                for (int firstPos : node.right.getFirstPoses()) {
+                    node.addFirstPos(firstPos);
+                }
+                // -> Realizar union de LAST POSES
+                for (int firstPos : node.left.getLastPoses()) {
+                    node.addLastPos(firstPos);
+                }
+                for (int firstPos : node.right.getLastPoses()) {
+                    node.addLastPos(firstPos);
+                }
+            }
+            else if(node.value.second.equals("·")){ // si nullable c1 == true: Union, sino firstPOs(c1)
+                // -> Realizar operacion de FIRST POSES
+                if(node.left.nullable == 1){ // Union
+                    for (int firstPos : node.left.getFirstPoses()) { // c1
+                        node.addFirstPos(firstPos);
+                    }
+                    for (int firstPos : node.right.getFirstPoses()) { // c2
+                        node.addFirstPos(firstPos);
+                    }
+                }
+                else{ // Copy all c1 (left)
+                    node.firstpos = node.left.firstpos;
+                }
+                // -> Realizar operacion de LAST POSES
+                if(node.right.nullable == 1){ // Union
+                    for (int firstPos : node.left.getLastPoses()) { // c1
+                        node.addLastPos(firstPos);
+                    }
+                    for (int firstPos : node.right.getLastPoses()) { // c2
+                        node.addLastPos(firstPos);
+                    }
+                }
+                else{ // Copy all c2 (right)
+                    node.lastpos = node.right.lastpos;
+                }
+            }
+            else if(node.value.second.equals("*") || node.value.second.equals("+") || node.value.second.equals("?")){ // firstPos(c1)
+                node.firstpos = node.left.firstpos;
+                node.lastpos = node.left.lastpos;
             }
         }
     }
     
-    public void generateTransitions(Node<PairData<String, String>> node){        
+    private void generateTransitions(Node<PairData<String, String>> node){        
         if(node != null){        
             String information = node.value.second;
+            // System.out.println("=================================");
+            // System.out.println("==> " + node.value.second + " | POS: " + node.pos);
+            // System.out.println("NULLABLE: " + node.nullable);
+            // System.out.println("FIRST_POS:");
+            // for (int num : node.getFirstPoses()) {
+            //     System.out.print(num + ",");
+            // }
+            // System.out.println("\nLAST_POS:");
+            // for (int num : node.getLastPoses()) {
+            //     System.out.print(num + ",");
+            // }
+            // System.out.println("");
+
             // String information = (node.invalidPos()) ?  node.value.second : node.value.second + "-" + node.pos;
             // String information = (node.invalidPos()) ? node.value.second + "-" + node.nullable: node.value.second + "-" + node.pos + "-" + node.nullable;
             transitions.add(node.value.first + " [label=\"" + information + "\"];");

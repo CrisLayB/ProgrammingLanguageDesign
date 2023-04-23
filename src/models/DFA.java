@@ -7,9 +7,6 @@ import java.util.Stack;
 import java.util.HashSet;
 
 public class DFA extends Automata {
-    // Atributos
-    private List<State> statesFinal;
-
     // Constructor
     public DFA(State stateInitial){
         super(stateInitial);
