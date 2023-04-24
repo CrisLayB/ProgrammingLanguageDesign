@@ -16,14 +16,14 @@ abstract public class Automata {
     
     // Constructor
     public Automata(){
-        states = new ArrayList<State>();
+        states = statesFinal = new ArrayList<State>();
         symbols = new ArrayList<>();
         transitions = new ArrayList<Transition>();
     }
     
     public Automata(State stateInitial){ 
         this.stateInitial = stateInitial;
-        states = new ArrayList<State>();
+        states = statesFinal = new ArrayList<State>();
         symbols = new ArrayList<>();
         transitions = new ArrayList<Transition>();
     }

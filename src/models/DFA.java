@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 import java.util.HashSet;
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.HashMap;
 
 public class DFA extends Automata {
     // Constructor
@@ -65,6 +69,29 @@ public class DFA extends Automata {
                 }
             }
         }
+    }
+
+    public DFA(Tree tree){ // Construir afd desde un arbol
+        super();
+        setSymbols(tree.getSymbols());
+        List<Integer> firstpos = tree.getFirstpos();
+        System.out.println("+++++++++++++++++++++++++++++++++++++");
+        for (Integer integer : firstpos) {
+            System.out.print(integer + " ");
+        }
+        int nullable = tree.getNullable();
+        System.out.println("\n\nNULLABLE: " + nullable);
+        System.out.println("+++++++++++++++++++++++++++++++++++++");
+
+        Queue<List<Integer>> unmarked = new LinkedList<>();
+        
+        while(!unmarked.isEmpty()){
+            List<Integer> state = unmarked.poll();
+
+            for (Symbol s : symbols) {
+
+            }
+        }        
     }
 
     public List<State> getStatesFinal(){

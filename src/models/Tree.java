@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.Stack;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,17 +9,24 @@ import java.util.Arrays;
 
 public class Tree {
     private Node<PairData<String, String>> root;
-    private ArrayList<String> transitions;  
+    private ArrayList<String> treeTransitions;  
     private int count;
     private List<String> signsAvoid = Arrays.asList("+", "*", "?", "|", "·");
+    private List<Symbol> symbols;
+    private Map<Integer, ArrayList<Integer>> tableFollowPos;
 
     public Tree(ArrayList<PairData<String, String>> regexPostfix){
-        transitions = new ArrayList<String>();        
-        count = 0;        
+        // Inicializando propiedades
+        treeTransitions = new ArrayList<String>();        
+        count = 0;
+        symbols = new ArrayList<Symbol>();
+        tableFollowPos = new LinkedHashMap<Integer, ArrayList<Integer>>();
+        // Crear arbol y obtener nullable, firstpos, lastpos y followpos
         createSyntaxTree(regexPostfix); 
         nullableTraversal(root); 
         firstposAndLastPosTraversal(root);
-        generateTransitions(root);
+        generateFollowPos(root);
+        generateTransitions(root); // Generar transiciones del arbol
     }
 
     private void createSyntaxTree(ArrayList<PairData<String, String>> regexPostfix){
@@ -26,8 +35,17 @@ public class Tree {
             String symbol = s.second;
             // * ---> Valor normal
             if(!signsAvoid.contains(symbol)){
+                if(symbol.equals("E")){ // Por si se detecta un EPSILON
+                    stack.push(new Node<>());
+                    continue;
+                }
+                
                 Node<PairData<String, String>> node = new Node<PairData<String, String>>(s, ++count);
                 stack.push(node);
+
+                // Agregar simbolo
+                Symbol newSymbol = (isNumeric(symbol)) ? new Symbol(Integer.parseInt(symbol)) : new Symbol(symbol.charAt(0));
+                if(!symbolExistsInAlphabet(newSymbol)) symbols.add(newSymbol);
             }
             // * ---> OR, DOT
             else if(symbol.equals("|") || symbol.equals("·")){
@@ -45,12 +63,20 @@ public class Tree {
         root = stack.pop();
     }  
 
-    // * ---> GETTERS
+    // * ---> GETTERS    
+    public List<Symbol> getSymbols() {
+        return symbols;
+    }
+    
     public ArrayList<String> getTransitions() {
-        return transitions;
+        return treeTransitions;
     }
 
     // * ---> METODOS
+    private boolean isNumeric(String str) {
+        return str.matches("-?\\d+(\\.\\d+)?");
+    }
+    
     private void nullableTraversal(Node<PairData<String, String>> node){
         if(node != null){
             nullableTraversal(node.left);
@@ -89,16 +115,12 @@ public class Tree {
             firstposAndLastPosTraversal(node.right);
 
             // Empezar a obtener las primeras posiciones
-            if(!signsAvoid.contains(node.value.second)){ // i
-                if (node.value.second.equals("#")){ // Hoja
-
-                }
-                else if(node.value.second.equals("E")){ // Epsilon
-
-                } 
-                else{ // Simbolo normal
+            if(!signsAvoid.contains(node.value.second)){ // i                
+                if(node.value.second.equals("E")){ } // Epsilon
+                else{ // Simbolo normal u hoja
                     node.addFirstPos(node.pos);
                     node.addLastPos(node.pos);
+                    tableFollowPos.put(node.pos, new ArrayList<>());
                 }
             }
             else if(node.value.second.equals("|")){ // firstPos(c1) U firstPos(c2)
@@ -149,6 +171,48 @@ public class Tree {
             }
         }
     }
+
+    private void generateFollowPos(Node<PairData<String, String>> node){
+        if(node != null){
+            generateFollowPos(node.left);
+            generateFollowPos(node.right);
+
+            // Empezar a generar todos los followPos
+            if(node.value.second.equals(".")){
+                for (int i : node.left.getLastPoses()) {
+                    for (int j : node.right.firstpos) {
+                        ArrayList<Integer> list = tableFollowPos.get(i);
+                        if(!list.contains(j)) list.add(j);
+                    }
+                }
+            }
+            if(node.value.second.equals("*") || node.value.second.equals("+")){
+                for (int i : node.lastpos) {
+                    for (int j : node.firstpos) {
+                        ArrayList<Integer> list = tableFollowPos.get(i);
+                        if(!list.contains(j)) list.add(j);
+                    }
+                }
+            }
+        }
+    }
+
+    public List<Integer> getFirstpos(){
+        return root.getFirstPoses();
+    }
+
+    public Integer getNullable(){
+        return root.getNullable();
+    }
+
+    private boolean symbolExistsInAlphabet(Symbol symbolCheck){
+        for (Symbol symbol : symbols) {
+            if(symbolCheck.getId() == symbol.getId()){
+                return true;
+            }
+        }
+        return false;
+    }
     
     private void generateTransitions(Node<PairData<String, String>> node){        
         if(node != null){        
@@ -168,15 +232,15 @@ public class Tree {
 
             // String information = (node.invalidPos()) ?  node.value.second : node.value.second + "-" + node.pos;
             // String information = (node.invalidPos()) ? node.value.second + "-" + node.nullable: node.value.second + "-" + node.pos + "-" + node.nullable;
-            transitions.add(node.value.first + " [label=\"" + information + "\"];");
+            treeTransitions.add(node.value.first + " [label=\"" + information + "\"];");
             if(node.left != null){
-                transitions.add(
+                treeTransitions.add(
                     node.value.first + " -> " + node.left.value.first + ";"
                 );
                 generateTransitions(node.left);
             }
             if(node.right != null){
-                transitions.add(
+                treeTransitions.add(
                     node.value.first + " -> " + node.right.value.first + ";"
                 );
                 generateTransitions(node.right);

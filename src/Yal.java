@@ -4,7 +4,6 @@ import controllers.YalChecker;
 import models.Tree;
 import models.PairData;
 import models.DFA;
-import algorithms.DirectDFA;
 import algorithms.ShuntingYardAlgorithm;
 
 // Importar librerias de java framework collections
@@ -91,9 +90,9 @@ public class Yal {
         AdminFiles.createImgDot(fileSintaxTree, "img/resultsSintaxTree.png");
 
         // * ====> Crear un automata
-        DFA dfa = DirectDFA.regularExpressionToDFA(regexTree);
-
-        
+        DFA dfa = new DFA(regexTree);
+        System.out.println(dfa.toString());
+                
         // * ====> Crear el scanner con todos los datos generados
         // String javaProgram = "docs/scanner.java";
         

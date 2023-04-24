@@ -1,7 +1,6 @@
 import algorithms.MinimizationDFA;
 import algorithms.ShuntingYardAlgorithm;
 import algorithms.ThompsonAlgorithm;
-import algorithms.DirectDFA;
 import controllers.AdminFiles;
 import controllers.SyntaxChecker;
 import models.NFA;
@@ -120,7 +119,7 @@ public class Main {
         
         Tree treePostfix = new Tree(regexExpression);
         
-        DFA dfaDirect = DirectDFA.regularExpressionToDFA(treePostfix);
+        DFA dfaDirect = new DFA(treePostfix);
         if(dfaDirect == null){
             System.out.println("Un error ocurrio con el AFD directo :)");
             return;

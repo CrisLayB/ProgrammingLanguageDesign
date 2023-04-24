@@ -9,6 +9,11 @@ public class Symbol implements Comparable<Symbol>{
         this.cId = cId;
     }
 
+    public Symbol(int id){
+        this.id = id;
+        this.cId = (char)id;
+    }
+
     public int getId() {
         return id;
     }
