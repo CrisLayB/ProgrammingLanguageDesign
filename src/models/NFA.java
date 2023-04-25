@@ -16,6 +16,46 @@ public class NFA extends Automata {
         addFirstTransition(symbol, stateInitial, stateFinal);
     }
 
+    public NFA(NFA nfaToCopy){        
+        // super(new State(nfaToCopy.amountStates(), Types.Initial));
+        super();
+        // configurar todos los estados
+        System.out.println("AAAAAAAAAAAAAAAAAa 1");
+        for (Transition transition : nfaToCopy.transitions) {
+            State stateOrigin = transition.getStateOrigin();
+            State stateFinal = transition.getStateFinal();
+            Symbol symbolTransition = transition.getSymbol();
+            // Vamos a modificar la data por conveniencia
+            int newNumberOrigin = Integer.parseInt(stateOrigin.getId()) + nfaToCopy.amountStates();
+            int newNumberFinal = Integer.parseInt(stateFinal.getId()) + nfaToCopy.amountStates();
+            // Crear los nuevos estados
+            State newStateOrigin = new State(newNumberOrigin, stateOrigin.getType());
+            State newStateFinal = new State(newNumberFinal, stateFinal.getType());
+            transitions.add(new Transition(
+                new Symbol(symbolTransition.getcId()),
+                newStateOrigin, 
+                newStateFinal
+            ));
+
+            if(newStateOrigin.getType().num == 0){
+                this.stateInitial = newStateOrigin;
+            }
+            
+            if(newStateFinal.getType().num == 2){
+                this.stateFinal = newStateFinal;
+            }
+        }
+
+        // Agregar los estados y simbolos necesarios
+        for (Transition transition : transitions) {
+            if(!checkIfRepeat(transition.getStateOrigin())) addState(transition.getStateOrigin());
+            if(!checkIfRepeat(transition.getStateOrigin())) addState(transition.getStateFinal());
+            addSymbol(transition.getSymbol());
+        }
+        
+        System.out.println("AAAAAAAAAAAAAAAAAa 2");
+    }
+
     // Getters
     public State getStateFinal() {
         return stateFinal;

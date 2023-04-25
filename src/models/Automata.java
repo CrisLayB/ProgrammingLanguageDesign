@@ -77,6 +77,14 @@ abstract public class Automata {
         states.add(state);
     }
 
+    public boolean checkIfRepeat(State stateCheck){
+        for (State state : states) {
+            if(state.getId() == stateCheck.getId()) return true;
+        }
+        return false;
+    }
+    
+
     public Symbol getSymbol(int numTransition){
         Transition transition = transitions.get(numTransition);
         return transition.getSymbol();
@@ -103,6 +111,9 @@ abstract public class Automata {
         symbols.add(newSymbol);
     }
     
+    public int amountStates(){
+        return states.size();
+    }
 
     public Set<State> eclousure(Set<State> moveStates){
         Set<State> eclosureStates = new HashSet<State>();
@@ -159,6 +170,20 @@ abstract public class Automata {
         }
         
         return nextStates;
+    }
+
+    public void modifyNumberStates(int number){
+        // number++; // Para ir modificando todos los estados para evitar un choque
+        for (Transition transition : transitions) {
+            State initialState = transition.getStateOrigin();
+            State finalState = transition.getStateFinal();
+            // Resetear todos los id de los states creados
+            int newNumberInitial = Integer.parseInt(initialState.getId()) + number;
+            int newNumberFinal = Integer.parseInt(finalState.getId()) + number;
+            // Resetear los numeros
+            initialState.setId(newNumberInitial + "");
+            finalState.setId(newNumberFinal + "");
+        }
     }
 
     // TODO: Metodos abstractos

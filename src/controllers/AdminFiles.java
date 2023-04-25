@@ -120,4 +120,23 @@ public class AdminFiles {
             System.out.println(e);
         }
     }
+
+    public static void createPdfDot(String fileInputPath, String fileOutputPath){
+        try {
+            String[] cmd = new String[8];
+            cmd[0] = "dot";
+            cmd[1] = "-Tpdf";
+            cmd[2] = fileInputPath;
+            cmd[3] = "-o";
+            cmd[4] = fileOutputPath;
+            cmd[5] = "&&";
+            cmd[6] = "sxiv";
+            cmd[7] = fileOutputPath;
+
+            Runtime rt = Runtime.getRuntime();
+            rt.exec( cmd );
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 }

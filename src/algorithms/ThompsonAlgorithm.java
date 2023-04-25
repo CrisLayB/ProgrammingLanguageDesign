@@ -20,13 +20,15 @@ public class ThompsonAlgorithm {
             char c = postfixExpression.charAt(i);
             int cAscii = (int)c;
 
-            if(cAscii == AsciiSymbol.Kleene.ascii){
+            if(cAscii == AsciiSymbol.Kleene.ascii){                
                 NFA nfaKleen = stack.pop();
                 stack.add(kleene(nfaKleen));
             }
             else if(cAscii == AsciiSymbol.Plus.ascii){
-                NFA nfaPlus = stack.pop();
-                stack.add(plus(nfaPlus));
+                NFA nfaOriginal = stack.pop();             
+                NFA nfaToKleene = new NFA(nfaOriginal);
+                num += nfaToKleene.amountStates(); // Get original number id
+                stack.add(concatenate(nfaOriginal, kleene(nfaToKleene)));
             }
             else if(cAscii == AsciiSymbol.Dot.ascii){
                 NFA nfaDot2 = stack.pop();
@@ -156,13 +158,5 @@ public class ThompsonAlgorithm {
     public static NFA question(NFA nfa1){
         NFA nfa2 = createNFA(epsilon);
         return or(nfa1, nfa2);
-    }
-
-    public static NFA plus(NFA nfa){
-        NFA nfaPlus = kleene(nfa);
-        Symbol symbolTemp = nfaPlus.getSymbol(0);
-        nfaPlus.addSymbol(symbolTemp);
-        NFA nfaCopy = createNFA(symbolTemp.getcId());
-        return concatenate(nfaPlus, nfaCopy);
     }
 }

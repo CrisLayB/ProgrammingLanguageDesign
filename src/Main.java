@@ -84,6 +84,7 @@ public class Main {
         }
         
         AdminFiles.createImgDot("docs/automataAFN.dot", "img/resultsAFN.png");
+        AdminFiles.createPdfDot("docs/automataAFN.dot", "img/resultsAFN.pdf");
 
         // * ===========================================================================================
         // * CONSTRUCCION DE AFD (Automata Finito Determinista) ========================================
