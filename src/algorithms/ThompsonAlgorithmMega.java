@@ -1,70 +1,109 @@
 package algorithms;
 
-import java.util.Stack;
-
 import models.NFA;
 import models.State;
-import models.Symbol;
-import models.Transition;
 import models.Types;
-import models.AsciiSymbol;
+import models.Transition;
+import models.Symbol;
 
-public class ThompsonAlgorithm {
-    private static int num = -1;
-    private final static char epsilon = 'E';
+import java.util.Map;
+import java.util.Stack;
+import java.util.ArrayList;
+
+// De antemano pido disculpas ya que esta clase será casi lo mismo que "ShuntingYardAlgorithm"
+public class ThompsonAlgorithmMega {
     
-    public static NFA constructNFA(String postfixExpression) {
-        Stack<NFA> stack = new Stack<NFA>();
-        
-        for (int i = 0; i < postfixExpression.length(); i++) {
-            char c = postfixExpression.charAt(i);
-            int cAscii = (int)c;
+    // Atributos
+    private NFA megaAutomata;
+    private int idControl;
+    private Map<String, ArrayList<String>> ids;
+    private final static char epsilon = 'E';
 
-            if(cAscii == AsciiSymbol.Kleene.ascii){                
+    // Constructor
+    public ThompsonAlgorithmMega(Map<String, ArrayList<String>> ids){
+        this.ids = ids;
+        idControl = -1;
+        // Contruct and prepare everything
+        preparingMegaAutomata();
+    }
+
+    // Getters
+    public NFA getMegaAutomata() {
+        return megaAutomata;
+    }
+
+    // Methods for Contructor
+    private void preparingMegaAutomata(){
+        // Crear estado inicial
+        megaAutomata = new NFA(new State(++idControl, Types.Initial));
+        
+        for(Map.Entry<String, ArrayList<String>> id: ids.entrySet()){
+            String idName = id.getKey();
+            ArrayList<String> idRegularExpression = id.getValue();
+
+            // Obtener postfix
+            ArrayList<String> regexPostfix = ShuntingYardAlgorithm.infixToPostfix(idRegularExpression);
+            System.out.println("===> " + idName + " - " + regexPostfix.toString());
+            
+            // Obtener el NFA
+            NFA nfa = constructNFA(regexPostfix);
+            System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+            System.out.println(nfa.toString());
+        }
+
+        System.out.println("MEGA AUTOMATA COMPLETO: ");
+        System.out.println(megaAutomata.toString());
+    }
+
+    private NFA constructNFA(ArrayList<String> postfix){
+        Stack<NFA> stack = new Stack<>();
+
+        for (String stringSymbol : postfix) {
+            if(stringSymbol.equals("*")){
                 NFA nfaKleen = stack.pop();
                 stack.add(kleene(nfaKleen));
             }
-            else if(cAscii == AsciiSymbol.Plus.ascii){
+            else if(stringSymbol.equals("+")){
                 NFA nfaOriginal = stack.pop();             
                 NFA nfaToKleene = new NFA(nfaOriginal);
-                num += nfaToKleene.amountStates(); // Get original number id
+                idControl += nfaToKleene.amountStates(); // Get original number id
                 stack.add(concatenate(nfaOriginal, kleene(nfaToKleene)));
             }
-            else if(cAscii == AsciiSymbol.Dot.ascii){
+            else if(stringSymbol.equals("·")){
                 NFA nfaDot2 = stack.pop();
                 NFA nfaDot1 = stack.pop();
                 stack.add(concatenate(nfaDot1, nfaDot2));  
             }
-            else if(cAscii == AsciiSymbol.Interrogation.ascii){
+            else if(stringSymbol.equals("?")){
                 NFA nfaQuestion = stack.pop();
                 stack.add(question(nfaQuestion));
             }
-            else if(cAscii == AsciiSymbol.Or.ascii){
+            else if(stringSymbol.equals("|")){
                 NFA nfaOr2 = stack.pop();
                 NFA nfaOr1 = stack.pop();
                 stack.add(or(nfaOr1, nfaOr2));
             }
             else{
-                stack.add(createNFA(c));
-            } 
+                stack.add(createNFA(stringSymbol));
+            }
         }
         
         return stack.pop();
     }
 
-    private static NFA createNFA(char c){
+    private NFA createNFA(String c){
         Symbol symbol = new Symbol(c);
-        num++;
-        State state1 = new State(num, Types.Initial);
-        num++;
-        State state2 = new State(num, Types.Final);
+        idControl++;
+        State state1 = new State(idControl, Types.Initial);
+        idControl++;
+        State state2 = new State(idControl, Types.Final);
         // Crear el nuevo NFA
         NFA nfaSymbol = new NFA(symbol, state1, state2);
         nfaSymbol.addSymbol(symbol);
         return nfaSymbol;
     }
 
-    private static NFA concatenate(NFA nfa1, NFA nfa2){
+    private NFA concatenate(NFA nfa1, NFA nfa2){
         // Se copiara toda la data para tener toda la informacion del nfa2
         State tempState = nfa1.getStateFinal();
         State tempFinalState = nfa2.getStateFinal();
@@ -82,7 +121,7 @@ public class ThompsonAlgorithm {
         return nfa1;
     }
 
-    private static NFA kleene(NFA nfa){
+    private NFA kleene(NFA nfa){
         nfa.getStateInitial().setType(Types.Transition);
         nfa.getStateFinal().setType(Types.Transition);
         // Crear la transicion que conecta con el estado final ε inicial        
@@ -90,10 +129,10 @@ public class ThompsonAlgorithm {
         Transition transitionBetween = new Transition(epsilonSymbol, nfa.getStateFinal(), nfa.getStateInitial());
         nfa.addTransition(transitionBetween);        
         // Crear los nuevos estados origen y finales
-        num++;
-        State newStateOrigin = new State(num, Types.Initial);
-        num++;
-        State newStateFinal = new State(num, Types.Final);
+        idControl++;
+        State newStateOrigin = new State(idControl, Types.Initial);
+        idControl++;
+        State newStateFinal = new State(idControl, Types.Final);
 
         // Ahora tocara que crear tres nuevas transiciones
         Transition transitionNewOrigin = new Transition(epsilonSymbol, newStateOrigin, newStateFinal);
@@ -113,7 +152,7 @@ public class ThompsonAlgorithm {
         return nfa;
     }
 
-    public static NFA or(NFA nfa1, NFA nfa2){
+    public NFA or(NFA nfa1, NFA nfa2){
         nfa1.getStateFinal().setType(Types.Transition);
         for (Transition transition : nfa2.getTransitions()) {
             transition.changeTypeStateOrigin(Types.Transition);
@@ -124,10 +163,10 @@ public class ThompsonAlgorithm {
         }        
 
         // Crear nuevo estado origen y final
-        num++;
-        State stateOrigin = new State(num, Types.Initial);
-        num++;
-        State stateFinal = new State(num, Types.Final);
+        idControl++;
+        State stateOrigin = new State(idControl, Types.Initial);
+        idControl++;
+        State stateFinal = new State(idControl, Types.Final);
         
         // Crear nuevas transiciones
         Transition transitionOriginUp = new Transition(new Symbol(epsilon), stateOrigin, nfa1.getStateInitial());
@@ -155,8 +194,9 @@ public class ThompsonAlgorithm {
         return nfa1;
     }
 
-    public static NFA question(NFA nfa1){
-        NFA nfa2 = createNFA(epsilon);
+    public NFA question(NFA nfa1){
+        NFA nfa2 = createNFA(epsilon+"");
         return or(nfa1, nfa2);
     }
+    
 }

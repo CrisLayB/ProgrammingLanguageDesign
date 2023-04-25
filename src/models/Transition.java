@@ -51,7 +51,11 @@ public class Transition {
     // Metodos de mostrar informacion
     @Override
     public String toString() {
-        return stateOrigin.getId() + " -> " + stateFinal.getId() + "[label=\""+ symbol.getcId() + "\"]\n";
+        return stateOrigin.getId() + " -> " + stateFinal.getId() + "[label=\""+ symbol.getStringId() + "\"]\n";
+    }
+
+    public String toStringMega() {
+        return stateOrigin.getId() + " -> " + stateFinal.getId() + "[label=\""+ symbol.getStringId() + "\"]\n";
     }
 
     public String detailInformation(){

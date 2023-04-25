@@ -6,6 +6,7 @@ import java.util.HashSet;
 public class NFA extends Automata {
     // Atributos
     private State stateFinal;
+    private boolean forMegaAutomata = false;
 
     // Constructor
     public NFA(Symbol symbol, State stateInitial, State stateFinal) {
@@ -16,11 +17,14 @@ public class NFA extends Automata {
         addFirstTransition(symbol, stateInitial, stateFinal);
     }
 
+    public NFA(State stateInitial){
+        super(stateInitial);
+        forMegaAutomata = true;
+    }
+
     public NFA(NFA nfaToCopy){        
-        // super(new State(nfaToCopy.amountStates(), Types.Initial));
         super();
         // configurar todos los estados
-        System.out.println("AAAAAAAAAAAAAAAAAa 1");
         for (Transition transition : nfaToCopy.transitions) {
             State stateOrigin = transition.getStateOrigin();
             State stateFinal = transition.getStateFinal();
@@ -45,15 +49,12 @@ public class NFA extends Automata {
                 this.stateFinal = newStateFinal;
             }
         }
-
         // Agregar los estados y simbolos necesarios
         for (Transition transition : transitions) {
             if(!checkIfRepeat(transition.getStateOrigin())) addState(transition.getStateOrigin());
             if(!checkIfRepeat(transition.getStateOrigin())) addState(transition.getStateFinal());
             addSymbol(transition.getSymbol());
-        }
-        
-        System.out.println("AAAAAAAAAAAAAAAAAa 2");
+        }        
     }
 
     // Getters
@@ -110,6 +111,7 @@ public class NFA extends Automata {
         information += "Transiciones: \n";
         for (Transition transition : transitions) {
             information += transition.toString();
+            // information += (forMegaAutomata == false) ? transition.toString() : "jeje: " + transition.toStringMega();
         }
         information += "-----------------------------------------------\n";
         return information;

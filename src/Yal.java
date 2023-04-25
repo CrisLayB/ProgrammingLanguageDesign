@@ -3,8 +3,9 @@ import controllers.AdminFiles;
 import controllers.YalChecker;
 import models.Tree;
 import models.PairData;
-import models.DFA;
+import models.NFA;
 import algorithms.ShuntingYardAlgorithm;
+import algorithms.ThompsonAlgorithmMega;
 
 // Importar librerias de java framework collections
 import java.util.ArrayList;
@@ -90,11 +91,9 @@ public class Yal {
         AdminFiles.createImgDot(fileSintaxTree, "img/resultsSintaxTree.png");
 
         // * ====> Crear un automata
-        DFA dfa = new DFA(regexTree);
-        System.out.println(dfa.toString());
+        ThompsonAlgorithmMega megaAutomata = new ThompsonAlgorithmMega(tokenizer.getIdsExtended());
                 
-        // * ====> Crear el scanner con todos los datos generados
-        // String javaProgram = "docs/scanner.java";
-        
+                
+        // * ====> Crear el scanner con todos los datos generados        
     }
 }

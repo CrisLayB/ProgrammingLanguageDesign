@@ -13,6 +13,7 @@ public class YalChecker {
     // --> Atributos
     private ArrayList<String> code;
     private Map<String, String> ids;
+    private Map<String, ArrayList<String>> idsExtended;
     private Map<String, RuleContent> rules;
     private static List<Character> signsOperation;
     private static List<Character> signsForAddParenthesis;
@@ -24,6 +25,7 @@ public class YalChecker {
     public YalChecker(ArrayList<String> code){
         this.code = code;
         ids = new LinkedHashMap<String, String>();
+        idsExtended = new LinkedHashMap<String, ArrayList<String>>();
         rules = new LinkedHashMap<String, RuleContent>();
         signsOperation = Arrays.asList('(', ')', '+', '.', '*', '?', '|');
         signsForAddParenthesis = Arrays.asList('+', '?', '*');
@@ -220,6 +222,16 @@ public class YalChecker {
         return regexExpression;
     }
 
+    // -> Getters
+    public Map<String, String> getIds() {
+        return ids;
+    }
+
+    public Map<String, ArrayList<String>> getIdsExtended() {
+        return idsExtended;
+    }
+    
+    // -> Metodos
     private void getValuesRegularExpression(String regularExpression){        
         String aux = "", result = "";
         for (int i = 0; i < regularExpression.length(); i++) {
@@ -260,19 +272,26 @@ public class YalChecker {
     }
 
     private void addValueToRegex(String id, String value){ // Para agregar los correspondientes ids y concatenasiones
+        idsExtended.put(id, new ArrayList<String>());
+
         String temp = "";        
         regexExpression.add("(");
-        regexExpression.add("(");
+        regexExpression.add("(");        
+        idsExtended.get(id).add("(");
         for (int index = 0; index < value.length(); index++) {
             char letter = value.charAt(index);
             if(signsOperation.contains(letter)){
                 regexExpression.add(letter+"");
+                idsExtended.get(id).add(letter+"");
                 // Revisar si la expresion se va a concatenar
                 if(letter == ')' || letter == '.' || letter == '?'){
                     // Si dado caso llegamos al limite entonces vamos a saltarnos este paso
                     if(index < value.length() - 1){ 
                         char next = value.charAt(index + 1);
-                        if(next == '(') regexExpression.add("·");
+                        if(next == '(') {
+                            regexExpression.add("·");
+                            idsExtended.get(id).add("·");
+                        }
                     }
                 }
             }
@@ -281,8 +300,12 @@ public class YalChecker {
                 char checkNext = value.charAt(index+1);
                 if(signsOperation.contains(checkNext)){
                     regexExpression.add(temp);
+                    idsExtended.get(id).add(temp);
                     temp = "";
-                    if(checkNext == '(') regexExpression.add("·");
+                    if(checkNext == '(') {
+                        regexExpression.add("·");
+                        idsExtended.get(id).add(".");
+                    }
                 }
             }
         }
@@ -290,6 +313,7 @@ public class YalChecker {
         regexExpression.add("·");
         regexExpression.add("#" + id);
         regexExpression.add(")");
+        idsExtended.get(id).add(")");
     }
 
     private void addAsciiToRegex(String value){ // Agregar ids y concatenacion correspondientes del int
@@ -298,6 +322,11 @@ public class YalChecker {
         regexExpression.add("·");
         regexExpression.add("#" + value);
         regexExpression.add(")");
+        // ...
+        idsExtended.put(value, new ArrayList<String>());
+        idsExtended.get(value).add("(");
+        idsExtended.get(value).add(value+"");
+        idsExtended.get(value).add(")");
     }
 
     private boolean addRuleContent(String id, String content, RuleContent ruleContent){
