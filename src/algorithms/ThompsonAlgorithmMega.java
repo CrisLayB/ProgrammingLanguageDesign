@@ -35,7 +35,9 @@ public class ThompsonAlgorithmMega {
     // Methods for Contructor
     private void preparingMegaAutomata(){
         // Crear estado inicial
-        megaAutomata = new NFA(new State(++idControl, Types.Initial));
+        State initialStateMegaAutomata = new State(++idControl, Types.Initial);
+        // megaAutomata = new NFA(new State(++idControl, Types.Initial));
+        megaAutomata = new NFA(initialStateMegaAutomata);
         
         for(Map.Entry<String, ArrayList<String>> id: ids.entrySet()){
             String idName = id.getKey();
@@ -47,10 +49,21 @@ public class ThompsonAlgorithmMega {
             
             // Obtener el NFA
             NFA nfa = constructNFA(regexPostfix);
+            for (Transition transition : nfa.getTransitions()) {
+                megaAutomata.addTransition(transition);
+            }
+            megaAutomata.addFinalState(nfa.getStateFinal());
+            Transition newTransition = new Transition(
+                new Symbol(epsilon+""), 
+                initialStateMegaAutomata, 
+                nfa.getStateInitial()
+            );
+            megaAutomata.addTransition(newTransition);
             System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
             System.out.println(nfa.toString());
         }
 
+        System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
         System.out.println("MEGA AUTOMATA COMPLETO: ");
         System.out.println(megaAutomata.toString());
     }

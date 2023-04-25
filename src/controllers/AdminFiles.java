@@ -41,6 +41,28 @@ public class AdminFiles {
         return contentScript;
     }
 
+    public static String readContentMegaNFA(NFA nfa, String r){
+        String contentScript = "";
+        contentScript += "digraph \"Resultado Automata AFN\" {\n";
+        contentScript += "\tlabel = \"" + r + "  [AFN]\"\n";
+        contentScript += "\tlabelloc  =  t\n";
+        contentScript += "\tfontsize  = 25\n";
+        contentScript += "\trankdir=LR size=\"8,5\"\n";
+        contentScript += "\tnode [shape=doublecircle]\n";
+        // contentScript += "\t" + nfa.getStateFinal().getId() + "\n";2
+        contentScript += "\tnode [shape=circle]\n";
+        contentScript += "\t" + nfa.getStateInitial().getId() + "\n";
+        contentScript += "\tnode [shape=none]\n";
+        contentScript += "\t\"\"\n";
+        contentScript += "\t\"\"-> " + nfa.getStateInitial().getId() + " [label=\"\"]\n";
+        contentScript += "\tnode [shape=circle]\n";
+        for (Transition transition : nfa.getTransitions()) {
+            contentScript += "\t" + transition.toString();
+        }
+        contentScript += "}";        
+        return contentScript;
+    }
+
     public static String readContentDFA(DFA dfa, String r){
         String contentScript = "";
         contentScript += "digraph \"Resultado Automata AFD\" {\n";

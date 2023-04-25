@@ -92,7 +92,13 @@ public class Yal {
 
         // * ====> Crear un automata
         ThompsonAlgorithmMega megaAutomata = new ThompsonAlgorithmMega(tokenizer.getIdsExtended());
-                
+        String formatedCode = AdminFiles.readContentMegaNFA(megaAutomata.getMegaAutomata(), "MegaAutomata");
+        if(!AdminFiles.writeFileCode(formatedCode, "docs/megaAutomata.dot")){
+            System.out.println("No se pudo guardar el archivo.dot");
+            return;
+        }
+
+        AdminFiles.createPdfDot("docs/megaAutomata.dot", "img/megaAutomata.pdf");
                 
         // * ====> Crear el scanner con todos los datos generados        
     }

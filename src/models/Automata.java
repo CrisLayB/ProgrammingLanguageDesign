@@ -77,6 +77,13 @@ abstract public class Automata {
         states.add(state);
     }
 
+    public void addFinalState(State state){
+        if(statesFinal.contains(state)){
+            statesFinal.remove(state);
+        }
+        statesFinal.add(state);
+    }
+
     public boolean checkIfRepeat(State stateCheck){
         for (State state : states) {
             if(state.getId() == stateCheck.getId()) return true;

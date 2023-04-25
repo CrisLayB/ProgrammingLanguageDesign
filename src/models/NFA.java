@@ -98,7 +98,13 @@ public class NFA extends Automata {
         information += "\n-----------------------------------------------\n";
         information += "AFN (NFA) Construido:\n";
         information += "Estado Inicial: " + this.stateInitial + "\n";
-        information += "Estado Final: " + this.stateFinal + "\n";
+        if(forMegaAutomata == true){
+            information += "Estados Finales:\n";
+            for (State state : statesFinal) {
+                information += state + " ";
+            }
+        }
+        information += "\nEstado Final: " + this.stateFinal + "\n";
         information += "Estados: \n";
         for (State state : states) {
             information += state.toString() + "\n";
@@ -111,7 +117,6 @@ public class NFA extends Automata {
         information += "Transiciones: \n";
         for (Transition transition : transitions) {
             information += transition.toString();
-            // information += (forMegaAutomata == false) ? transition.toString() : "jeje: " + transition.toStringMega();
         }
         information += "-----------------------------------------------\n";
         return information;
