@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class DFA extends Automata {
+    private Map<List<Integer>, Map<Symbol, List<Integer>>> transitionsTree; // Exclusivo para tree
+    
     // Constructor
     public DFA(State stateInitial){
         super(stateInitial);
@@ -74,24 +76,54 @@ public class DFA extends Automata {
     public DFA(Tree tree){ // Construir afd desde un arbol
         super();
         setSymbols(tree.getSymbols());
+        
+        transitionsTree = new HashMap<List<Integer>, Map<Symbol, List<Integer>>>();
+
+        int counter = 0;
+        this.stateInitial = new State(counter, Types.Initial);
+        
         List<Integer> firstpos = tree.getFirstpos();
-        System.out.println("+++++++++++++++++++++++++++++++++++++");
-        for (Integer integer : firstpos) {
-            System.out.print(integer + " ");
+
+        System.out.println("====================================");
+        for(int i : firstpos){
+            System.out.print(i + " ");
         }
-        int nullable = tree.getNullable();
-        System.out.println("\n\nNULLABLE: " + nullable);
-        System.out.println("+++++++++++++++++++++++++++++++++++++");
+        System.out.println("\n====================================");
+
+        transitionsTree.put(firstpos, new HashMap<>());
+        counter++;
 
         Queue<List<Integer>> unmarked = new LinkedList<>();
+        unmarked.add(firstpos);
         
         while(!unmarked.isEmpty()){
             List<Integer> state = unmarked.poll();
-
             for (Symbol s : symbols) {
-
+                List<Integer> nextState = getNextState(state, s);
+                if(!nextState.isEmpty() && !transitionsTree.containsKey(nextState)){
+                    transitionsTree.put(nextState, new HashMap<>());
+                    unmarked.add(nextState);
+                    counter++;
+                }
+                if(!nextState.isEmpty()){
+                    System.out.println("EJEM");
+                    transitionsTree.get(state).put(s, nextState);
+                }
             }
-        }        
+        }     
+        
+        // Verificar las transiciones
+        for(Map.Entry<List<Integer>, Map<Symbol, List<Integer>>> transitionTree: transitionsTree.entrySet()){
+            System.out.println("??????????????????????????????????????????");
+            List<Integer> keyList = transitionTree.getKey();
+            Map<Symbol, List<Integer>> valueMap = transitionTree.getValue();
+            System.out.println("=> " + keyList.toString());
+            for(Map.Entry<Symbol, List<Integer>> ja: valueMap.entrySet()){
+                Symbol symbolJa = ja.getKey();
+                List<Integer> valueList = ja.getValue();
+                System.out.println(symbolJa.toString() + " and "  + valueList.toString());
+            }
+        }
     }
 
     public List<State> getStatesFinal(){
@@ -133,6 +165,20 @@ public class DFA extends Automata {
             }
         }
         states.add(state);
+    }
+
+    private List<Integer> getNextState(List<Integer> currentState, Symbol symbol){
+        List<Integer> nextState = new ArrayList<>();
+        Map<Symbol, List<Integer>> stateTransitions = transitionsTree.get(currentState);
+        if (stateTransitions != null) {
+            List<Integer> transitionsForSymbol = stateTransitions.get(symbol);
+            if (transitionsForSymbol != null) {
+                nextState.addAll(transitionsForSymbol);
+            }
+        }
+        // for (Integer state : currentState) {
+        // }
+        return nextState;
     }
 
     @Override

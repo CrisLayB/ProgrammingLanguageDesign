@@ -114,7 +114,6 @@ abstract public class Automata {
             State state = stack.pop();
             for (Transition transition : transitions) {
                 if (transition.getStateOrigin().equals(state) && transition.getSymbol().getcId() == 'E') {
-                    // if (transition.getStateOrigin().equals(state)) {
                     State nextState = transition.getStateFinal();
                     if (!eclosureStates.contains(nextState)) {
                         eclosureStates.add(nextState);

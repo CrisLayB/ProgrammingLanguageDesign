@@ -64,6 +64,10 @@ public class Tree {
     }  
 
     // * ---> GETTERS    
+    public Node<PairData<String, String>> getRoot() {
+        return root;
+    }
+    
     public List<Symbol> getSymbols() {
         return symbols;
     }
@@ -85,26 +89,26 @@ public class Tree {
             // * => Determinar todos los nullables
             
             if(!signsAvoid.contains(node.value.second)){ // False
-                node.nullable = 0; 
+                node.nullable = false; 
             }
             else if(node.value.second.equals("E")){ // True
-                node.nullable = 1;
+                node.nullable = true;
             }
             else if(node.value.second.equals("|")){ // nullable(c1) | nullable(c2)
-                int c1 = node.left.nullable;
-                int c2 = node.right.nullable;
-                node.nullable = (c1 == 1 || c2 == 1) ? 1 : 0;
+                Boolean c1 = node.left.nullable;
+                Boolean c2 = node.right.nullable;
+                node.nullable = (c1 || c2) ? true : false;
             }
             else if(node.value.second.equals("·")){ // nullable(c1) & nullable(c2)
-                int c1 = node.left.nullable;
-                int c2 = node.right.nullable;
-                node.nullable = (c1 == 1 && c2 == 1) ? 1 : 0;
+                Boolean c1 = node.left.nullable;
+                Boolean c2 = node.right.nullable;
+                node.nullable = (c1 && c2) ? true : false;
             }
             else if(node.value.second.equals("*") || node.value.second.equals("?")){ // True
-                node.nullable = 1;                
+                node.nullable = true;
             }
             else if(node.value.second.equals("+")){
-                node.nullable = (node.left.nullable == 1) ? 1 : 0;
+                node.nullable = (node.left.nullable) ? true : false;
             }
         }
     }
@@ -116,58 +120,38 @@ public class Tree {
 
             // Empezar a obtener las primeras posiciones
             if(!signsAvoid.contains(node.value.second)){ // i                
-                if(node.value.second.equals("E")){ } // Epsilon
-                else{ // Simbolo normal u hoja
-                    node.addFirstPos(node.pos);
-                    node.addLastPos(node.pos);
-                    tableFollowPos.put(node.pos, new ArrayList<>());
-                }
+                node.firstpos.add(node.pos);
+                node.lastpos.add(node.pos);
+                tableFollowPos.put(node.pos, new ArrayList<>());
             }
             else if(node.value.second.equals("|")){ // firstPos(c1) U firstPos(c2)
                 // -> Realizar union de FIRST POSES
-                for (int firstPos : node.left.getFirstPoses()) {
-                    node.addFirstPos(firstPos);
-                }
-                for (int firstPos : node.right.getFirstPoses()) {
-                    node.addFirstPos(firstPos);
-                }
+                node.addFirstPos(node.left.firstpos);
+                node.addFirstPos(node.right.firstpos);
                 // -> Realizar union de LAST POSES
-                for (int firstPos : node.left.getLastPoses()) {
-                    node.addLastPos(firstPos);
-                }
-                for (int firstPos : node.right.getLastPoses()) {
-                    node.addLastPos(firstPos);
-                }
+                node.addLastPos(node.left.lastpos);
+                node.addLastPos(node.right.lastpos);                
             }
             else if(node.value.second.equals("·")){ // si nullable c1 == true: Union, sino firstPOs(c1)
-                // -> Realizar operacion de FIRST POSES
-                if(node.left.nullable == 1){ // Union
-                    for (int firstPos : node.left.getFirstPoses()) { // c1
-                        node.addFirstPos(firstPos);
-                    }
-                    for (int firstPos : node.right.getFirstPoses()) { // c2
-                        node.addFirstPos(firstPos);
-                    }
+                if(node.left.nullable){ // Firstpos
+                    node.addFirstPos(node.left.firstpos);
+                    node.addFirstPos(node.right.firstpos);
                 }
-                else{ // Copy all c1 (left)
-                    node.firstpos = node.left.firstpos;
+                else{
+                    node.addFirstPos(node.left.firstpos);
                 }
-                // -> Realizar operacion de LAST POSES
-                if(node.right.nullable == 1){ // Union
-                    for (int firstPos : node.left.getLastPoses()) { // c1
-                        node.addLastPos(firstPos);
-                    }
-                    for (int firstPos : node.right.getLastPoses()) { // c2
-                        node.addLastPos(firstPos);
-                    }
-                }
-                else{ // Copy all c2 (right)
-                    node.lastpos = node.right.lastpos;
+                
+                if(node.right.nullable){ // Lastpos
+                    node.addLastPos(node.left.lastpos);
+                    node.addLastPos(node.right.lastpos);
+                }                
+                else{
+                    node.addLastPos(node.right.lastpos);
                 }
             }
             else if(node.value.second.equals("*") || node.value.second.equals("+") || node.value.second.equals("?")){ // firstPos(c1)
-                node.firstpos = node.left.firstpos;
-                node.lastpos = node.left.lastpos;
+                node.addFirstPos(node.left.firstpos);
+                node.addLastPos(node.left.lastpos);
             }
         }
     }
@@ -201,8 +185,8 @@ public class Tree {
         return root.getFirstPoses();
     }
 
-    public Integer getNullable(){
-        return root.getNullable();
+    public List<Integer> getLastpos(){
+        return root.getLastPoses();
     }
 
     private boolean symbolExistsInAlphabet(Symbol symbolCheck){
