@@ -120,38 +120,16 @@ public class Tree {
 
             // Empezar a obtener las primeras posiciones
             if(!signsAvoid.contains(node.value.second)){ // i                
-                node.firstpos.add(node.pos);
-                node.lastpos.add(node.pos);
-                tableFollowPos.put(node.pos, new ArrayList<>());
+
             }
             else if(node.value.second.equals("|")){ // firstPos(c1) U firstPos(c2)
-                // -> Realizar union de FIRST POSES
-                node.addFirstPos(node.left.firstpos);
-                node.addFirstPos(node.right.firstpos);
-                // -> Realizar union de LAST POSES
-                node.addLastPos(node.left.lastpos);
-                node.addLastPos(node.right.lastpos);                
+                
             }
             else if(node.value.second.equals("·")){ // si nullable c1 == true: Union, sino firstPOs(c1)
-                if(node.left.nullable){ // Firstpos
-                    node.addFirstPos(node.left.firstpos);
-                    node.addFirstPos(node.right.firstpos);
-                }
-                else{
-                    node.addFirstPos(node.left.firstpos);
-                }
-                
-                if(node.right.nullable){ // Lastpos
-                    node.addLastPos(node.left.lastpos);
-                    node.addLastPos(node.right.lastpos);
-                }                
-                else{
-                    node.addLastPos(node.right.lastpos);
-                }
+
             }
             else if(node.value.second.equals("*") || node.value.second.equals("+") || node.value.second.equals("?")){ // firstPos(c1)
-                node.addFirstPos(node.left.firstpos);
-                node.addLastPos(node.left.lastpos);
+                
             }
         }
     }
@@ -189,6 +167,16 @@ public class Tree {
         return root.getLastPoses();
     }
 
+    public List<Integer> getFollowpos(int pos){
+        List<Integer> followpos = new ArrayList<>();
+        for (Integer integer : followpos) {
+            if(integer == pos){
+                followpos.add(integer);
+            }
+        }
+        return followpos;
+    }
+    
     private boolean symbolExistsInAlphabet(Symbol symbolCheck){
         for (Symbol symbol : symbols) {
             if(symbolCheck.getId() == symbol.getId()){
@@ -201,21 +189,6 @@ public class Tree {
     private void generateTransitions(Node<PairData<String, String>> node){        
         if(node != null){        
             String information = node.value.second;
-            // System.out.println("=================================");
-            // System.out.println("==> " + node.value.second + " | POS: " + node.pos);
-            // System.out.println("NULLABLE: " + node.nullable);
-            // System.out.println("FIRST_POS:");
-            // for (int num : node.getFirstPoses()) {
-            //     System.out.print(num + ",");
-            // }
-            // System.out.println("\nLAST_POS:");
-            // for (int num : node.getLastPoses()) {
-            //     System.out.print(num + ",");
-            // }
-            // System.out.println("");
-
-            // String information = (node.invalidPos()) ?  node.value.second : node.value.second + "-" + node.pos;
-            // String information = (node.invalidPos()) ? node.value.second + "-" + node.nullable: node.value.second + "-" + node.pos + "-" + node.nullable;
             treeTransitions.add(node.value.first + " [label=\"" + information + "\"];");
             if(node.left != null){
                 treeTransitions.add(

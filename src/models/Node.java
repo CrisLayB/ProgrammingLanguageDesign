@@ -93,18 +93,6 @@ public class Node<E> {
     public void addLastPos(int number){
         if(!lastpos.contains(number)) lastpos.add(number);
     }
-
-    public void addFirstPos(List<Integer> numbers){
-        for (int i : numbers) {
-            if(!firstpos.contains(i)) firstpos.add(i);
-        }
-    }
-
-    public void addLastPos(List<Integer> numbers){
-        for (int i : numbers) {
-            if(!lastpos.contains(i)) lastpos.add(i);
-        }
-    }
     
     public String traverse(){
         String information = "";

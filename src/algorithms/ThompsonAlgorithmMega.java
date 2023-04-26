@@ -59,13 +59,13 @@ public class ThompsonAlgorithmMega {
                 nfa.getStateInitial()
             );
             megaAutomata.addTransition(newTransition);
-            System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-            System.out.println(nfa.toString());
+            // System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+            // System.out.println(nfa.toString());
         }
 
-        System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-        System.out.println("MEGA AUTOMATA COMPLETO: ");
-        System.out.println(megaAutomata.toString());
+        // System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+        // System.out.println("MEGA AUTOMATA COMPLETO: ");
+        // System.out.println(megaAutomata.toString());
     }
 
     private NFA constructNFA(ArrayList<String> postfix){
