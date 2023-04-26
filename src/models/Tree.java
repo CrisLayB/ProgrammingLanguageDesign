@@ -138,24 +138,6 @@ public class Tree {
         if(node != null){
             generateFollowPos(node.left);
             generateFollowPos(node.right);
-
-            // Empezar a generar todos los followPos
-            if(node.value.second.equals(".")){
-                for (int i : node.left.getLastPoses()) {
-                    for (int j : node.right.firstpos) {
-                        ArrayList<Integer> list = tableFollowPos.get(i);
-                        if(!list.contains(j)) list.add(j);
-                    }
-                }
-            }
-            if(node.value.second.equals("*") || node.value.second.equals("+")){
-                for (int i : node.lastpos) {
-                    for (int j : node.firstpos) {
-                        ArrayList<Integer> list = tableFollowPos.get(i);
-                        if(!list.contains(j)) list.add(j);
-                    }
-                }
-            }
         }
     }
 

@@ -1,6 +1,6 @@
 	let delim = [' ''\t''\n']
  let ws = delim+ 
-let letter = ['A'-'Z''a'-'z']
+let letter = ['A'-'C''a'-'c']
 
 let digit = ["0123456789"]
    let id = letter (letter | digit)*

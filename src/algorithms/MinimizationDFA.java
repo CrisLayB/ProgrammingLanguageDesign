@@ -1,7 +1,6 @@
 package algorithms;
 
 import models.DFA;
-import models.PairData;
 import models.State;
 import models.Symbol;
 
@@ -11,8 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Queue;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.HashMap;
 
 public class MinimizationDFA {
     public static DFA minimizingDFA(DFA dfa){
@@ -40,10 +37,7 @@ public class MinimizationDFA {
                     }
                 }
                 L.add(Ds);
-            }            
-            
-            int i = 0;
-            
+            }                                
         }
 
         return dfaMin;

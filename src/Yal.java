@@ -91,14 +91,17 @@ public class Yal {
         AdminFiles.createImgDot(fileSintaxTree, "img/resultsSintaxTree.png");
 
         // * ====> Crear un automata
-        ThompsonAlgorithmMega megaAutomata = new ThompsonAlgorithmMega(tokenizer.getIdsExtended());
-        String formatedCode = AdminFiles.readContentMegaNFA(megaAutomata.getMegaAutomata(), "MegaAutomata");
+        ThompsonAlgorithmMega thompsonMegaAutomata = new ThompsonAlgorithmMega(tokenizer.getIdsExtended());
+        NFA megaAutomata = thompsonMegaAutomata.getMegaAutomata();
+        System.out.println(megaAutomata.toString());
+
+        // Guardar resultado de un mega automata en un pdf
+        String formatedCode = AdminFiles.readContentMegaNFA(megaAutomata, "MegaAutomata [" + args[0] + "]" );
         if(!AdminFiles.writeFileCode(formatedCode, "docs/megaAutomata.dot")){
             System.out.println("No se pudo guardar el archivo.dot");
             return;
         }
-
-        AdminFiles.createPdfDot("docs/megaAutomata.dot", "img/megaAutomata.pdf");
+        AdminFiles.createPdfDot("docs/megaAutomata.dot", "img/megaAutomata__.pdf");
                 
         // * ====> Crear el scanner con todos los datos generados        
     }
