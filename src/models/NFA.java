@@ -36,7 +36,7 @@ public class NFA extends Automata {
             State newStateOrigin = new State(newNumberOrigin, stateOrigin.getType());
             State newStateFinal = new State(newNumberFinal, stateFinal.getType());
             transitions.add(new Transition(
-                new Symbol(symbolTransition.getcId()),
+                new Symbol(symbolTransition.getStringId()),
                 newStateOrigin, 
                 newStateFinal
             ));

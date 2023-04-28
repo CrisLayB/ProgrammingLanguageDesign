@@ -59,13 +59,7 @@ public class ThompsonAlgorithmMega {
                 nfa.getStateInitial()
             );
             megaAutomata.addTransition(newTransition);
-            // System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-            // System.out.println(nfa.toString());
         }
-
-        // System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-        // System.out.println("MEGA AUTOMATA COMPLETO: ");
-        // System.out.println(megaAutomata.toString());
     }
 
     private NFA constructNFA(ArrayList<String> postfix){
@@ -129,7 +123,7 @@ public class ThompsonAlgorithmMega {
             nfa1.addSymbol(transition.getSymbol());
         }        
         nfa1.setStateFinal(tempFinalState);
-        Transition transition = new Transition(new Symbol(epsilon), tempState, nfa2.getStateInitial());
+        Transition transition = new Transition(new Symbol(epsilon+""), tempState, nfa2.getStateInitial());
         nfa1.addTransition(transition);
         return nfa1;
     }
@@ -138,7 +132,7 @@ public class ThompsonAlgorithmMega {
         nfa.getStateInitial().setType(Types.Transition);
         nfa.getStateFinal().setType(Types.Transition);
         // Crear la transicion que conecta con el estado final ε inicial        
-        Symbol epsilonSymbol = new Symbol(epsilon);
+        Symbol epsilonSymbol = new Symbol(epsilon+"");
         Transition transitionBetween = new Transition(epsilonSymbol, nfa.getStateFinal(), nfa.getStateInitial());
         nfa.addTransition(transitionBetween);        
         // Crear los nuevos estados origen y finales
@@ -182,11 +176,11 @@ public class ThompsonAlgorithmMega {
         State stateFinal = new State(idControl, Types.Final);
         
         // Crear nuevas transiciones
-        Transition transitionOriginUp = new Transition(new Symbol(epsilon), stateOrigin, nfa1.getStateInitial());
-        Transition transitionOriginDown = new Transition(new Symbol(epsilon), stateOrigin, nfa2.getStateInitial());
+        Transition transitionOriginUp = new Transition(new Symbol(epsilon+""), stateOrigin, nfa1.getStateInitial());
+        Transition transitionOriginDown = new Transition(new Symbol(epsilon+""), stateOrigin, nfa2.getStateInitial());
 
-        Transition transitionFinalUp = new Transition(new Symbol(epsilon), nfa1.getStateFinal(), stateFinal);
-        Transition transitionFinalDown = new Transition(new Symbol(epsilon), nfa2.getStateFinal(), stateFinal);
+        Transition transitionFinalUp = new Transition(new Symbol(epsilon+""), nfa1.getStateFinal(), stateFinal);
+        Transition transitionFinalDown = new Transition(new Symbol(epsilon+""), nfa2.getStateFinal(), stateFinal);
         
         // Agregar nuevas transiciones
         nfa1.addTransition(transitionOriginUp);
