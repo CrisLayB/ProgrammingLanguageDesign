@@ -33,6 +33,7 @@ abstract public class Automata {
         this.statesFinal = statesFinal;
         this.states = states;
         this.transitions = transitions;
+        symbols = new ArrayList<>();
     }
 
     // Getters
@@ -79,6 +80,10 @@ abstract public class Automata {
 
     public void addTransition(Transition transition){
         transitions.add(transition);
+    }
+
+    public void addTransition(Transition transition, int pos){
+        transitions.add(pos, transition);
     }
 
     public void addState(State state){

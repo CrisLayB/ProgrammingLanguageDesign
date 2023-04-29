@@ -4,6 +4,7 @@ public class Symbol implements Comparable<Symbol>{
     private int id; // id = ASCII de C_id;
     private char cId;
     private String stringId;
+    private String letValue;
 
     public Symbol(char cId){
         this.id = (int)cId;
@@ -17,6 +18,12 @@ public class Symbol implements Comparable<Symbol>{
 
     public Symbol(String stringId){
         this.stringId = stringId;
+        this.letValue = null;
+    }
+
+    public Symbol(String stringId, String letValue){
+        this.stringId = stringId;
+        this.letValue = letValue;
     }
 
     public int getId() {
@@ -29,6 +36,10 @@ public class Symbol implements Comparable<Symbol>{
 
     public String getStringId() {
         return stringId;
+    }
+
+    public String getLetValue() {
+        return letValue;
     }
 
     @Override

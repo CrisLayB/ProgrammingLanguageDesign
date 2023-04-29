@@ -123,12 +123,21 @@ public class FilesCreator {
             
             // Obtener automata generado
             myWriter.write("\n\t\t// Obtener Automata \n");
+            myWriter.write("\t\tNFA automata = megaAutomata(); \n");
             myWriter.write("\t\t");
 
             // Recibir contenido del input
             myWriter.write("\n\t\t// Leer contenido del archivo \n");
             myWriter.write("\t\tArrayList<String> fileContent = FilesCreator.readFileContent(args[0]); \n");
-            myWriter.write("\t\t \n");
+            myWriter.write("\t\tArrayList<String> results = new ArrayList<String>(); \n");
+            myWriter.write("\t\tfor (String string : fileContent) { \n");
+            myWriter.write("\t\t    for (int i = 0; i < string.length(); i++) {\n");
+            myWriter.write("\t\t        char c = string.charAt(i); \n");
+            myWriter.write("\t\t        int ascii = (int)c; \n");
+            myWriter.write("\t\t        String[] result = automata.simulateMega(ascii+\"\");\n");
+            myWriter.write("\t\t        results.add(\"[(\" + result[0] + \", \" + c + \" - Token: \" + result[1] + \"]\");\n");
+            myWriter.write("\t\t    } \n");
+            myWriter.write("\t\t} \n");
             myWriter.write("\t}\n");
             
 
@@ -145,6 +154,19 @@ public class FilesCreator {
           } catch (IOException e) {            
             return false;
           }
+        return true;
+    }
+
+    public static boolean createFileTokens(ArrayList<String> resultsTokens){
+        try {
+            FileWriter myWriter = new FileWriter("docs/outputFile");
+            for (String result : resultsTokens) {
+                myWriter.write(result);
+            }
+            myWriter.close();
+        } catch (IOException e) {            
+            return false;
+        }
         return true;
     }
 

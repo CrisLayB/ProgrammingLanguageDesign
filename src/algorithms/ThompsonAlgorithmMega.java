@@ -44,10 +44,10 @@ public class ThompsonAlgorithmMega {
 
             // Obtener postfix
             ArrayList<String> regexPostfix = ShuntingYardAlgorithm.infixToPostfix(idRegularExpression);
-            System.out.println("===> " + idName + " - " + regexPostfix.toString());
+            System.out.println("JEEE ===> " + idName + " - " + regexPostfix.toString());
             
             // Obtener el NFA
-            NFA nfa = constructNFA(regexPostfix);
+            NFA nfa = constructNFA(regexPostfix, idName);
             for (Transition transition : nfa.getTransitions()) {
                 megaAutomata.addTransition(transition);
             }
@@ -61,7 +61,7 @@ public class ThompsonAlgorithmMega {
         }
     }
 
-    private NFA constructNFA(ArrayList<String> postfix){
+    private NFA constructNFA(ArrayList<String> postfix, String id){
         Stack<NFA> stack = new Stack<>();
 
         for (String stringSymbol : postfix) {
@@ -90,15 +90,16 @@ public class ThompsonAlgorithmMega {
                 stack.add(or(nfaOr1, nfaOr2));
             }
             else{
-                stack.add(createNFA(stringSymbol));
+                stack.add(createNFA(stringSymbol, id));
             }
         }
         
         return stack.pop();
     }
 
-    private NFA createNFA(String c){
-        Symbol symbol = new Symbol(c);
+    private NFA createNFA(String c, String id){
+        // Symbol symbol = new Symbol(c, id);
+        Symbol symbol = (id.length() == 0) ? new Symbol(c) : new Symbol(c, id);
         idControl++;
         State state1 = new State(idControl, Types.Initial);
         idControl++;
@@ -201,7 +202,7 @@ public class ThompsonAlgorithmMega {
     }
 
     public NFA question(NFA nfa1){
-        NFA nfa2 = createNFA(epsilon+"");
+        NFA nfa2 = createNFA(epsilon+"", "");
         return or(nfa1, nfa2);
     }
     

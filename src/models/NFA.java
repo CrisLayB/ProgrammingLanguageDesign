@@ -60,6 +60,7 @@ public class NFA extends Automata {
 
     public NFA(State stateInitial, List<State> statesFinal, List<State> states, List<Transition> transitions){
         super(stateInitial, statesFinal, states, transitions);
+        forMegaAutomata = true;
     }
 
     // Getters
@@ -95,6 +96,15 @@ public class NFA extends Automata {
         }
 
         return false;
+    }
+
+    public String[] simulateMega(String wAscii){
+        for (Transition transition : getTransitions()) {
+            if(transition.getSymbol().getStringId().equals(wAscii)){
+                return new String[]{wAscii, transition.getSymbol().getLetValue()};
+            }
+        }        
+        return new String[]{wAscii, "ERROR LEXICO"};
     }
 
     @Override

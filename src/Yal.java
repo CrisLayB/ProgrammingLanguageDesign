@@ -9,7 +9,6 @@ import algorithms.ShuntingYardAlgorithm;
 import algorithms.ThompsonAlgorithmMega;
 
 import models.*;
-import java.util.*;
 
 // Importar librerias de java framework collections
 import java.util.ArrayList;
@@ -109,14 +108,10 @@ public class Yal {
                 
         // * ====> Crear el scanner con todos los datos generados (Megaautomata y codigo generado)
         if(!FilesCreator.createScannerJava(megaAutomataCode(megaAutomata), generateVariablesLet(tokenizer.getRuleContent()))){
-            System.out.println("Un error acabo de ocurrir");
+            System.out.println(Colors.RED + "\n==> Un error acabo de ocurrir" + Colors.RESET);
             return;
         }
-        System.out.println("\nEl Scanner.java a sido creado de forma exitosa.");
-
-        // ! =====================================================================
-
-        // ! =====================================================================
+        System.out.println(Colors.GREEN + "\nEl Scanner.java a sido creado de forma exitosa." + Colors.RESET);
     }
 
     private static ArrayList<String> generateVariablesLet(RuleContent ruleContent){
@@ -139,7 +134,7 @@ public class Yal {
         }
         code.add("\t\treturn NULL;\n");
         code.add("\t}\n");
-                
+
         return code;
     }
 
@@ -167,11 +162,17 @@ public class Yal {
         // Escribir todas las transiciones        
         code.add("List<Transition> transitions = new ArrayList<Transition>();");
         for (Transition t : megaAutomata.getTransitions()) {
-            code.add(
+            String instruction = (t.getSymbol().getLetValue() == null) ? 
                 String.format(
-                    "transitions.add(new Transition(new Symbol(\"%s\"), new State(\"%s\", %s), new State(\"%s\", %s)));", 
-                    t.getSymbol().getStringId(), t.getStateOrigin().getId(), "Types." + t.getStateOrigin().getType(), 
-                    t.getStateFinal().getId(), "Types." + t.getStateFinal().getType())
+                "transitions.add(new Transition(new Symbol(\"%s\"), new State(\"%s\", %s), new State(\"%s\", %s)));", 
+                t.getSymbol().getStringId(), t.getStateOrigin().getId(), "Types." + t.getStateOrigin().getType(), 
+                t.getStateFinal().getId(), "Types." + t.getStateFinal().getType()) : 
+                String.format(
+                    "transitions.add(new Transition(new Symbol(\"%s\", \"%s\"), new State(\"%s\", %s), new State(\"%s\", %s)));", 
+                    t.getSymbol().getStringId(), t.getSymbol().getLetValue(), t.getStateOrigin().getId(), "Types." + t.getStateOrigin().getType(), 
+                    t.getStateFinal().getId(), "Types." + t.getStateFinal().getType());
+            code.add(
+                instruction
             );            
         }
 
