@@ -1,5 +1,5 @@
 digraph "Resultado Automata AFD" {
-	label = "((a|b|c)+)  [AFD]"
+	label = "((a|b|c)(a|b|c)*)  [AFD]"
 	labelloc  =  t
 	fontsize  = 25
 	rankdir=LR size="8,5"
@@ -8,10 +8,25 @@ digraph "Resultado Automata AFD" {
 	0
 	node [shape=none]
 	node [shape=circle]
-	0 -> 1[label="a"]
-	0 -> 2[label="b"]
-	0 -> 3[label="c"]
-	3 -> 4[label="c"]
-	2 -> 4[label="c"]
-	1 -> 4[label="c"]
+	0 -> 1[label="null"]
+	0 -> 2[label="null"]
+	0 -> 3[label="null"]
+	3 -> 4[label="null"]
+	3 -> 5[label="null"]
+	3 -> 6[label="null"]
+	6 -> 4[label="null"]
+	6 -> 5[label="null"]
+	6 -> 6[label="null"]
+	5 -> 4[label="null"]
+	5 -> 5[label="null"]
+	5 -> 6[label="null"]
+	4 -> 4[label="null"]
+	4 -> 5[label="null"]
+	4 -> 6[label="null"]
+	2 -> 4[label="null"]
+	2 -> 5[label="null"]
+	2 -> 6[label="null"]
+	1 -> 4[label="null"]
+	1 -> 5[label="null"]
+	1 -> 6[label="null"]
 }

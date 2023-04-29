@@ -28,9 +28,20 @@ abstract public class Automata {
         transitions = new ArrayList<Transition>();
     }
 
+    public Automata(State stateInitial, List<State> statesFinal, List<State> states, List<Transition> transitions){
+        this.stateInitial = stateInitial;
+        this.statesFinal = statesFinal;
+        this.states = states;
+        this.transitions = transitions;
+    }
+
     // Getters
     public State getStateInitial() {
         return stateInitial;
+    }
+
+    public List<State> getStatesFinal() {
+        return statesFinal;
     }
 
     public List<State> getStates() {

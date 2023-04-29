@@ -5,6 +5,8 @@ import java.io.BufferedWriter;
 import java.io.Writer;
 import java.io.OutputStreamWriter;
 import java.io.FileOutputStream;
+import java.io.FileWriter;   // Import the FileWriter class
+import java.io.IOException;  // Import the IOException class to handle errors
 
 // Leer archivos
 import java.io.BufferedReader;
@@ -18,7 +20,7 @@ import models.NFA;
 import models.DFA;
 import models.Transition;
 
-public class AdminFiles {        
+public class FilesCreator {        
     public static String readContentNFA(NFA nfa, String r){
         String contentScript = "";
         contentScript += "digraph \"Resultado Automata AFN\" {\n";
@@ -93,6 +95,58 @@ public class AdminFiles {
         return contentScript;
     }
 
+    public static boolean createScannerJava(ArrayList<String> code){
+        try {
+            FileWriter myWriter = new FileWriter("src/Scanner.java");
+            // myWriter.write("\t\t");
+            myWriter.write("import controllers.FilesCreator;\n");
+            myWriter.write("import models.*;\n");
+            myWriter.write("\n");
+            myWriter.write("import java.util.List;\n");
+            myWriter.write("import java.util.ArrayList;\n");
+            myWriter.write("\n");
+            myWriter.write("public class Scanner {\n");
+
+            
+            
+            myWriter.write("\tpublic static void main(String[] args) {\n");
+            myWriter.write("\t\tif (args.length == 0){\n");
+            myWriter.write("\t\t\tSystem.out.println(\"Te falto ingresar un archivo en los argumentos\");\n");
+            myWriter.write("\t\t\tSystem.out.println(\"EJEMPLO: java Scanner file\");\n");
+            myWriter.write("\t\t}\n");
+            myWriter.write("\t\tSystem.out.println(\"===> Scanner.java\");\n");
+            
+            // Obtener automata generado
+            myWriter.write("\n\t\t// Obtener Automata \n");
+            myWriter.write("\t\t");
+
+            // Recibir contenido del input
+            myWriter.write("\n\t\t// Leer contenido del archivo \n");
+            myWriter.write("\t\tArrayList<String> fileContent = FilesCreator.readFileContent(args[0]); \n");
+            myWriter.write("\t\t \n");
+            myWriter.write("\t}\n");
+            
+            // Y codigo detectado de las rules
+            myWriter.write("\tprivate static String scan(){\n");
+            myWriter.write("\t\treturn null;\n");
+            myWriter.write("\t}\n");
+
+            // Implementar codigo de automatas            
+            myWriter.write("\tprivate static NFA megaAutomata() { \n");
+            myWriter.write("\t\t// Automata Generado \n");
+            for (String lineCode : code) {
+                myWriter.write("\t\t" + lineCode + "\n");
+            }
+            myWriter.write("\t}\n");
+            
+            myWriter.write("}\n");
+            myWriter.close();
+          } catch (IOException e) {            
+            return false;
+          }
+        return true;
+    }
+
     public static boolean writeFileCode(String content, String file){
         Writer out = null;
         try {
@@ -123,38 +177,19 @@ public class AdminFiles {
 
         return lines;
     }
-    
-    public static void createImgDot(String fileInputPath, String fileOutputPath){
+
+    // TypeFile: -"Tpng" or "-Tpdf"
+    public static void createDot(String fileInputPath, String fileOutputPath, String typeFile){
+        String[] cmd = new String[8];
+        cmd[0] = "dot";
+        cmd[1] = typeFile;
+        cmd[2] = fileInputPath;
+        cmd[3] = "-o";
+        cmd[4] = fileOutputPath;
+        cmd[5] = "&&";
+        cmd[6] = "sxiv";
+        cmd[7] = fileOutputPath;
         try {
-            String[] cmd = new String[8];
-            cmd[0] = "dot";
-            cmd[1] = "-Tpng";
-            cmd[2] = fileInputPath;
-            cmd[3] = "-o";
-            cmd[4] = fileOutputPath;
-            cmd[5] = "&&";
-            cmd[6] = "sxiv";
-            cmd[7] = fileOutputPath;
-
-            Runtime rt = Runtime.getRuntime();
-            rt.exec( cmd );
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-
-    public static void createPdfDot(String fileInputPath, String fileOutputPath){
-        try {
-            String[] cmd = new String[8];
-            cmd[0] = "dot";
-            cmd[1] = "-Tpdf";
-            cmd[2] = fileInputPath;
-            cmd[3] = "-o";
-            cmd[4] = fileOutputPath;
-            cmd[5] = "&&";
-            cmd[6] = "sxiv";
-            cmd[7] = fileOutputPath;
-
             Runtime rt = Runtime.getRuntime();
             rt.exec( cmd );
         } catch (Exception e) {
@@ -162,3 +197,5 @@ public class AdminFiles {
         }
     }
 }
+
+// PD: Unica clase que utiliza Try and Catch JAJAJAJA

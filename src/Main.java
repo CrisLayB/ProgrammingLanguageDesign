@@ -1,7 +1,7 @@
 import algorithms.MinimizationDFA;
 import algorithms.ShuntingYardAlgorithm;
 import algorithms.ThompsonAlgorithm;
-import controllers.AdminFiles;
+import controllers.FilesCreator;
 import controllers.SyntaxChecker;
 import models.NFA;
 import models.DFA;
@@ -77,14 +77,13 @@ public class Main {
         // Algoritmo de contruccion de Thompson
         NFA nfa = ThompsonAlgorithm.constructNFA(rPostfix);
         System.out.println(nfa.toString());
-        String formatedCode = AdminFiles.readContentNFA(nfa, r);        
-        if(!AdminFiles.writeFileCode(formatedCode, "docs/automataAFN.dot")){
+        String formatedCode = FilesCreator.readContentNFA(nfa, r);        
+        if(!FilesCreator.writeFileCode(formatedCode, "docs/automataAFN.dot")){
             System.out.println("No se pudo guardar el archivo.dot");
             return;
-        }
-        
-        AdminFiles.createImgDot("docs/automataAFN.dot", "img/resultsAFN.png");
-        AdminFiles.createPdfDot("docs/automataAFN.dot", "img/resultsAFN.pdf");
+        }        
+        FilesCreator.createDot("docs/automataAFN.dot", "img/resultsAFN.png", "-Tpng");
+        FilesCreator.createDot("docs/automataAFN.dot", "img/resultsAFN.pdf", "-Tpdf");
 
         // * ===========================================================================================
         // * CONSTRUCCION DE AFD (Automata Finito Determinista) ========================================
@@ -93,13 +92,12 @@ public class Main {
         // Algoritmo de Construccion de Subconjuntos
         DFA dfaSubsetConstruction = new DFA(nfa);
         System.out.println(dfaSubsetConstruction.toString());
-        String formatedCodeDFA = AdminFiles.readContentDFA(dfaSubsetConstruction, r);
-        if(!AdminFiles.writeFileCode(formatedCodeDFA, "docs/automataAFD.dot")){
+        String formatedCodeDFA = FilesCreator.readContentDFA(dfaSubsetConstruction, r);
+        if(!FilesCreator.writeFileCode(formatedCodeDFA, "docs/automataAFD.dot")){
             System.out.println("No se pudo guardar el archivo.dot");
             return;
         }
-
-        AdminFiles.createImgDot("docs/automataAFD.dot", "img/resultsAFD.png");
+        FilesCreator.createDot("docs/automataAFD.dot", "img/resultsAFD.png", "-Tpng");
 
         // * ===========================================================================================
         // * CONSTRUCCION AFD DIRECTO (Automata Finito Determinista Directo) ===========================
@@ -121,10 +119,6 @@ public class Main {
         Tree treePostfix = new Tree(regexExpression);
         
         DFA dfaDirect = new DFA(treePostfix);
-        if(dfaDirect == null){
-            System.out.println("Un error ocurrio con el AFD directo :)");
-            return;
-        }
         System.out.println(dfaDirect.toString());
         
         // * ===========================================================================================

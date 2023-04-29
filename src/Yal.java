@@ -1,11 +1,15 @@
 // Importar codigo java propio
-import controllers.AdminFiles;
+import controllers.FilesCreator;
 import controllers.YalChecker;
 import models.Tree;
 import models.PairData;
+import models.Transition;
 import models.NFA;
 import algorithms.ShuntingYardAlgorithm;
 import algorithms.ThompsonAlgorithmMega;
+
+import models.*;
+import java.util.*;
 
 // Importar librerias de java framework collections
 import java.util.ArrayList;
@@ -32,7 +36,7 @@ public class Yal {
         }
         
         // * ====> Vamos a obtener todo el contenido del archivo
-        ArrayList<String> yalContent = AdminFiles.readFileContent(args[0]);
+        ArrayList<String> yalContent = FilesCreator.readFileContent(args[0]);
 
         if(yalContent == null){ // Si dado caso no se detecta de fomra correcta el codigo yal
             System.out.println("\n--> No se a detectado un archivo valido\n");
@@ -82,13 +86,13 @@ public class Yal {
         Tree regexTree = new Tree(regexExpression);
         
         ArrayList<String> transitionsTree = regexTree.getTransitions();
-        String scriptTree = AdminFiles.readContentTree(transitionsTree);
+        String scriptTree = FilesCreator.readContentTree(transitionsTree);
         String fileSintaxTree = "docs/SintaxTree.dot";
-        if(!AdminFiles.writeFileCode(scriptTree, fileSintaxTree)){
+        if(!FilesCreator.writeFileCode(scriptTree, fileSintaxTree)){
             System.out.println("No se pudo guardar ni sobreescribir el archivo .dot");
             return;
         }
-        AdminFiles.createImgDot(fileSintaxTree, "img/resultsSintaxTree.png");
+        FilesCreator.createDot(fileSintaxTree, "img/resultsSintaxTree.png", "-Tpng");
 
         // * ====> Crear un automata
         ThompsonAlgorithmMega thompsonMegaAutomata = new ThompsonAlgorithmMega(tokenizer.getIdsExtended());
@@ -96,13 +100,62 @@ public class Yal {
         System.out.println(megaAutomata.toString());
 
         // Guardar resultado de un mega automata en un pdf
-        String formatedCode = AdminFiles.readContentMegaNFA(megaAutomata, "MegaAutomata [" + args[0] + "]" );
-        if(!AdminFiles.writeFileCode(formatedCode, "docs/megaAutomata.dot")){
+        String formatedCode = FilesCreator.readContentMegaNFA(megaAutomata, "MegaAutomata [" + args[0] + "]" );
+        if(!FilesCreator.writeFileCode(formatedCode, "docs/megaAutomata.dot")){
             System.out.println("No se pudo guardar el archivo.dot");
             return;
         }
-        AdminFiles.createPdfDot("docs/megaAutomata.dot", "img/megaAutomata__.pdf");
+        FilesCreator.createDot("docs/megaAutomata.dot", "img/megaAutomata__.pdf", "-Tpdf");
                 
-        // * ====> Crear el scanner con todos los datos generados        
+        // * ====> Crear el scanner con todos los datos generados
+        if(!FilesCreator.createScannerJava(megaAutomataCode(megaAutomata))){
+            System.out.println("Un error acabo de ocurrir");
+            return;
+        }
+        System.out.println("\nEl Scanner.java a sido creado de forma exitosa.");
+    }
+
+    private static ArrayList<String> megaAutomataCode(NFA megaAutomata){
+        ArrayList<String> code = new ArrayList<String>();
+
+        // Escribir estado inicial
+        code.add(String.format("State initialState = new State(%s, %s);", megaAutomata.getStateInitial().getId(), "Types." + megaAutomata.getStateInitial().getType()));
+        // Escribir los estados finales
+        code.add("List<State> finalStates = new ArrayList<State>();");
+        for (State fS : megaAutomata.getStatesFinal()) {  
+            code.add(
+                String.format(
+                    "finalStates.add(new State(\"%s\", %s));", fS.getId(), "Types." + fS.getType())
+            );
+        }
+        // Escribir todos los estados
+        code.add("List<State> states = new ArrayList<State>();");
+        for (State a : megaAutomata.getStates()) {
+            code.add(
+                String.format(
+                    "states.add(new State(\"%s\", %s));", a.getId(), "Types." + a.getType())
+            );
+        }
+        // Escribir todo el alfabeto (Symbolos)
+        // code.add("List<Symbol> symbols = new ArrayList<Symbol>();");
+        // for (Symbol sym : megaAutomata.getSymbols()) {
+        //     code.add(
+        //         String.format("symbols.add(new Symbol(\"%s\"));", sym.getStringId())
+        //     );
+        // }
+        // Escribir todas las transiciones        
+        code.add("List<Transition> transitions = new ArrayList<Transition>();");
+        for (Transition t : megaAutomata.getTransitions()) {
+            code.add(
+                String.format(
+                    "transitions.add(new Transition(new Symbol(\"%s\"), new State(\"%s\", %s), new State(\"%s\", %s)));", 
+                    t.getSymbol().getStringId(), t.getStateOrigin().getId(), "Types." + t.getStateOrigin().getType(), 
+                    t.getStateFinal().getId(), "Types." + t.getStateFinal().getType())
+            );            
+        }
+
+        code.add("return new NFA(initialState, finalStates, states, transitions);");
+        
+        return code;
     }
 }

@@ -2,6 +2,7 @@ package models;
 
 import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
 
 public class NFA extends Automata {
     // Atributos
@@ -55,6 +56,10 @@ public class NFA extends Automata {
             if(!checkIfRepeat(transition.getStateOrigin())) addState(transition.getStateFinal());
             addSymbol(transition.getSymbol());
         }        
+    }
+
+    public NFA(State stateInitial, List<State> statesFinal, List<State> states, List<Transition> transitions){
+        super(stateInitial, statesFinal, states, transitions);
     }
 
     // Getters
