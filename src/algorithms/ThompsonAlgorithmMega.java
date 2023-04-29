@@ -17,7 +17,7 @@ public class ThompsonAlgorithmMega {
     private NFA megaAutomata;
     private int idControl;
     private Map<String, ArrayList<String>> ids;
-    private final static char epsilon = 'E';
+    private final static char epsilon = '€';
 
     // Constructor
     public ThompsonAlgorithmMega(Map<String, ArrayList<String>> ids){
@@ -36,7 +36,6 @@ public class ThompsonAlgorithmMega {
     private void preparingMegaAutomata(){
         // Crear estado inicial
         State initialStateMegaAutomata = new State(++idControl, Types.Initial);
-        // megaAutomata = new NFA(new State(++idControl, Types.Initial));
         megaAutomata = new NFA(initialStateMegaAutomata);
         
         for(Map.Entry<String, ArrayList<String>> id: ids.entrySet()){

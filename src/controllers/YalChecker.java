@@ -230,6 +230,10 @@ public class YalChecker {
     public Map<String, ArrayList<String>> getIdsExtended() {
         return idsExtended;
     }
+
+    public RuleContent getRuleContent(){        
+        return rules.entrySet().iterator().next().getValue();
+    }
     
     // -> Metodos
     private void getValuesRegularExpression(String regularExpression){        
@@ -364,7 +368,7 @@ public class YalChecker {
             tempRuleContent.updateRegex(content);
             // Si dado caso no hay nada en los actions entonces se creara una action vacia
             if(tempRuleContent.emptyAction()){ // Si el id no tiene una accion en concreto
-                ruleContent.updateBufferForAction("return null");
+                ruleContent.updateBufferForAction("return NULL");
                 tempRuleContent.addAction();
             }
         }

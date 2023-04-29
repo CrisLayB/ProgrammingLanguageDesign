@@ -35,6 +35,14 @@ public class RuleContent {
     public boolean getAddAction(){
         return addAction;
     }
+
+    public ArrayList<String> getActions() {
+        return actions;
+    }
+
+    public ArrayList<String> getNamesBuffer() {
+        return namesBuffer;
+    }
     
     // --> Setters
     public void setArgs(ArrayList<String> args) {

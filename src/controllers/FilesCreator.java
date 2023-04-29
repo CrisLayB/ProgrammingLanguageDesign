@@ -95,7 +95,7 @@ public class FilesCreator {
         return contentScript;
     }
 
-    public static boolean createScannerJava(ArrayList<String> code){
+    public static boolean createScannerJava(ArrayList<String> codeMegaAutomata, ArrayList<String> codeRule){
         try {
             FileWriter myWriter = new FileWriter("src/Scanner.java");
             // myWriter.write("\t\t");
@@ -107,9 +107,14 @@ public class FilesCreator {
             myWriter.write("\n");
             myWriter.write("public class Scanner {\n");
 
+            // Implementar variables para retornar el scan y codigo generado
+            myWriter.write("\tprivate final static String NULL = \"NULL\";\n");
+            for (String code : codeRule) {
+                myWriter.write(code);
+            }
             
-            
-            myWriter.write("\tpublic static void main(String[] args) {\n");
+            // Menu principal del programa
+            myWriter.write("\n\tpublic static void main(String[] args) {\n");
             myWriter.write("\t\tif (args.length == 0){\n");
             myWriter.write("\t\t\tSystem.out.println(\"Te falto ingresar un archivo en los argumentos\");\n");
             myWriter.write("\t\t\tSystem.out.println(\"EJEMPLO: java Scanner file\");\n");
@@ -126,15 +131,11 @@ public class FilesCreator {
             myWriter.write("\t\t \n");
             myWriter.write("\t}\n");
             
-            // Y codigo detectado de las rules
-            myWriter.write("\tprivate static String scan(){\n");
-            myWriter.write("\t\treturn null;\n");
-            myWriter.write("\t}\n");
 
             // Implementar codigo de automatas            
-            myWriter.write("\tprivate static NFA megaAutomata() { \n");
+            myWriter.write("\n\tprivate static NFA megaAutomata() { \n");
             myWriter.write("\t\t// Automata Generado \n");
-            for (String lineCode : code) {
+            for (String lineCode : codeMegaAutomata) {
                 myWriter.write("\t\t" + lineCode + "\n");
             }
             myWriter.write("\t}\n");

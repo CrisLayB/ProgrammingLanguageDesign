@@ -97,7 +97,7 @@ public class Yal {
         // * ====> Crear un automata
         ThompsonAlgorithmMega thompsonMegaAutomata = new ThompsonAlgorithmMega(tokenizer.getIdsExtended());
         NFA megaAutomata = thompsonMegaAutomata.getMegaAutomata();
-        System.out.println(megaAutomata.toString());
+        // System.out.println(megaAutomata.toString());
 
         // Guardar resultado de un mega automata en un pdf
         String formatedCode = FilesCreator.readContentMegaNFA(megaAutomata, "MegaAutomata [" + args[0] + "]" );
@@ -107,12 +107,40 @@ public class Yal {
         }
         FilesCreator.createDot("docs/megaAutomata.dot", "img/megaAutomata__.pdf", "-Tpdf");
                 
-        // * ====> Crear el scanner con todos los datos generados
-        if(!FilesCreator.createScannerJava(megaAutomataCode(megaAutomata))){
+        // * ====> Crear el scanner con todos los datos generados (Megaautomata y codigo generado)
+        if(!FilesCreator.createScannerJava(megaAutomataCode(megaAutomata), generateVariablesLet(tokenizer.getRuleContent()))){
             System.out.println("Un error acabo de ocurrir");
             return;
         }
         System.out.println("\nEl Scanner.java a sido creado de forma exitosa.");
+
+        // ! =====================================================================
+
+        // ! =====================================================================
+    }
+
+    private static ArrayList<String> generateVariablesLet(RuleContent ruleContent){
+        ArrayList<String> code = new ArrayList<String>();
+
+        // De primero vamos a almacenar las variables
+        for (String string : ruleContent.getActions()) {
+            String[] valueReturns = string.split(" ");
+            if(!valueReturns[valueReturns.length - 1].equals("NULL"))
+                code.add("\tprivate final static String " + valueReturns[valueReturns.length - 1] + " = \"" + valueReturns[valueReturns.length - 1] + "\";\n");
+        }
+        // Luego vamos a crear las condiciones para el metodo de scan
+        code.add("\n\tprivate static String scan(String token){\n");
+        for (int i = 0; i < ruleContent.getNamesBuffer().size(); i++) {
+            String name = ruleContent.getNamesBuffer().get(i);
+            String action = ruleContent.getActions().get(i);
+            code.add("\t\tif(token.equals(\"" + name + "\")){\n");
+            code.add("\t\t\t" + action + ";\n");
+            code.add("\t\t}\n");
+        }
+        code.add("\t\treturn NULL;\n");
+        code.add("\t}\n");
+                
+        return code;
     }
 
     private static ArrayList<String> megaAutomataCode(NFA megaAutomata){
@@ -136,13 +164,6 @@ public class Yal {
                     "states.add(new State(\"%s\", %s));", a.getId(), "Types." + a.getType())
             );
         }
-        // Escribir todo el alfabeto (Symbolos)
-        // code.add("List<Symbol> symbols = new ArrayList<Symbol>();");
-        // for (Symbol sym : megaAutomata.getSymbols()) {
-        //     code.add(
-        //         String.format("symbols.add(new Symbol(\"%s\"));", sym.getStringId())
-        //     );
-        // }
         // Escribir todas las transiciones        
         code.add("List<Transition> transitions = new ArrayList<Transition>();");
         for (Transition t : megaAutomata.getTransitions()) {

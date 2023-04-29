@@ -109,7 +109,7 @@ abstract public class Automata {
     }
 
     public void addSymbol(Symbol newSymbol){        
-        if(newSymbol.getId() == 949 || newSymbol.getId() == 69){
+        if(newSymbol.getId() == 949 || newSymbol.getId() == AsciiSymbol.Epsilon.ascii){
             return;
         }
         
@@ -142,7 +142,7 @@ abstract public class Automata {
         while (!stack.isEmpty()) {
             State state = stack.pop();
             for (Transition transition : transitions) {
-                if (transition.getStateOrigin().equals(state) && transition.getSymbol().getcId() == 'E') {
+                if (transition.getStateOrigin().equals(state) && transition.getSymbol().getcId() == AsciiSymbol.Epsilon.c) {
                     State nextState = transition.getStateFinal();
                     if (!eclosureStates.contains(nextState)) {
                         eclosureStates.add(nextState);

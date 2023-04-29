@@ -11,7 +11,7 @@ import models.AsciiSymbol;
 
 public class ThompsonAlgorithm {
     private static int num = -1;
-    private final static char epsilon = 'E';
+    private final static char epsilon = '€';
     
     public static NFA constructNFA(String postfixExpression) {
         Stack<NFA> stack = new Stack<NFA>();
