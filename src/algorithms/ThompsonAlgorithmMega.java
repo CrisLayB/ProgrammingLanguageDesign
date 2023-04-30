@@ -44,7 +44,7 @@ public class ThompsonAlgorithmMega {
 
             // Obtener postfix
             ArrayList<String> regexPostfix = ShuntingYardAlgorithm.infixToPostfix(idRegularExpression);
-            System.out.println("JEEE ===> " + idName + " - " + regexPostfix.toString());
+            System.out.println("===> " + idName + " - " + regexPostfix.toString());
             
             // Obtener el NFA
             NFA nfa = constructNFA(regexPostfix, idName);

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Arrays;
 
 import models.RuleContent;
+import models.AsciiSymbol;
 import models.Colors;
 
 public class YalChecker {
@@ -228,7 +229,7 @@ public class YalChecker {
     }
 
     public Map<String, ArrayList<String>> getIdsExtended() {
-        return idsExtended;
+        return idsExtended; // Para retornar los valores de forma mas completa
     }
 
     public RuleContent getRuleContent(){        
@@ -282,6 +283,7 @@ public class YalChecker {
         regexExpression.add("(");
         regexExpression.add("(");        
         idsExtended.get(id).add("(");
+        idsExtended.get(id).add("(");
         for (int index = 0; index < value.length(); index++) {
             char letter = value.charAt(index);
             if(signsOperation.contains(letter)){
@@ -317,20 +319,60 @@ public class YalChecker {
         regexExpression.add("·");
         regexExpression.add("#" + id);
         regexExpression.add(")");
+        // Agregar hoja final
+        idsExtended.get(id).add(")");
+        idsExtended.get(id).add("·");
+        idsExtended.get(id).add("#" + id);
         idsExtended.get(id).add(")");
     }
 
     private void addAsciiToRegex(String value){ // Agregar ids y concatenacion correspondientes del int
         regexExpression.add("(");
-        regexExpression.add(value+"");
-        regexExpression.add("·");
-        regexExpression.add("#" + value);
+        regexExpression.add("(");
+        // if(saveToken.length() > 0 && saveToken.length() != content.length()) saveToken += AsciiSymbol.Dot.c;
+        if(!isNumeric(value)){ // Esto quiere decir que estamos ante un token todavia no convertido en ascii
+            for (int i = 0; i < value.length(); i++) {
+                char c = value.charAt(i);
+                if(i > 0 && i != value.length()) regexExpression.add(AsciiSymbol.Dot.c+"");
+                regexExpression.add((int)c+"");
+            }
+        }
+        else{
+            regexExpression.add(value+"");
+        }
         regexExpression.add(")");
-        // ...
-        idsExtended.put(value, new ArrayList<String>());
-        idsExtended.get(value).add("(");
-        idsExtended.get(value).add(value+"");
-        idsExtended.get(value).add(")");
+        regexExpression.add("·");
+        if(isNumeric(value)){
+            regexExpression.add("#" + (char)Integer.parseInt(value));
+        }
+        else{
+            regexExpression.add("#" + value);
+        }
+        regexExpression.add(")");
+
+        String charValue = (isNumeric(value)) ? (char)Integer.parseInt(value)+"" : value;
+        idsExtended.put(charValue, new ArrayList<String>());
+        idsExtended.get(charValue).add("(");
+        idsExtended.get(charValue).add("(");
+        if(!isNumeric(value)){ // Esto quiere decir que estamos ante un token todavia no convertido en ascii
+            for (int i = 0; i < value.length(); i++) {
+                char c = value.charAt(i);
+                if(i > 0 && i != value.length()) idsExtended.get(charValue).add(AsciiSymbol.Dot.c+"");
+                idsExtended.get(charValue).add((int)c+"");
+            }
+        }
+        else{
+            idsExtended.get(charValue).add(value+"");
+        }
+        idsExtended.get(charValue).add(")");
+        idsExtended.get(charValue).add("·");
+        if(isNumeric(value)){
+            idsExtended.get(charValue).add("#" + (char)Integer.parseInt(value));
+        }
+        else{
+            idsExtended.get(charValue).add("#" + value);
+        }
+        idsExtended.get(charValue).add(")");
     }
 
     private boolean addRuleContent(String id, String content, RuleContent ruleContent){
@@ -396,6 +438,7 @@ public class YalChecker {
             if(content.length() >= 3 && content.charAt(content.length() - 1) == '"'){
                 String saveToken = "";
                 for (int i = 1; i < content.length() - 1; i++) {
+                    // if(saveToken.length() > 0 && saveToken.length() != content.length()) saveToken += AsciiSymbol.Dot.c;
                     saveToken += content.charAt(i);
                 }
                 tempRuleContent.addNameBuffer(saveToken);

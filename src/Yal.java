@@ -96,7 +96,6 @@ public class Yal {
         // * ====> Crear un automata
         ThompsonAlgorithmMega thompsonMegaAutomata = new ThompsonAlgorithmMega(tokenizer.getIdsExtended());
         NFA megaAutomata = thompsonMegaAutomata.getMegaAutomata();
-        // System.out.println(megaAutomata.toString());
 
         // Guardar resultado de un mega automata en un pdf
         String formatedCode = FilesCreator.readContentMegaNFA(megaAutomata, "MegaAutomata [" + args[0] + "]" );
@@ -108,10 +107,10 @@ public class Yal {
                 
         // * ====> Crear el scanner con todos los datos generados (Megaautomata y codigo generado)
         if(!FilesCreator.createScannerJava(megaAutomataCode(megaAutomata), generateVariablesLet(tokenizer.getRuleContent()))){
-            System.out.println(Colors.RED + "\n==> Un error acabo de ocurrir" + Colors.RESET);
+            System.out.println(Colors.RED + "\n==> Un error acabo de ocurrir a la hora de generar el Scanner\n" + Colors.RESET);
             return;
         }
-        System.out.println(Colors.GREEN + "\nEl Scanner.java a sido creado de forma exitosa." + Colors.RESET);
+        System.out.println(Colors.GREEN + "\nEl Scanner.java a sido creado de forma exitosa.\n" + Colors.RESET);
     }
 
     private static ArrayList<String> generateVariablesLet(RuleContent ruleContent){
