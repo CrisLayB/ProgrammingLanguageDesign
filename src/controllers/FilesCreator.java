@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import models.NFA;
 import models.DFA;
 import models.Transition;
+import models.State;
 
 public class FilesCreator {        
     public static String readContentNFA(NFA nfa, String r){
@@ -51,7 +52,9 @@ public class FilesCreator {
         contentScript += "\tfontsize  = 25\n";
         contentScript += "\trankdir=LR size=\"8,5\"\n";
         contentScript += "\tnode [shape=doublecircle]\n";
-        // contentScript += "\t" + nfa.getStateFinal().getId() + "\n";2
+        for (State state : nfa.getStatesFinal()) {
+            contentScript += "\t" + state.getId() + "\n";
+        }
         contentScript += "\tnode [shape=circle]\n";
         contentScript += "\t" + nfa.getStateInitial().getId() + "\n";
         contentScript += "\tnode [shape=none]\n";
@@ -113,11 +116,13 @@ public class FilesCreator {
                 myWriter.write(code);
             }
             
+            // ! ============================================================================
             // Menu principal del programa
             myWriter.write("\n\tpublic static void main(String[] args) {\n");
             myWriter.write("\t\tif (args.length == 0){\n");
             myWriter.write("\t\t\tSystem.out.println(\"Te falto ingresar un archivo en los argumentos\");\n");
             myWriter.write("\t\t\tSystem.out.println(\"EJEMPLO: java Scanner file\");\n");
+            myWriter.write("\t\t\treturn;\n");
             myWriter.write("\t\t}\n");
             myWriter.write("\t\tSystem.out.println(\"===> Scanner.java\");\n");
             
@@ -130,16 +135,33 @@ public class FilesCreator {
             myWriter.write("\n\t\t// Leer contenido del archivo \n");
             myWriter.write("\t\tArrayList<String> fileContent = FilesCreator.readFileContent(args[0]); \n");
             myWriter.write("\t\tArrayList<String> results = new ArrayList<String>(); \n");
+            myWriter.write("\n\t\tString lexema = \"\", idDetected = \"\"; \n");
             myWriter.write("\t\tfor (String string : fileContent) { \n");
             myWriter.write("\t\t    for (int i = 0; i < string.length(); i++) {\n");
             myWriter.write("\t\t        char c = string.charAt(i); \n");
             myWriter.write("\t\t        int ascii = (int)c; \n");
             myWriter.write("\t\t        String[] result = automata.simulateMega(ascii+\"\");\n");
-            myWriter.write("\t\t        results.add(\"[(\" + result[0] + \", \" + c + \" - Token: \" + result[1] + \"]\");\n");
+            // myWriter.write("\t\t        results.add(\"[(\" + result[0] + \", \" + c + \" - Token: \" + result[1] + \"]\\n\");\n");
+            myWriter.write("\t\t        // Vamos a evaluar si el id detectado esta vacio\n");
+            myWriter.write("\t\t        if(idDetected.length() == 0){ \n");
+            myWriter.write("\t\t        	idDetected = result[1];\n");
+            myWriter.write("\t\t        	lexema += c;\n");
+            myWriter.write("\t\t        }\n");
+            myWriter.write("\t\t        else if(idDetected.equals(result[1])) lexema += c;\n");
+            myWriter.write("\t\t        else{ // Si ya no es igual entonces se detiene\n");
+            myWriter.write("\t\t            results.add(\"[\" + lexema + \" - Token: \" + idDetected + \"]\\n\");\n");
+            myWriter.write("\t\t            // Resetear el id Detectado\n");
+            myWriter.write("\t\t        	idDetected = result[1];\n");
+            myWriter.write("\t\t            lexema = c + \"\";\n");
+            myWriter.write("\t\t        }\n");
             myWriter.write("\t\t    } \n");
             myWriter.write("\t\t} \n");
+            myWriter.write("\t\tif(!FilesCreator.createFileTokens(results, \"docs/outputFile\")){\n");
+            myWriter.write("\t\t    System.out.println(\"Error a la hora de crear el output :(\");\n");
+            myWriter.write("\t\t    return;\n");
+            myWriter.write("\t\t}\n");
             myWriter.write("\t}\n");
-            
+            // ! ============================================================================            
 
             // Implementar codigo de automatas            
             myWriter.write("\n\tprivate static NFA megaAutomata() { \n");
@@ -157,14 +179,14 @@ public class FilesCreator {
         return true;
     }
 
-    public static boolean createFileTokens(ArrayList<String> resultsTokens){
+    public static boolean createFileTokens(ArrayList<String> resultsTokens, String path){
         try {
-            FileWriter myWriter = new FileWriter("docs/outputFile");
+            FileWriter myWriter = new FileWriter(path);
             for (String result : resultsTokens) {
                 myWriter.write(result);
             }
             myWriter.close();
-        } catch (IOException e) {            
+        } catch (IOException e) {
             return false;
         }
         return true;
