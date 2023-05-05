@@ -81,38 +81,19 @@ public class DFA extends Automata {
         this.stateInitial = new State(counter, Types.Initial);
         
         List<Integer> firstpos = tree.getFirstpos();
+        
+        Set<Integer> tempFirstPos = new HashSet<>(firstpos);
 
-        Queue<List<Integer>> unmarked = new LinkedList<>();
-        unmarked.add(firstpos);
+        Stack<Set<Integer>> unmarked = new Stack<>();
+        unmarked.add(tempFirstPos);
         
         while(!unmarked.isEmpty()){
-            List<Integer> state = unmarked.poll();
-            for (Symbol s : symbols) {
-                List<Integer> nextState = getNextState(state, s);
-                // if(!nextState.isEmpty() && !transitionsTree.containsKey(nextState)){
-                //     transitionsTree.put(nextState, new HashMap<>());
-                //     unmarked.add(nextState);
-                //     counter++;
-                // }
-                // if(!nextState.isEmpty()){
-                //     System.out.println("EJEM");
-                //     transitionsTree.get(state).put(s, nextState);
-                // }
+            Set<Integer> state = unmarked.pop();
+            for (Symbol s : symbols) {                                
+                
             }
         }     
-        
-        // // Verificar las transiciones
-        // for(Map.Entry<List<Integer>, Map<Symbol, List<Integer>>> transitionTree: transitionsTree.entrySet()){
-        //     System.out.println("??????????????????????????????????????????");
-        //     List<Integer> keyList = transitionTree.getKey();
-        //     Map<Symbol, List<Integer>> valueMap = transitionTree.getValue();
-        //     System.out.println("=> " + keyList.toString());
-        //     for(Map.Entry<Symbol, List<Integer>> ja: valueMap.entrySet()){
-        //         Symbol symbolJa = ja.getKey();
-        //         List<Integer> valueList = ja.getValue();
-        //         System.out.println(symbolJa.toString() + " and "  + valueList.toString());
-        //     }
-        // }
+
     }
 
     public List<State> getStatesFinal(){
@@ -154,20 +135,6 @@ public class DFA extends Automata {
             }
         }
         states.add(state);
-    }
-
-    private List<Integer> getNextState(List<Integer> currentState, Symbol symbol){
-        List<Integer> nextState = new ArrayList<>();
-        Map<Symbol, List<Integer>> stateTransitions = transitionsTree.get(currentState);
-        if (stateTransitions != null) {
-            List<Integer> transitionsForSymbol = stateTransitions.get(symbol);
-            if (transitionsForSymbol != null) {
-                nextState.addAll(transitionsForSymbol);
-            }
-        }
-        // for (Integer state : currentState) {
-        // }
-        return nextState;
     }
 
     @Override

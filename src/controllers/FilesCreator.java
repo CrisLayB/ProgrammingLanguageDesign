@@ -163,7 +163,7 @@ public class FilesCreator {
             myWriter.write("\t\t        }\n");
             myWriter.write("\t\t    } \n");
             myWriter.write("\t\t} \n");
-            myWriter.write("\t\tif(!FilesCreator.createFileTokens(results, \"docs/outputFile\")){\n");
+            myWriter.write("\t\tif(!FilesCreator.createFileTokens(results, \"docs/outputFile\") || !FilesCreator.createFileTokens(actions, \"docs/outputFileActions\")){\n");
             myWriter.write("\t\t    System.out.println(\"Error a la hora de crear el output :(\");\n");
             myWriter.write("\t\t    return;\n");
             myWriter.write("\t\t}\n");
@@ -221,7 +221,7 @@ public class FilesCreator {
             String bfRead;
 
             while((bfRead = bf.readLine()) != null){
-                lines.add(bfRead);
+                lines.add(bfRead + "\n"); // Tomar en cuenta los enters
             }
         } catch (Exception e) {
             lines = null;

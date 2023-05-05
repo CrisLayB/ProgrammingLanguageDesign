@@ -3,6 +3,7 @@ package models;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Collection;
 
 public class NFA extends Automata {
     // Atributos
@@ -95,6 +96,23 @@ public class NFA extends Automata {
             return true;
         }
 
+        return false;
+    }
+
+    public boolean simulateTest(String ascii){
+        Set<State> initialStateSet = new HashSet<State>();
+        initialStateSet.add(getStateInitial());
+        Set<State> S = eclousure(initialStateSet);
+
+        // Move
+        Symbol c = new Symbol(ascii);
+        Set<State> moved = move(S,c);            
+        S = eclousure(moved);
+        
+        if(S.contains(this.stateFinal)){
+            return true;
+        }
+        
         return false;
     }
 
