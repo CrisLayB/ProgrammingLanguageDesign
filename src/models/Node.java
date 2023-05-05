@@ -7,29 +7,32 @@ public class Node<E> {
     // -> Atributos
     protected E value;
     protected Node<E> left, right;
-    protected int pos = -1;    
-    protected boolean nullable;
-    protected List<Integer> firstpos, lastpos;
+    private int pos = -1;    
+    private boolean nullable;
+    private List<Integer> firstpos, lastpos;
 
     // -> Constructores
     public Node(){
         value = null;
         nullable = false;
-        firstpos = lastpos = new ArrayList<>();
+        firstpos = new ArrayList<>();
+        lastpos = new ArrayList<>();
     }
     
     public Node(E value)
     {
         this.value = value;
         nullable = false;
-        firstpos = lastpos = new ArrayList<>();
+        firstpos = new ArrayList<>();
+        lastpos = new ArrayList<>();
     }    
 
     public Node(E value, int pos){
         this.pos = pos;
         this.value = value;
         nullable = false;
-        firstpos = lastpos = new ArrayList<>();
+        firstpos = new ArrayList<>();
+        lastpos = new ArrayList<>();
     }
 
     public Node(E value, Node<E> left, Node<E> right){
@@ -37,7 +40,8 @@ public class Node<E> {
         nullable = false;
         if(left != null) setLeft(left);
         if(right != null) setRight(right);
-        firstpos = lastpos = new ArrayList<>();
+        firstpos = new ArrayList<>();
+        lastpos = new ArrayList<>();
     }
 
     // -> Getters
@@ -83,6 +87,10 @@ public class Node<E> {
 
     public void setValue(E value){
         this.value = value;
+    }
+
+    public void setNullable(boolean nullable) {
+        this.nullable = nullable;
     }
 
     // -> Metodos

@@ -117,6 +117,16 @@ public class Main {
         regexExpression.add(new PairData<String,String>("n"+idCounter, "·"));
         
         Tree treePostfix = new Tree(regexExpression);
+
+        // Vamos a guardar en una imagen los resultados del arbol
+        ArrayList<String> transitionsTree = treePostfix.getTransitions();
+        String scriptTree = FilesCreator.readContentTree(transitionsTree);
+        String fileSintaxTree = "docs/SintaxTree.dot";
+        if(!FilesCreator.writeFileCode(scriptTree, fileSintaxTree)){
+            System.out.println("No se pudo guardar ni sobreescribir el archivo .dot");
+            return;
+        }
+        FilesCreator.createDot(fileSintaxTree, "img/resultsSintaxTreeNormal.png", "-Tpng");
         
         DFA dfaDirect = new DFA(treePostfix);
         System.out.println(dfaDirect.toString());

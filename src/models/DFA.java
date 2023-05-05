@@ -10,9 +10,9 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 
-public class DFA extends Automata {
+public class DFA extends Automata { 
     private Map<List<Integer>, Map<Symbol, List<Integer>>> transitionsTree; // Exclusivo para tree
-    
+       
     // Constructor
     public DFA(State stateInitial){
         super(stateInitial);
@@ -77,21 +77,10 @@ public class DFA extends Automata {
         super();
         setSymbols(tree.getSymbols());
         
-        transitionsTree = new HashMap<List<Integer>, Map<Symbol, List<Integer>>>();
-
         int counter = 0;
         this.stateInitial = new State(counter, Types.Initial);
         
         List<Integer> firstpos = tree.getFirstpos();
-
-        System.out.println("====================================");
-        for(int i : firstpos){
-            System.out.print(i + " ");
-        }
-        System.out.println("\n====================================");
-
-        transitionsTree.put(firstpos, new HashMap<>());
-        counter++;
 
         Queue<List<Integer>> unmarked = new LinkedList<>();
         unmarked.add(firstpos);
@@ -100,30 +89,30 @@ public class DFA extends Automata {
             List<Integer> state = unmarked.poll();
             for (Symbol s : symbols) {
                 List<Integer> nextState = getNextState(state, s);
-                if(!nextState.isEmpty() && !transitionsTree.containsKey(nextState)){
-                    transitionsTree.put(nextState, new HashMap<>());
-                    unmarked.add(nextState);
-                    counter++;
-                }
-                if(!nextState.isEmpty()){
-                    System.out.println("EJEM");
-                    transitionsTree.get(state).put(s, nextState);
-                }
+                // if(!nextState.isEmpty() && !transitionsTree.containsKey(nextState)){
+                //     transitionsTree.put(nextState, new HashMap<>());
+                //     unmarked.add(nextState);
+                //     counter++;
+                // }
+                // if(!nextState.isEmpty()){
+                //     System.out.println("EJEM");
+                //     transitionsTree.get(state).put(s, nextState);
+                // }
             }
         }     
         
-        // Verificar las transiciones
-        for(Map.Entry<List<Integer>, Map<Symbol, List<Integer>>> transitionTree: transitionsTree.entrySet()){
-            System.out.println("??????????????????????????????????????????");
-            List<Integer> keyList = transitionTree.getKey();
-            Map<Symbol, List<Integer>> valueMap = transitionTree.getValue();
-            System.out.println("=> " + keyList.toString());
-            for(Map.Entry<Symbol, List<Integer>> ja: valueMap.entrySet()){
-                Symbol symbolJa = ja.getKey();
-                List<Integer> valueList = ja.getValue();
-                System.out.println(symbolJa.toString() + " and "  + valueList.toString());
-            }
-        }
+        // // Verificar las transiciones
+        // for(Map.Entry<List<Integer>, Map<Symbol, List<Integer>>> transitionTree: transitionsTree.entrySet()){
+        //     System.out.println("??????????????????????????????????????????");
+        //     List<Integer> keyList = transitionTree.getKey();
+        //     Map<Symbol, List<Integer>> valueMap = transitionTree.getValue();
+        //     System.out.println("=> " + keyList.toString());
+        //     for(Map.Entry<Symbol, List<Integer>> ja: valueMap.entrySet()){
+        //         Symbol symbolJa = ja.getKey();
+        //         List<Integer> valueList = ja.getValue();
+        //         System.out.println(symbolJa.toString() + " and "  + valueList.toString());
+        //     }
+        // }
     }
 
     public List<State> getStatesFinal(){

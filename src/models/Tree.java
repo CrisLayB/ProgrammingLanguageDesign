@@ -46,6 +46,9 @@ public class Tree {
                 // Agregar simbolo
                 Symbol newSymbol = (isNumeric(symbol)) ? new Symbol(Integer.parseInt(symbol)) : new Symbol(symbol.charAt(0));
                 if(!symbolExistsInAlphabet(newSymbol)) symbols.add(newSymbol);
+
+                // Agregar numeros para el followPOs
+                tableFollowPos.put(count, new ArrayList<Integer>());
             }
             // * ---> OR, DOT
             else if(symbol.equals("|") || symbol.equals("·")){
@@ -89,27 +92,28 @@ public class Tree {
             // * => Determinar todos los nullables
             
             if(!signsAvoid.contains(node.value.second)){ // False
-                node.nullable = false; 
+                node.setNullable(false);
             }
-            else if(node.value.second.equals("E")){ // True
-                node.nullable = true;
+            else if(node.value.second.equals(AsciiSymbol.Epsilon.c + "")){ // True
+                node.setNullable(true);
             }
             else if(node.value.second.equals("|")){ // nullable(c1) | nullable(c2)
-                Boolean c1 = node.left.nullable;
-                Boolean c2 = node.right.nullable;
-                node.nullable = (c1 || c2) ? true : false;
+                Boolean c1 = node.left.getNullable();
+                Boolean c2 = node.right.getNullable();
+                node.setNullable((c1 || c2));
             }
             else if(node.value.second.equals("·")){ // nullable(c1) & nullable(c2)
-                Boolean c1 = node.left.nullable;
-                Boolean c2 = node.right.nullable;
-                node.nullable = (c1 && c2) ? true : false;
+                Boolean c1 = node.left.getNullable();
+                Boolean c2 = node.right.getNullable();
+                node.setNullable((c1 && c2));
             }
-            else if(node.value.second.equals("*") || node.value.second.equals("?")){ // True
-                node.nullable = true;
+            else if(node.value.second.equals("*")){ // True
+                node.setNullable(true);
             }
-            else if(node.value.second.equals("+")){
-                node.nullable = (node.left.nullable) ? true : false;
-            }
+            // // ! ¿Se debe de hacer otra cosa con question mark y plus symbol? //  || node.value.second.equals("?")
+            // else if(node.value.second.equals("+")){
+            //     node.nullable = (node.left.nullable) ? true : false;
+            // }
         }
     }
 
@@ -120,24 +124,88 @@ public class Tree {
 
             // Empezar a obtener las primeras posiciones
             if(!signsAvoid.contains(node.value.second)){ // i                
-
+                node.addFirstPos(node.getPos());
+                node.addLastPos(node.getPos());
             }
-            else if(node.value.second.equals("|")){ // firstPos(c1) U firstPos(c2)
-                
+            else if(node.value.second.equals("|")){ // firstPos(c1) U firstPos(c2)                
+                for (int i : node.left.getFirstPoses()) {
+                    node.addFirstPos(i);
+                }
+                for (int i : node.right.getFirstPoses()) {
+                    node.addFirstPos(i);
+                }
+                // ? =======================================
+                for (int i : node.left.getLastPoses()) {
+                    node.addLastPos(i);
+                }
+                for (int i : node.right.getLastPoses()) {
+                    node.addLastPos(i);
+                }
             }
             else if(node.value.second.equals("·")){ // si nullable c1 == true: Union, sino firstPOs(c1)
-
+                if(node.left.getNullable() == true){
+                    for (int i : node.left.getFirstPoses()) {
+                        node.addFirstPos(i);
+                    }
+                    for (int i : node.right.getFirstPoses()) {
+                        node.addFirstPos(i);
+                    }
+                }
+                else{
+                    for (int i : node.left.getFirstPoses()) {
+                        node.addFirstPos(i);
+                    }
+                }
+                // ? =======================================
+                if(node.right.getNullable() == true){
+                    for (int i : node.left.getLastPoses()) {
+                        node.addLastPos(i);
+                    }
+                    for (int i : node.right.getLastPoses()) {
+                        node.addLastPos(i);
+                    }
+                }
+                else{
+                    for (int i : node.right.getLastPoses()) {
+                        node.addLastPos(i);
+                    }
+                }
             }
-            else if(node.value.second.equals("*") || node.value.second.equals("+") || node.value.second.equals("?")){ // firstPos(c1)
-                
+            else if(node.value.second.equals("*")){ // firstPos(c1)
+                for (int i : node.left.getFirstPoses()) {
+                    node.addFirstPos(i);
+                }
+                // ? =======================================
+                for (int i : node.left.getLastPoses()) {
+                    node.addLastPos(i);
+                }
             }
+            // ! Depende de lo que me digan con || node.value.second.equals("+") || node.value.second.equals("?")
+            // ! Vamos a ver que se hace
         }
     }
 
     private void generateFollowPos(Node<PairData<String, String>> node){
         if(node != null){
             generateFollowPos(node.left);
-            generateFollowPos(node.right);
+            generateFollowPos(node.right);           
+
+            if(node.value.second.equals("·")){ // Si dado caso es concatenacion
+                for (int i : node.left.getLastPoses()) { // Con el hijo izquierdo en firstPos
+                    for (int j : node.right.getFirstPoses()) { // Con el hijo derecho en lastPos
+                        ArrayList<Integer> listNums = tableFollowPos.get(i);
+                        if(!listNums.contains(j)) listNums.add(j); // Son las que se encuentran en followPos
+                    }
+                }
+            }
+            else if(node.value.second.equals("*")){
+                for (int i : node.getLastPoses()) {
+                    for (int j : node.getFirstPoses()) {
+                        ArrayList<Integer> listNums = tableFollowPos.get(i);
+                        if(!listNums.contains(j)) listNums.add(j);
+                    }
+                }
+            }
         }
     }
 
