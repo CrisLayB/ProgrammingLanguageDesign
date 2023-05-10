@@ -141,7 +141,7 @@ public class FilesCreator {
             myWriter.write("\t\t    for (int i = 0; i < string.length(); i++) {\n");
             myWriter.write("\t\t        char c = string.charAt(i); \n");
             myWriter.write("\t\t        int ascii = (int)c; \n");
-            myWriter.write("\t\t        String[] result = automata.simulateMega(ascii+\"\");\n");
+            myWriter.write("\t\t        String[] result = automata.identifyId(ascii+\"\");\n");
             myWriter.write("\t\t        // Vamos a evaluar si el id detectado esta vacio\n");
             myWriter.write("\t\t        if(idDetected.length() == 0){ \n");
             myWriter.write("\t\t        	idDetected = result[1];\n");

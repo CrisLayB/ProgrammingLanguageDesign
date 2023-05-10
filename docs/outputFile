@@ -1,3 +1,5 @@
+[:= - Token: :=]
+[  - Token: ws]
 [hola - Token: id]
 [  - Token: ws]
 [a - Token: id]
@@ -21,7 +23,7 @@
 [  - Token: ws]
 [4 - Token: id]
 [  - Token: ws]
-[< - Token: ERROR LEXICO]
+[< - Token: <]
 [  - Token: ws]
 [> - Token: ERROR LEXICO]
 [
@@ -44,14 +46,20 @@
 [  - Token: ws]
 [) - Token: )]
 [  - Token: ws]
-[:= - Token: ERROR LEXICO]
+[:= - Token: :=]
 [
  - Token: ws]
 [ab - Token: id]
 [/ - Token: /]
 [c - Token: id]
+[  - Token: ws]
+[12 - Token: id]
+[. - Token: ERROR LEXICO]
+[34 - Token: id]
 [
  - Token: ws]
+[if - Token: id]
+[  - Token: ws]
 [hola1quehace - Token: id]
 [
  - Token: ws]
@@ -62,4 +70,4 @@
 [println - Token: id]
 [( - Token: (]
 [) - Token: )]
-[; - Token: ERROR LEXICO]
+[; - Token: ;]

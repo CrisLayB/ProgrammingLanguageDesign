@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Collection;
+import java.util.Collections;
 
 public class NFA extends Automata {
     // Atributos
@@ -99,16 +100,62 @@ public class NFA extends Automata {
         return false;
     }
 
+    public String[] simulateMega(String w){
+        Set<State> initialStateSet = new HashSet<State>();
+        initialStateSet.add(getStateInitial());
+        Set<State> S = eclousure(initialStateSet);
+        
+        for (int i = 0; i < w.length(); i++) {            
+            Symbol c = new Symbol(w.charAt(i)+"");
+            S = eclousure(move(S, c));
+        }
+
+        // S = eclousure(S);
+
+        if(Collections.disjoint(S, statesFinal)){
+            // String temp = ""
+            System.out.println("====== CONJUNTO STATES FINAL");
+            for (State state : statesFinal) {
+                System.out.println(state);
+            }
+            System.out.println("====== CONJUNTO S");
+            for (State state : S) {
+                System.out.println(state);
+            }
+
+            return new String[]{w, "JAJA"};
+        }
+
+        return new String[]{w, "ERROR LEXICO"};
+    }
+
     public boolean simulateTest(String ascii){
         Set<State> initialStateSet = new HashSet<State>();
         initialStateSet.add(getStateInitial());
         Set<State> S = eclousure(initialStateSet);
-
+        
+        for (State s : S) {
+            System.out.println(s.toString());
+        }
+        
         // Move
         Symbol c = new Symbol(ascii);
-        Set<State> moved = move(S,c);            
-        S = eclousure(moved);
+        Set<State> moved = move(S,c);
+
+        System.out.println("+++++++++++++++++++++++++++");
+        for (State s : moved) {
+            System.out.println(s.toString());
+        }
         
+        S = eclousure(moved);
+
+        S = eclousure(move(S, c));
+
+        System.out.println("+++++++++++++++++++++++++++");
+        for (State s : S) {
+            System.out.println(s.toString());
+        }
+
         if(S.contains(this.stateFinal)){
             return true;
         }
@@ -116,7 +163,7 @@ public class NFA extends Automata {
         return false;
     }
 
-    public String[] simulateMega(String wAscii){
+    public String[] identifyId(String wAscii){
         for (Transition transition : getTransitions()) {
             if(transition.getSymbol().getStringId().equals(wAscii)){
                 return new String[]{wAscii, transition.getSymbol().getLetValue()};
