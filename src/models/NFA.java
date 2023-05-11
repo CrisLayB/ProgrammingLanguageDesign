@@ -111,17 +111,17 @@ public class NFA extends Automata {
         }
 
         // S = eclousure(S);
+        System.out.println("====== CONJUNTO STATES FINAL");
+        for (State state : statesFinal) {
+            System.out.println(state);
+        }
+        System.out.println("====== CONJUNTO S");
+        for (State state : S) {
+            System.out.println(state);
+        }
 
         if(Collections.disjoint(S, statesFinal)){
             // String temp = ""
-            System.out.println("====== CONJUNTO STATES FINAL");
-            for (State state : statesFinal) {
-                System.out.println(state);
-            }
-            System.out.println("====== CONJUNTO S");
-            for (State state : S) {
-                System.out.println(state);
-            }
 
             return new String[]{w, "JAJA"};
         }
@@ -170,6 +170,10 @@ public class NFA extends Automata {
             }
         }        
         return new String[]{wAscii, "ERROR LEXICO"};
+    }
+
+    public void defineLeafIdFinalState(String leafId){
+        stateFinal.defineLeafId(leafId);
     }
 
     @Override

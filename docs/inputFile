@@ -1,6 +1,3 @@
-if := hola a b c abc ab cb
-baba que hace 4 < >
-5 10 1234 + / - * ( ) :=
-ab/c 12.34
+:= a b c abc
+baba 4 < > 12.34
 if hola1quehace
-System.out.println();

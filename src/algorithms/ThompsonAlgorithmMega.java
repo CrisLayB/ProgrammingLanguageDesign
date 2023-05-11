@@ -51,7 +51,8 @@ public class ThompsonAlgorithmMega {
             for (Transition transition : nfa.getTransitions()) {
                 megaAutomata.addTransition(transition);
             }
-            megaAutomata.addFinalState(nfa.getStateFinal());
+            nfa.defineLeafIdFinalState(idName); // Agregar el id en el estado final    
+            megaAutomata.addFinalState(nfa.getStateFinal()); // Agregar el estado final
             Transition newTransition = new Transition(
                 new Symbol(epsilon+""), 
                 initialStateMegaAutomata, 

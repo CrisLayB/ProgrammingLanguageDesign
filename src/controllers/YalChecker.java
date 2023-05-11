@@ -14,7 +14,7 @@ public class YalChecker {
     // --> Atributos
     private ArrayList<String> code;
     private Map<String, String> ids;
-    private Map<String, ArrayList<String>> idsExtended;
+    private Map<String, ArrayList<String>> idsExtended; // Donde se armara el automata
     private Map<String, RuleContent> rules;
     private static List<Character> signsOperation;
     private static List<Character> signsForAddParenthesis;
@@ -23,7 +23,7 @@ public class YalChecker {
     private ArrayList<String> regexExpression;
 
     // --> Constructor
-    public YalChecker(ArrayList<String> code){
+    public  YalChecker(ArrayList<String> code){
         this.code = code;
         ids = new LinkedHashMap<String, String>();
         idsExtended = new LinkedHashMap<String, ArrayList<String>>();
@@ -282,7 +282,7 @@ public class YalChecker {
         String temp = "";        
         regexExpression.add("(");
         regexExpression.add("(");        
-        idsExtended.get(id).add("(");
+        // idsExtended.get(id).add("(");
         idsExtended.get(id).add("(");
         for (int index = 0; index < value.length(); index++) {
             char letter = value.charAt(index);
@@ -318,18 +318,13 @@ public class YalChecker {
         regexExpression.add(")");
         regexExpression.add("·");
         regexExpression.add("#" + id);
-        regexExpression.add(")");
-        // Agregar hoja final
-        idsExtended.get(id).add(")");
-        idsExtended.get(id).add("·");
-        idsExtended.get(id).add("#" + id);
+        regexExpression.add(")");        
         idsExtended.get(id).add(")");
     }
 
     private void addAsciiToRegex(String value){ // Agregar ids y concatenacion correspondientes del int
         regexExpression.add("(");
         regexExpression.add("(");
-        // if(saveToken.length() > 0 && saveToken.length() != content.length()) saveToken += AsciiSymbol.Dot.c;
         if(!isNumeric(value)){ // Esto quiere decir que estamos ante un token todavia no convertido en ascii
             for (int i = 0; i < value.length(); i++) {
                 char c = value.charAt(i);
@@ -353,7 +348,6 @@ public class YalChecker {
         String charValue = (isNumeric(value)) ? (char)Integer.parseInt(value)+"" : value;
         idsExtended.put(charValue, new ArrayList<String>());
         idsExtended.get(charValue).add("(");
-        idsExtended.get(charValue).add("(");
         if(!isNumeric(value)){ // Esto quiere decir que estamos ante un token todavia no convertido en ascii
             for (int i = 0; i < value.length(); i++) {
                 char c = value.charAt(i);
@@ -363,14 +357,6 @@ public class YalChecker {
         }
         else{
             idsExtended.get(charValue).add(value+"");
-        }
-        idsExtended.get(charValue).add(")");
-        idsExtended.get(charValue).add("·");
-        if(isNumeric(value)){
-            idsExtended.get(charValue).add("#" + (char)Integer.parseInt(value));
-        }
-        else{
-            idsExtended.get(charValue).add("#" + value);
         }
         idsExtended.get(charValue).add(")");
     }

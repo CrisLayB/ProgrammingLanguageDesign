@@ -147,7 +147,7 @@ public class Yal {
         for (State fS : megaAutomata.getStatesFinal()) {  
             code.add(
                 String.format(
-                    "finalStates.add(new State(\"%s\", %s));", fS.getId(), "Types." + fS.getType())
+                    "finalStates.add(new State(\"%s\", %s, \"%s\"));", fS.getId(), "Types." + fS.getType(), fS.getLeafId())
             );
         }
         // Escribir todos los estados
