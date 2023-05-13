@@ -178,12 +178,38 @@ abstract public class Automata {
             for (Transition transition : transitions) {
                 State stateOriginTransition = transition.getStateOrigin();
                 // Se revisara si el id del estado origen de la transicion es igual al id de uno de los estados de e
+                Symbol symbolTransition = transition.getSymbol();
+                State stateFinalTransition = transition.getStateFinal();
                 if(stateOriginTransition.getId().equals(state.getId())){
-                    Symbol symbolTransition = transition.getSymbol();
-                    State stateFinalTransition = transition.getStateFinal();
                     // Si dado caso los ids coinciden y el estado final de la transicion no esta ingresada
                     // Entonces se agregara el estado final de la transicion a siguientes estados
                     if(symbolTransition.getId() == s.getId()){
+                    // if(symbolTransition.getStringId().equals(s.getStringId())){
+                        if(!nextStates.contains(stateFinalTransition)){
+                            nextStates.add(stateFinalTransition);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return nextStates;
+    }
+
+    public Set<State> moveMega(Set<State> e, Symbol s){
+        Set<State> nextStates = new HashSet<State>();
+
+        for (State state : e) {
+            for (Transition transition : transitions) {
+                State stateOriginTransition = transition.getStateOrigin();
+                // Se revisara si el id del estado origen de la transicion es igual al id de uno de los estados de e
+                Symbol symbolTransition = transition.getSymbol();
+                State stateFinalTransition = transition.getStateFinal();
+                if(stateOriginTransition.getId().equals(state.getId())){
+                    // Si dado caso los ids coinciden y el estado final de la transicion no esta ingresada
+                    // Entonces se agregara el estado final de la transicion a siguientes estados
+                    // if(symbolTransition.getId() == s.getId()){
+                    if(symbolTransition.getStringId().equals(s.getStringId())){
                         if(!nextStates.contains(stateFinalTransition)){
                             nextStates.add(stateFinalTransition);
                         }

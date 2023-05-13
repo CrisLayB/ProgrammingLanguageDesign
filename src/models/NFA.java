@@ -3,8 +3,8 @@ package models;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.Stack;
+import java.util.ArrayList;
 
 public class NFA extends Automata {
     // Atributos
@@ -83,6 +83,29 @@ public class NFA extends Automata {
     }
 
     @Override
+    public Set<State> eclousure(Set<State> moveStates){
+        Set<State> eclosureStates = new HashSet<State>();
+        Stack<State> stack = new Stack<>();
+        stack.addAll(moveStates);
+        eclosureStates.addAll(moveStates);
+
+        while (!stack.isEmpty()) {
+            State state = stack.pop();
+            for (Transition transition : transitions) {
+                if (transition.getStateOrigin().equals(state) && transition.getSymbol().getStringId().equals(AsciiSymbol.Epsilon.c+"")) {
+                    State nextState = transition.getStateFinal();
+                    if (!eclosureStates.contains(nextState)) {
+                        eclosureStates.add(nextState);
+                        stack.push(nextState);
+                    }
+                }
+            }
+        }
+
+        return eclosureStates;
+    }
+
+    @Override
     public boolean simulate(String w) {
         Set<State> initialStateSet = new HashSet<State>();
         initialStateSet.add(getStateInitial());
@@ -104,28 +127,43 @@ public class NFA extends Automata {
         Set<State> initialStateSet = new HashSet<State>();
         initialStateSet.add(getStateInitial());
         Set<State> S = eclousure(initialStateSet);
+        // Este eclouse debe de retornar el principal y el resto de estados principales
         
-        for (int i = 0; i < w.length(); i++) {            
+        System.out.println();
+        // for (int i = 0; i < w.length(); i++) {            
+        //     Symbol c = new Symbol(w.charAt(i)+"");
+        //     S = move(S, c); // Solo un 
+        // }        
+
+        System.out.println("====== CONJUNTO S INICIALESA DEL MEGAAUMATA");
+        for (State state : S) {
+            System.out.println(state);
+        }
+        System.out.println("");
+
+        for (int i = 0; i < w.length(); i++) {
+            // Symbol c = new Symbol((int)w.charAt(i)+"");
             Symbol c = new Symbol(w.charAt(i)+"");
             S = eclousure(move(S, c));
         }
 
-        // S = eclousure(S);
-        System.out.println("====== CONJUNTO STATES FINAL");
-        for (State state : statesFinal) {
-            System.out.println(state);
-        }
         System.out.println("====== CONJUNTO S");
         for (State state : S) {
             System.out.println(state);
         }
+        System.out.println();
 
-        if(Collections.disjoint(S, statesFinal)){
-            // String temp = ""
-
-            return new String[]{w, "JAJA"};
+        // Vamos a verificar si uno de los estados de S esta dentro de los estados finales
+        for (State s : statesFinal) {
+            String sId = s.getId();
+            for (State s2 : S) {
+                if(sId.equals(s2.getId())){
+                    return new String[]{w, s.getLeafId()}; 
+                }
+            }
         }
 
+        // Esto quiere decir que no se retorno un estado de aceptacion
         return new String[]{w, "ERROR LEXICO"};
     }
 

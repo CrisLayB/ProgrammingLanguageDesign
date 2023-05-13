@@ -136,6 +136,8 @@ public class FilesCreator {
             myWriter.write("\t\tArrayList<String> fileContent = FilesCreator.readFileContent(args[0]); \n");
             myWriter.write("\t\tArrayList<String> results = new ArrayList<String>(); \n");
             myWriter.write("\t\tArrayList<String> actions = new ArrayList<String>(); \n");
+            myWriter.write("\t\tArrayList<String> lexemas = new ArrayList<String>(); \n");
+            myWriter.write("\t\t \n");
             myWriter.write("\n\t\tString lexema = \"\", idDetected = \"\"; \n");
             myWriter.write("\t\tfor (String string : fileContent) { \n");
             myWriter.write("\t\t    for (int i = 0; i < string.length(); i++) {\n");
@@ -149,6 +151,7 @@ public class FilesCreator {
             myWriter.write("\t\t        	if(result[1].equals(\"ERROR LEXICO\")){\n");
             myWriter.write("\t\t        		results.add(\"[\" + c + \" - Token: \" + result[1] + \"]\\n\");\n");
             myWriter.write("\t\t        		actions.add(\"[\" + c + \" - Token Action: \" + scan(result[1]) + \"]\\n\");\n");
+            myWriter.write("\t\t                lexemas.add(c+\"\");\n");
             myWriter.write("\t\t        	    idDetected = \"\";\n");
             myWriter.write("\t\t        	    lexema = \"\";\n");
             myWriter.write("\t\t        	}\n");
@@ -157,11 +160,16 @@ public class FilesCreator {
             myWriter.write("\t\t        else{ // Si ya no es igual entonces se detiene\n");
             myWriter.write("\t\t            results.add(\"[\" + lexema + \" - Token: \" + idDetected + \"]\\n\");\n");
             myWriter.write("\t\t        	actions.add(\"[\" + lexema + \" - Token Action: \" + scan(idDetected) + \"]\\n\");\n");
+            myWriter.write("\t\t            lexemas.add(lexema);\n");
             myWriter.write("\t\t            // Resetear el id Detectado\n");
             myWriter.write("\t\t        	idDetected = result[1];\n");
             myWriter.write("\t\t            lexema = c + \"\";\n");
             myWriter.write("\t\t        }\n");
             myWriter.write("\t\t    } \n");
+            myWriter.write("\t\t} \n");
+            myWriter.write("\t\tfor(String l : lexemas){\n");
+            myWriter.write("\t\t    String[] resultsSim = automata.simulateMega(l);\n");
+            myWriter.write("\t\t    System.out.println(resultsSim[0] + \" and \" + resultsSim[1]);\n");
             myWriter.write("\t\t} \n");
             myWriter.write("\t\tif(!FilesCreator.createFileTokens(results, \"docs/outputFile\") || !FilesCreator.createFileTokens(actions, \"docs/outputFileActions\")){\n");
             myWriter.write("\t\t    System.out.println(\"Error a la hora de crear el output :(\");\n");
