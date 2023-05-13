@@ -183,8 +183,8 @@ abstract public class Automata {
                 if(stateOriginTransition.getId().equals(state.getId())){
                     // Si dado caso los ids coinciden y el estado final de la transicion no esta ingresada
                     // Entonces se agregara el estado final de la transicion a siguientes estados
-                    if(symbolTransition.getId() == s.getId()){
-                    // if(symbolTransition.getStringId().equals(s.getStringId())){
+                    // if(symbolTransition.getId() == s.getId()){
+                    if(symbolTransition.getStringId().equals(s.getStringId())){
                         if(!nextStates.contains(stateFinalTransition)){
                             nextStates.add(stateFinalTransition);
                         }

@@ -149,8 +149,6 @@ public class FilesCreator {
             myWriter.write("\t\t        	idDetected = result[1];\n");
             myWriter.write("\t\t        	lexema += c;\n");
             myWriter.write("\t\t        	if(result[1].equals(\"ERROR LEXICO\")){\n");
-            myWriter.write("\t\t        		results.add(\"[\" + c + \" - Token: \" + result[1] + \"]\\n\");\n");
-            myWriter.write("\t\t        		actions.add(\"[\" + c + \" - Token Action: \" + scan(result[1]) + \"]\\n\");\n");
             myWriter.write("\t\t                lexemas.add(c+\"\");\n");
             myWriter.write("\t\t        	    idDetected = \"\";\n");
             myWriter.write("\t\t        	    lexema = \"\";\n");
@@ -158,10 +156,7 @@ public class FilesCreator {
             myWriter.write("\t\t        }\n");
             myWriter.write("\t\t        else if(idDetected.equals(result[1])) lexema += c;\n");
             myWriter.write("\t\t        else{ // Si ya no es igual entonces se detiene\n");
-            myWriter.write("\t\t            results.add(\"[\" + lexema + \" - Token: \" + idDetected + \"]\\n\");\n");
-            myWriter.write("\t\t        	actions.add(\"[\" + lexema + \" - Token Action: \" + scan(idDetected) + \"]\\n\");\n");
             myWriter.write("\t\t            lexemas.add(lexema);\n");
-            myWriter.write("\t\t            // Resetear el id Detectado\n");
             myWriter.write("\t\t        	idDetected = result[1];\n");
             myWriter.write("\t\t            lexema = c + \"\";\n");
             myWriter.write("\t\t        }\n");
@@ -169,7 +164,9 @@ public class FilesCreator {
             myWriter.write("\t\t} \n");
             myWriter.write("\t\tfor(String l : lexemas){\n");
             myWriter.write("\t\t    String[] resultsSim = automata.simulateMega(l);\n");
-            myWriter.write("\t\t    System.out.println(resultsSim[0] + \" and \" + resultsSim[1]);\n");
+            myWriter.write("\t\t    System.out.println(resultsSim[0] + \" -> \" + resultsSim[1]);\n");
+            myWriter.write("\t\t    results.add(resultsSim[0] + \" -> Token: \" + resultsSim[1] + \"\\n\");\n");
+            myWriter.write("\t\t    actions.add(resultsSim[0] + \" -> Token Action: \" + scan(resultsSim[1]) + \"\\n\");\n");
             myWriter.write("\t\t} \n");
             myWriter.write("\t\tif(!FilesCreator.createFileTokens(results, \"docs/outputFile\") || !FilesCreator.createFileTokens(actions, \"docs/outputFileActions\")){\n");
             myWriter.write("\t\t    System.out.println(\"Error a la hora de crear el output :(\");\n");

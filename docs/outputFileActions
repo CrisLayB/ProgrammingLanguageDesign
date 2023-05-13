@@ -1,9 +1,24 @@
-[+ - Token Action: PLUS]
-[ -  - Token Action: NULL]
-[* - Token Action: TIMES]
-[  - Token Action: NULL]
-[( - Token Action: LPAREN]
-[  - Token Action: NULL]
-[) - Token Action: RPAREN]
-[  - Token Action: NULL]
-[:= - Token Action: ASIGNOP]
+if -> Token Action: ID
+  -> Token Action: NULL
+:= -> Token Action: ASIGNOP
+  -> Token Action: NULL
+if -> Token Action: ID
+  -> Token Action: NULL
+/ -> Token Action: NULL
+  -> Token Action: NULL
++ -> Token Action: PLUS
+  -> Token Action: NULL
+* -> Token Action: TIMES
+  -> Token Action: NULL
+( -> Token Action: LPAREN
+  -> Token Action: NULL
+) -> Token Action: RPAREN
+ 
+ -> Token Action: NULL
+abc -> Token Action: ID
+  -> Token Action: NULL
+12 -> Token Action: NULL
+   -> Token Action: NULL
+else -> Token Action: ELSE
+  -> Token Action: NULL
+jaja1avc -> Token Action: ID

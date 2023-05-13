@@ -1,9 +1,24 @@
-[+ - Token: +]
-[ -  - Token: ERROR LEXICO]
-[* - Token: *]
-[  - Token: ERROR LEXICO]
-[( - Token: (]
-[  - Token: ERROR LEXICO]
-[) - Token: )]
-[  - Token: ERROR LEXICO]
-[:= - Token: :=]
+if -> Token: id
+  -> Token: ws
+:= -> Token: :=
+  -> Token: ws
+if -> Token: id
+  -> Token: ws
+/ -> Token: ERROR LEXICO
+  -> Token: ws
++ -> Token: +
+  -> Token: ws
+* -> Token: *
+  -> Token: ws
+( -> Token: (
+  -> Token: ws
+) -> Token: )
+ 
+ -> Token: ws
+abc -> Token: id
+  -> Token: ws
+12 -> Token: ERROR LEXICO
+   -> Token: ws
+else -> Token: else
+  -> Token: ws
+jaja1avc -> Token: id

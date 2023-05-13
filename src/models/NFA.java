@@ -91,8 +91,8 @@ public class NFA extends Automata {
 
         while (!stack.isEmpty()) {
             State state = stack.pop();
-            for (Transition transition : transitions) {
-                if (transition.getStateOrigin().equals(state) && transition.getSymbol().getStringId().equals(AsciiSymbol.Epsilon.c+"")) {
+            for (Transition transition : transitions) {                
+                if (sameIdState(transition.getStateOrigin(), state) && transition.getSymbol().getStringId().equals(AsciiSymbol.Epsilon.c+"")) {
                     State nextState = transition.getStateFinal();
                     if (!eclosureStates.contains(nextState)) {
                         eclosureStates.add(nextState);
@@ -103,6 +103,10 @@ public class NFA extends Automata {
         }
 
         return eclosureStates;
+    }
+
+    private boolean sameIdState(State s1, State s2){
+        return (s1.getId().equals(s2.getId()));
     }
 
     @Override
@@ -127,39 +131,19 @@ public class NFA extends Automata {
         Set<State> initialStateSet = new HashSet<State>();
         initialStateSet.add(getStateInitial());
         Set<State> S = eclousure(initialStateSet);
-        // Este eclouse debe de retornar el principal y el resto de estados principales
-        
-        System.out.println();
-        // for (int i = 0; i < w.length(); i++) {            
-        //     Symbol c = new Symbol(w.charAt(i)+"");
-        //     S = move(S, c); // Solo un 
-        // }        
-
-        System.out.println("====== CONJUNTO S INICIALESA DEL MEGAAUMATA");
-        for (State state : S) {
-            System.out.println(state);
-        }
-        System.out.println("");
 
         for (int i = 0; i < w.length(); i++) {
-            // Symbol c = new Symbol((int)w.charAt(i)+"");
-            Symbol c = new Symbol(w.charAt(i)+"");
+            Symbol c = new Symbol((int)w.charAt(i)+"");
             S = eclousure(move(S, c));
         }
 
-        System.out.println("====== CONJUNTO S");
-        for (State state : S) {
-            System.out.println(state);
-        }
-        System.out.println();
-
         // Vamos a verificar si uno de los estados de S esta dentro de los estados finales
-        for (State s : statesFinal) {
-            String sId = s.getId();
-            for (State s2 : S) {
-                if(sId.equals(s2.getId())){
-                    return new String[]{w, s.getLeafId()}; 
-                }
+        for (State stateS : S) {
+            for (State stateF : statesFinal) {
+                String sId = stateS.getId();
+                String fId = stateF.getId();
+                if(sId.equals(fId)) 
+                    return new String[]{w, stateF.getLeafId()};
             }
         }
 
