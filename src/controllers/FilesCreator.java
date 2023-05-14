@@ -134,9 +134,10 @@ public class FilesCreator {
 
             // Recibir contenido del input
             myWriter.write("\n\t\t// Leer contenido del archivo \n");
-            myWriter.write("\t\tArrayList<String> fileContent = FilesCreator.readFileContent(args[0]); \n");
+            myWriter.write("\t\tArrayList<String> fileContent = FilesCreator.readFileContent(args[0], true); \n");
             myWriter.write("\t\tArrayList<String> results = new ArrayList<String>(); \n");
             myWriter.write("\t\tArrayList<String> actions = new ArrayList<String>(); \n");
+            myWriter.write("\t\tArrayList<String> tokensOutput = new ArrayList<String>(); \n");
             myWriter.write("\t\tList<Integer> charsInt = new ArrayList<Integer>(); \n");
             myWriter.write("\t\t \n");
             myWriter.write("\t\tfor (String string : fileContent) { \n");
@@ -151,8 +152,9 @@ public class FilesCreator {
             myWriter.write("\t\t    System.out.println(\"|\" + token[0] + \"| -> |\" + token[1] + \"|\");\n");
             myWriter.write("\t\t    results.add(token[0] + \" -> Token: \" + token[1] + \"\\n\");\n");
             myWriter.write("\t\t    actions.add(token[0] + \" -> Token Action: \" + scan(token[1]) + \"\\n\");\n");
+            myWriter.write("\t\t    tokensOutput.add(scan(token[1]) + \"→\" + token[0] + \"↑\\n\");\n");
             myWriter.write("\t\t} \n");
-            myWriter.write("\t\tif(!FilesCreator.createFileTokens(results, \"docs/outputFile\") || !FilesCreator.createFileTokens(actions, \"docs/outputFileActions\")){\n");
+            myWriter.write("\t\tif(!FilesCreator.createFileTokens(results, \"docs/outputFile\") || !FilesCreator.createFileTokens(actions, \"docs/outputFileActions\") || !FilesCreator.createFileTokens(tokensOutput, \"docs/tokens\")){\n");
             myWriter.write("\t\t    System.out.println(\"Error a la hora de crear el output :(\");\n");
             myWriter.write("\t\t    return;\n");
             myWriter.write("\t\t}\n");
@@ -201,7 +203,7 @@ public class FilesCreator {
         return true;
     }
 
-    public static ArrayList<String> readFileContent(String file){
+    public static ArrayList<String> readFileContent(String file, boolean withExtraEnter){
         ArrayList<String> lines = new ArrayList<>();
         BufferedReader bf;
         
@@ -210,7 +212,7 @@ public class FilesCreator {
             String bfRead;
 
             while((bfRead = bf.readLine()) != null){
-                lines.add(bfRead + "\n"); // Tomar en cuenta los enters
+                lines.add(bfRead + ((withExtraEnter == true) ? "\n" : "")); // Tomar en cuenta los enters
             }
         } catch (Exception e) {
             lines = null;

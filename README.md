@@ -29,7 +29,7 @@ Implementar el path: https://stackoverflow.com/questions/35064304/runtimeerror-m
 
 Nos servirá para ver de una manera visual las simulaciones.
 
-## Ejecucion de Automatas
+## ---> Automatas
 
 Para correr este proyecto debes de compilar el archivo Main.java y ejecutar el main con los argumentos solicitados (en este caso sería la expresion regular y la cadena de aceptación) de la siguiente manera:
 
@@ -44,13 +44,34 @@ Ejemplo:
 java Main 'a(a|b)*c' 'abc'
 ```
 
-![Alt text](/img/img3.png 'Corriendo Programa en vscode actualizado')
+![Alt text](/img/ForREADME/automatas.png 'Corriendo Programa en vscode actualizado')
 
-## Ejecucion del Analizador Yal
+## ---> Generador de Analizadores Léxicos (YALex)
 
 Para correr esta parte de este proyecto debes de compilar el archivo Yal.java y ejecutar esta clase con sus correspondientes argumentos (en este caso seria el archivo yal a analizar):
 
 ```
-java Yal 'direccion_archivo.yal'
+java LexicalAnalyzerGenerator 'direccion_archivo_yal.yal'
 ```
 
+![Alt text](/img/ForREADME/lexicalAna01.png 'Scanner Generado')
+
+Este programa es capaz de detectar errores sintaxicos del archivo .yal ingresado.
+
+Si todo salio en orden entonces se creara un Scanner donde se guardara todo el automata y las acciones a llevar a cabo, este se llamara "Scanner.java" (y también se crea un pdf con el automata generado).
+
+Para correr el Scanner generado debes de ingresar un archivo donde este todo el input a analizar para obtener los tokens esperados.
+
+```
+java Scanner 'inputFile'
+```
+
+![Alt text](/img/ForREADME/lexicalAna02.png 'Scanner Ejecutado')
+
+En la carpeta "docs" se guardaran en archivos los tokens generados, los archivos se llaman "outputFile".
+
+## ---> Generador de Analizadores Sintáticos (YAPar)
+
+```
+java ParserGenerator 'direccion_archivo_yalpar.yalp' 'archivo_output_tokens_generados'
+```

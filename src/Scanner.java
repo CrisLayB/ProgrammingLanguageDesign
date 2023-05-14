@@ -81,9 +81,10 @@ public class Scanner {
 		NFA automata = megaAutomata(); 
 		
 		// Leer contenido del archivo 
-		ArrayList<String> fileContent = FilesCreator.readFileContent(args[0]); 
+		ArrayList<String> fileContent = FilesCreator.readFileContent(args[0], true); 
 		ArrayList<String> results = new ArrayList<String>(); 
 		ArrayList<String> actions = new ArrayList<String>(); 
+		ArrayList<String> tokensOutput = new ArrayList<String>(); 
 		List<Integer> charsInt = new ArrayList<Integer>(); 
 		 
 		for (String string : fileContent) { 
@@ -98,8 +99,9 @@ public class Scanner {
 		    System.out.println("|" + token[0] + "| -> |" + token[1] + "|");
 		    results.add(token[0] + " -> Token: " + token[1] + "\n");
 		    actions.add(token[0] + " -> Token Action: " + scan(token[1]) + "\n");
+		    tokensOutput.add(scan(token[1]) + "→" + token[0] + "↑\n");
 		} 
-		if(!FilesCreator.createFileTokens(results, "docs/outputFile") || !FilesCreator.createFileTokens(actions, "docs/outputFileActions")){
+		if(!FilesCreator.createFileTokens(results, "docs/outputFile") || !FilesCreator.createFileTokens(actions, "docs/outputFileActions") || !FilesCreator.createFileTokens(tokensOutput, "docs/tokens")){
 		    System.out.println("Error a la hora de crear el output :(");
 		    return;
 		}

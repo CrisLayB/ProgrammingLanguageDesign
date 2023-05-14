@@ -11,27 +11,29 @@ import java.util.ArrayList;
 
 /**
  * <h1>Diseño De Lenguajes de Programacion - UVG</h1>
- * <h2> Yal </h2>
- * Programa donde se lleva a cabo el analisis de los archivos yal increados
+ * <h2> Lexical Analyzer Generator </h2>
+ * 
+ * Programa donde se lleva a cabo el analisis de los archivos YAL
+ * para crear un analizador léxico
  * 
  * Creado por:
  * @author Cristian Laynez - 201281
  * @since 2023
  **/
 
-public class Yal {
+public class LexicalAnalyzerGenerator {
     public static void main(String[] args) {
         int amountArgs = args.length;
 
         // Si no ingreso ningun argumento
         if (amountArgs == 0){
             System.out.println("Ejemplo de como ejecutar el programa e el nombre del archivo YALex:");
-            System.out.println("\njava Yal 'src/docs/slr-1.yal'\n");
+            System.out.println("\njava LexicalAnalyzerGenerator 'src/docs/YALex/slr-1.yal'\n");
             return;
         }
         
         // * ====> Vamos a obtener todo el contenido del archivo
-        ArrayList<String> yalContent = FilesCreator.readFileContent(args[0]);
+        ArrayList<String> yalContent = FilesCreator.readFileContent(args[0], false);
 
         if(yalContent == null){ // Si dado caso no se detecta de fomra correcta el codigo yal
             System.out.println("\n--> No se a detectado un archivo valido\n");

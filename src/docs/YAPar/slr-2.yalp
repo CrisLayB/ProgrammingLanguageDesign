@@ -12,6 +12,12 @@
 %token NUMBER
 %token LPAREN RPAREN
 
+/* FINALIZA sección de TOKENS */
+
+%%
+
+/* INICIA sección de PRODUCCIONES */
+
 expression:
     expression PLUS term
   | expression MINUS term

@@ -1,10 +1,11 @@
-/* Configuración del parser para Gramática No.1 */
+/* Configuración del parser para Gramática Propia */
 /* Sigue la gramática SLR: */
 /* E → E + T | T */
 /* T → T ∗ F | F */
 /* F → ( E ) | id */
 
-%token ID PLUS
+%token ID
+%token PLUS
 %token TIMES
 %token LPAREN RPAREN
 
@@ -14,15 +15,15 @@
 
 /* INICIA sección de PRODUCCIONES */
 
-expression:
-    expression PLUS term
-  | term
+e:
+    e PLUS t
+  | t
 ;
-term:
-    term TIMES factor
-  | factor
+t:
+    t TIMES f
+  | f
 ;
-factor:
-    LPAREN expression RPAREN
+f:
+    LPAREN e RPAREN
   | ID
 ;

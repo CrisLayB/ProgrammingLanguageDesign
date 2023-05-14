@@ -8,6 +8,12 @@
 %token TIMES
 %token LPAREN RPAREN
 
+/* FINALIZA sección de TOKENS */
+
+%%
+
+/* INICIA sección de PRODUCCIONES */
+
 expression:
     term PLUS expression
   | term

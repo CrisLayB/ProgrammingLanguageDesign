@@ -40,6 +40,12 @@
 %token PLUS
 %token TIMES
 
+/* FINALIZA sección de TOKENS */
+
+%%
+
+/* INICIA sección de PRODUCCIONES */
+
 p:
     t
 ;

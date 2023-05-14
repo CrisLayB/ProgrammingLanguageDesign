@@ -1,28 +1,15 @@
-holaquehace -> Token: id
+soy_un_id -> Token: id
   -> Token: ws
-5 -> Token: number
-  -> Token: ws
-12.17 -> Token: number
-  -> Token: ws
-& -> Token: ERROR LEXICO
-  -> Token: ws
-if -> Token: if
-  -> Token: ws
-:= -> Token: :=
-  -> Token: ws
-abc -> Token: id
- 
- -> Token: ws
-variable_1_xd -> Token: id
+12 -> Token: number
   -> Token: ws
 $ -> Token: ERROR LEXICO
   -> Token: ws
 if -> Token: if
-  -> Token: ws
-funciona -> Token: id
 
  -> Token: ws
 ; -> Token: ;
+  -> Token: ws
+:= -> Token: :=
   -> Token: ws
 < -> Token: <
   -> Token: ws
@@ -30,18 +17,12 @@ funciona -> Token: id
   -> Token: ws
 + -> Token: +
   -> Token: ws
+- -> Token: -
+  -> Token: ws
 * -> Token: *
+  -> Token: ws
+/ -> Token: /
   -> Token: ws
 ( -> Token: (
   -> Token: ws
 ) -> Token: )
-  -> Token: ws
-if -> Token: if
-  -> Token: ws
-for -> Token: id
-  -> Token: ws
-else -> Token: id
-  -> Token: ws
-if -> Token: if
-  -> Token: ws
-jajajaja -> Token: id

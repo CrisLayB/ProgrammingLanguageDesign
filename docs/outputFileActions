@@ -1,28 +1,15 @@
-holaquehace -> Token Action: ID
+soy_un_id -> Token Action: ID
   -> Token Action: WHITESPACE
-5 -> Token Action: NUMBER
-  -> Token Action: WHITESPACE
-12.17 -> Token Action: NUMBER
-  -> Token Action: WHITESPACE
-& -> Token Action: NULL
-  -> Token Action: WHITESPACE
-if -> Token Action: IF
-  -> Token Action: WHITESPACE
-:= -> Token Action: ASSIGNOP
-  -> Token Action: WHITESPACE
-abc -> Token Action: ID
- 
- -> Token Action: WHITESPACE
-variable_1_xd -> Token Action: ID
+12 -> Token Action: NUMBER
   -> Token Action: WHITESPACE
 $ -> Token Action: NULL
   -> Token Action: WHITESPACE
 if -> Token Action: IF
-  -> Token Action: WHITESPACE
-funciona -> Token Action: ID
 
  -> Token Action: WHITESPACE
 ; -> Token Action: SEMICOLON
+  -> Token Action: WHITESPACE
+:= -> Token Action: ASSIGNOP
   -> Token Action: WHITESPACE
 < -> Token Action: LT
   -> Token Action: WHITESPACE
@@ -30,18 +17,12 @@ funciona -> Token Action: ID
   -> Token Action: WHITESPACE
 + -> Token Action: PLUS
   -> Token Action: WHITESPACE
+- -> Token Action: MINUS
+  -> Token Action: WHITESPACE
 * -> Token Action: TIMES
+  -> Token Action: WHITESPACE
+/ -> Token Action: DIV
   -> Token Action: WHITESPACE
 ( -> Token Action: LPAREN
   -> Token Action: WHITESPACE
 ) -> Token Action: RPAREN
-  -> Token Action: WHITESPACE
-if -> Token Action: IF
-  -> Token Action: WHITESPACE
-for -> Token Action: ID
-  -> Token Action: WHITESPACE
-else -> Token Action: ID
-  -> Token Action: WHITESPACE
-if -> Token Action: IF
-  -> Token Action: WHITESPACE
-jajajaja -> Token Action: ID

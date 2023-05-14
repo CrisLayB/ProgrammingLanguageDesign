@@ -284,7 +284,6 @@ public class YalChecker {
         String temp = "";        
         regexExpression.add("(");
         regexExpression.add("(");        
-        // idsExtended.get(id).add("(");
         idsExtended.get(id).add("(");
         for (int index = 0; index < value.length(); index++) {
             char letter = value.charAt(index);
