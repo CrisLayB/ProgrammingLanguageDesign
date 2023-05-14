@@ -287,8 +287,9 @@ public class YalChecker {
         for (int index = 0; index < value.length(); index++) {
             char letter = value.charAt(index);
             if(signsOperation.contains(letter)){
-                regexExpression.add(letter+"");
-                idsExtended.get(id).add(letter+"");
+                String maybeAscii = (letter == '.') ? (int)letter + "" : letter + "";
+                regexExpression.add(maybeAscii);
+                idsExtended.get(id).add(maybeAscii);
                 // Revisar si la expresion se va a concatenar
                 if(letter == ')' || letter == '.' || letter == '?'){
                     // Si dado caso llegamos al limite entonces vamos a saltarnos este paso
@@ -310,7 +311,7 @@ public class YalChecker {
                     temp = "";
                     if(checkNext == '(') {
                         regexExpression.add("·");
-                        idsExtended.get(id).add(".");
+                        idsExtended.get(id).add("·");
                     }
                 }
             }

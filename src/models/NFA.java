@@ -4,7 +4,6 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Stack;
-import java.util.ArrayList;
 
 public class NFA extends Automata {
     // Atributos
@@ -151,37 +150,7 @@ public class NFA extends Automata {
         return new String[]{w, "ERROR LEXICO"};
     }
 
-    public boolean simulateTest(String ascii){
-        Set<State> initialStateSet = new HashSet<State>();
-        initialStateSet.add(getStateInitial());
-        Set<State> S = eclousure(initialStateSet);
-        
-        for (State s : S) {
-            System.out.println(s.toString());
-        }
-        
-        // Move
-        Symbol c = new Symbol(ascii);
-        Set<State> moved = move(S,c);
-
-        System.out.println("+++++++++++++++++++++++++++");
-        for (State s : moved) {
-            System.out.println(s.toString());
-        }
-        
-        S = eclousure(moved);
-
-        S = eclousure(move(S, c));
-
-        System.out.println("+++++++++++++++++++++++++++");
-        for (State s : S) {
-            System.out.println(s.toString());
-        }
-
-        if(S.contains(this.stateFinal)){
-            return true;
-        }
-        
+    public boolean simulateTest(String ascii){        
         return false;
     }
 

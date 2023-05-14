@@ -1,24 +1,42 @@
-if -> Token: id
+12 -> Token: number
+. -> Token: ERROR LEXICO
+17 -> Token: number
   -> Token: ws
-:= -> Token: :=
+else -> Token: ERROR LEXICO
   -> Token: ws
-if -> Token: id
-  -> Token: ws
-/ -> Token: ERROR LEXICO
-  -> Token: ws
-+ -> Token: +
-  -> Token: ws
-* -> Token: *
-  -> Token: ws
-( -> Token: (
-  -> Token: ws
-) -> Token: )
- 
+j -> Token: ERROR LEXICO
+a -> Token: id
+j -> Token: ERROR LEXICO
+a1a -> Token: id
+v -> Token: ERROR LEXICO
+c -> Token: id
+
  -> Token: ws
-abc -> Token: id
+f -> Token: ERROR LEXICO
+or -> Token: ERROR LEXICO
   -> Token: ws
-12 -> Token: ERROR LEXICO
-   -> Token: ws
-else -> Token: else
+if -> Token: if
   -> Token: ws
-jaja1avc -> Token: id
+h -> Token: ERROR LEXICO
+i -> Token: ERROR LEXICO
+jole -> Token: ERROR LEXICO
+  -> Token: ws
+if -> Token: if
+  -> Token: ws
+if -> Token: if
+  -> Token: ws
+if -> Token: if
+  -> Token: ws
+if -> Token: if
+  -> Token: ws
+j -> Token: ERROR LEXICO
+a -> Token: id
+j -> Token: ERROR LEXICO
+a -> Token: id
+j -> Token: ERROR LEXICO
+a_ -> Token: id
+s -> Token: ERROR LEXICO
+i -> Token: ERROR LEXICO
+_ -> Token: ERROR LEXICO
+soy -> Token: ERROR LEXICO
+1 -> Token: number
