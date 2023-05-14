@@ -3,6 +3,7 @@ package models;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class NFA extends Automata {
@@ -150,17 +151,56 @@ public class NFA extends Automata {
         return new String[]{w, "ERROR LEXICO"};
     }
 
-    public boolean simulateTest(String ascii){        
-        return false;
+    public List<String[]> simulate(List<Integer> asccis){
+        List<String[]> tokens = new ArrayList<String[]>();
+
+        Set<State> initialStateSet = new HashSet<State>();
+        initialStateSet.add(getStateInitial());
+        Set<State> S = eclousure(initialStateSet);
+        
+        String lexema = "";
+        State acceptedState = null;
+        for (int i = 0; i < asccis.size(); i++) {
+            int number = asccis.get(i);
+            Symbol c = new Symbol(number+"");
+            S = eclousure(move(S, c));
+            
+            for (State state : S) { // Guardar estado final
+                if(state.getType() == Types.Final){
+                    // ! CUIDADO CON LOS ESTADOS FINALES DEL MEGAAUTOMATA
+                    acceptedState = state;
+                    break;
+                }
+            }           
+
+            if(S.isEmpty()){                
+                // Si state no es null entonces vamos a guardar el estado de aceptacion
+                if(acceptedState != null){
+                    // Vamos a detectar el token final con su hoja correspondiente
+                    State tempAcceptedState = getStateWithLeaf(acceptedState);
+                    // Guardar el token
+                    tokens.add(new String[]{lexema, tempAcceptedState.getLeafId()});
+                }
+                // Vamos a reiniciar S
+                S = eclousure(initialStateSet);
+                lexema = "";
+                acceptedState = null;
+                i--;
+            }
+            else{
+                lexema += (char)number;
+            }
+
+        }
+        
+        return tokens;
     }
 
-    public String[] identifyId(String wAscii){
-        for (Transition transition : getTransitions()) {
-            if(transition.getSymbol().getStringId().equals(wAscii)){
-                return new String[]{wAscii, transition.getSymbol().getLetValue()};
-            }
-        }        
-        return new String[]{wAscii, "ERROR LEXICO"};
+    private State getStateWithLeaf(State acceptedState){
+        for (State state : statesFinal) {
+            if(state.getId().equals(acceptedState.getId())) return state;
+        }
+        return acceptedState;
     }
 
     public void defineLeafIdFinalState(String leafId){

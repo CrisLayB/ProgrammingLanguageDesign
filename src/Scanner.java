@@ -80,44 +80,19 @@ public class Scanner {
 		
 		// Leer contenido del archivo 
 		ArrayList<String> fileContent = FilesCreator.readFileContent(args[0]); 
-		ArrayList<String> results = new ArrayList<String>(); 
-		ArrayList<String> actions = new ArrayList<String>(); 
-		ArrayList<String> lexemas = new ArrayList<String>(); 
-		 
-
-		String lexema = "", idDetected = ""; 
+		List<Integer> charsInt = new ArrayList<Integer>(); // Obtener todos los chars
 		for (String string : fileContent) { 
 		    for (int i = 0; i < string.length(); i++) {
 		        char c = string.charAt(i); 
 		        int ascii = (int)c; 
-		        String[] result = automata.identifyId(ascii+"");
-		        // Vamos a evaluar si el id detectado esta vacio
-		        if(idDetected.length() == 0){ 
-		        	idDetected = result[1];
-		        	lexema += c;
-		        	if(result[1].equals("ERROR LEXICO")){
-		                lexemas.add(c+"");
-		        	    idDetected = "";
-		        	    lexema = "";
-		        	}
-		        }
-		        else if(idDetected.equals(result[1])) lexema += c;
-		        else{ // Si ya no es igual entonces se detiene
-		            lexemas.add(lexema);
-		        	idDetected = result[1];
-		            lexema = c + "";
-		        }
+				charsInt.add(ascii);
 		    } 
-		} 
-		for(String l : lexemas){
-		    String[] resultsSim = automata.simulateMega(l);
-		    System.out.println(resultsSim[0] + " -> " + resultsSim[1]);
-		    results.add(resultsSim[0] + " -> Token: " + resultsSim[1] + "\n");
-		    actions.add(resultsSim[0] + " -> Token Action: " + scan(resultsSim[1]) + "\n");
-		} 
-		if(!FilesCreator.createFileTokens(results, "docs/outputFile") || !FilesCreator.createFileTokens(actions, "docs/outputFileActions")){
-		    System.out.println("Error a la hora de crear el output :(");
-		    return;
+		}
+
+		// Vamos a procesar todos los chars en una simulacion
+		List<String[]> tokens = automata.simulate(charsInt);
+		for (String[] token : tokens) {
+			System.out.println(token[0] + " -> " + token[1]);
 		}
 	}
 
