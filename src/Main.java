@@ -1,10 +1,10 @@
 import algorithms.MinimizationDFA;
 import algorithms.ShuntingYardAlgorithm;
 import algorithms.ThompsonAlgorithm;
+import automatas.DFA;
+import automatas.NFA;
 import controllers.FilesCreator;
 import controllers.SyntaxChecker;
-import models.NFA;
-import models.DFA;
 import models.PairData;
 import models.Tree;
 

@@ -15,9 +15,8 @@ import java.io.FileReader;
 // Para retornar la data
 import java.util.ArrayList;
 
-// Para leer el contenido del Automata
-import models.NFA;
-import models.DFA;
+import automatas.DFA;
+import automatas.NFA;
 import models.Transition;
 import models.State;
 
@@ -104,6 +103,8 @@ public class FilesCreator {
             // myWriter.write("\t\t");
             myWriter.write("import controllers.FilesCreator;\n");
             myWriter.write("import models.*;\n");
+            myWriter.write("import automatas.*;\n");
+            myWriter.write("import enums.*;\n");
             myWriter.write("\n");
             myWriter.write("import java.util.List;\n");
             myWriter.write("import java.util.ArrayList;\n");
@@ -147,7 +148,7 @@ public class FilesCreator {
             myWriter.write("\t\t} \n");
             myWriter.write("\t\tList<String[]> tokens = automata.simulate(charsInt); \n");
             myWriter.write("\t\tfor (String[] token : tokens) {\n");
-            myWriter.write("\t\t    System.out.println(token[0] + \" -> \" + token[1]);\n");
+            myWriter.write("\t\t    System.out.println(\"|\" + token[0] + \"| -> |\" + token[1] + \"|\");\n");
             myWriter.write("\t\t    results.add(token[0] + \" -> Token: \" + token[1] + \"\\n\");\n");
             myWriter.write("\t\t    actions.add(token[0] + \" -> Token Action: \" + scan(token[1]) + \"\\n\");\n");
             myWriter.write("\t\t} \n");

@@ -1,17 +1,22 @@
-package models;
+package automatas;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
+
+import enums.Types;
+import models.PairData;
+import models.State;
+import models.Symbol;
+import models.Transition;
+import models.Tree;
+
 import java.util.HashSet;
-import java.util.Queue;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.HashMap;
+// import java.util.Map;
 
 public class DFA extends Automata { 
-    private Map<List<Integer>, Map<Symbol, List<Integer>>> transitionsTree; // Exclusivo para tree
+    // private Map<List<Integer>, Map<Symbol, List<Integer>>> transitionsTree; // Exclusivo para tree
        
     // Constructor
     public DFA(State stateInitial){
@@ -87,13 +92,12 @@ public class DFA extends Automata {
         Stack<Set<Integer>> unmarked = new Stack<>();
         unmarked.add(tempFirstPos);
         
-        while(!unmarked.isEmpty()){
-            Set<Integer> state = unmarked.pop();
-            for (Symbol s : symbols) {                                
+        // while(!unmarked.isEmpty()){
+        //     Set<Integer> state = unmarked.pop();
+        //     for (Symbol s : symbols) {                                
                 
-            }
-        }     
-
+        //     }
+        // }     
     }
 
     public List<State> getStatesFinal(){

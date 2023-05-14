@@ -1,10 +1,16 @@
-package models;
+package automatas;
 
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Stack;
+
+import enums.AsciiSymbol;
+import enums.Types;
+import models.State;
+import models.Symbol;
+import models.Transition;
 
 public class NFA extends Automata {
     // Atributos
@@ -166,31 +172,34 @@ public class NFA extends Automata {
             Symbol c = new Symbol(number+"");
             S = eclousure(move(S, c));
             
-            for (State state : S) { // Guardar estado final
-                if(state.getType() == Types.Final){
-                    acceptedState = state;
-                    break;
+            if(!S.isEmpty()){
+                for (State state : S) { // Guardar estado final
+                    if(state.getType() == Types.Final){
+                        acceptedState = state;
+                        break;
+                    }
                 }
-            }           
+            }
 
             if(S.isEmpty()){                
                 // Si state no es null entonces vamos a guardar el estado de aceptacion
                 if(acceptedState != null){
-                    // Vamos a detectar el token final con su hoja correspondiente
-                    State tempAcceptedState = getStateWithLeaf(acceptedState);
-                    // Guardar el token
+                    State tempAcceptedState = getStateWithLeaf(acceptedState); // Detectar token final con su hoja
                     tokens.add(new String[]{lexema, tempAcceptedState.getLeafId()});
+                    i--; // Regresar al char anterior para verificarlo
+                }
+                else{ // Detectar error lexico cuando no hay estado de aceptacion
+                    lexema += (char)number;
+                    tokens.add(new String[]{lexema, "ERROR LEXICO"});
                 }
                 // Vamos a reiniciar S
                 S = eclousure(initialStateSet);
                 lexema = "";
                 acceptedState = null;
-                i--;
-            }
+            }            
             else{
                 lexema += (char)number;
-            }
-
+            }            
         }
         
         return tokens;

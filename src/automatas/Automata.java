@@ -1,10 +1,15 @@
-package models;
+package automatas;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Stack;
+
+import enums.AsciiSymbol;
+import models.State;
+import models.Symbol;
+import models.Transition;
 
 abstract public class Automata {
     // Atributos
@@ -183,7 +188,6 @@ abstract public class Automata {
                 if(stateOriginTransition.getId().equals(state.getId())){
                     // Si dado caso los ids coinciden y el estado final de la transicion no esta ingresada
                     // Entonces se agregara el estado final de la transicion a siguientes estados
-                    // if(symbolTransition.getId() == s.getId()){
                     if(symbolTransition.getStringId().equals(s.getStringId())){
                         if(!nextStates.contains(stateFinalTransition)){
                             nextStates.add(stateFinalTransition);

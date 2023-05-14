@@ -2,12 +2,12 @@ package algorithms;
 
 import java.util.Stack;
 
-import models.NFA;
+import automatas.NFA;
+import enums.AsciiSymbol;
+import enums.Types;
 import models.State;
 import models.Symbol;
 import models.Transition;
-import models.Types;
-import models.AsciiSymbol;
 
 public class ThompsonAlgorithm {
     private static int num = -1;

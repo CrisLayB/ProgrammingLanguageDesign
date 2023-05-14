@@ -1,8 +1,8 @@
 package test;
 
+import enums.AsciiSymbol;
+import enums.Types;
 import junit.framework.TestCase;
-import models.Types;
-import models.AsciiSymbol;
 
 public class EnumTest extends TestCase {
     

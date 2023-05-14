@@ -1,6 +1,5 @@
 package algorithms;
 
-import models.DFA;
 import models.State;
 import models.Symbol;
 
@@ -8,6 +7,9 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
+import automatas.DFA;
+
 import java.util.Queue;
 import java.util.LinkedList;
 

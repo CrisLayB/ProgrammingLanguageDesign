@@ -1,5 +1,7 @@
 package models;
 
+import enums.Types;
+
 public class Transition {
     // Atributos
     private State stateOrigin;

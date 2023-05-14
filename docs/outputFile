@@ -4,6 +4,8 @@ holaquehace -> Token: id
   -> Token: ws
 12.17 -> Token: number
   -> Token: ws
+& -> Token: ERROR LEXICO
+  -> Token: ws
 if -> Token: if
   -> Token: ws
 := -> Token: :=
@@ -12,6 +14,8 @@ abc -> Token: id
  
  -> Token: ws
 variable_1_xd -> Token: id
+  -> Token: ws
+$ -> Token: ERROR LEXICO
   -> Token: ws
 if -> Token: if
   -> Token: ws
@@ -34,9 +38,9 @@ funciona -> Token: id
   -> Token: ws
 if -> Token: if
   -> Token: ws
-for -> Token: for
+for -> Token: id
   -> Token: ws
-else -> Token: else
+else -> Token: id
   -> Token: ws
 if -> Token: if
   -> Token: ws

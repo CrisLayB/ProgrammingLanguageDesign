@@ -1,5 +1,7 @@
 package models;
 
+import enums.Types;
+
 public class State {
     private String id; // id of this State
     private Types type;

@@ -4,6 +4,8 @@ holaquehace -> Token Action: ID
   -> Token Action: WHITESPACE
 12.17 -> Token Action: NUMBER
   -> Token Action: WHITESPACE
+& -> Token Action: NULL
+  -> Token Action: WHITESPACE
 if -> Token Action: IF
   -> Token Action: WHITESPACE
 := -> Token Action: ASSIGNOP
@@ -12,6 +14,8 @@ abc -> Token Action: ID
  
  -> Token Action: WHITESPACE
 variable_1_xd -> Token Action: ID
+  -> Token Action: WHITESPACE
+$ -> Token Action: NULL
   -> Token Action: WHITESPACE
 if -> Token Action: IF
   -> Token Action: WHITESPACE
@@ -34,9 +38,9 @@ funciona -> Token Action: ID
   -> Token Action: WHITESPACE
 if -> Token Action: IF
   -> Token Action: WHITESPACE
-for -> Token Action: FOR
+for -> Token Action: ID
   -> Token Action: WHITESPACE
-else -> Token Action: ELSE
+else -> Token Action: ID
   -> Token Action: WHITESPACE
 if -> Token Action: IF
   -> Token Action: WHITESPACE

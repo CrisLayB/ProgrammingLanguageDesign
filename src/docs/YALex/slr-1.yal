@@ -11,12 +11,9 @@ let id = letter(letter|digit)*
 rule tokens = 
     ws
   | id        { return ID }               (* Cambie por una acción válida, que devuelva el token *)
-  | "if"      { return IF }  
   | '+'       { return PLUS }
-  | ":="      { return ASIGNOP }
   | '*'       { return TIMES }
   | '('       { return LPAREN }
-  | "else"    { return ELSE }
   | ')'       { return RPAREN }
 
 (* Introducir cualquier trailer aqui *)

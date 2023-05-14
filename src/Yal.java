@@ -1,13 +1,9 @@
 // Importar codigo java propio
 import controllers.FilesCreator;
 import controllers.YalChecker;
-import models.Tree;
-import models.PairData;
-import models.Transition;
-import models.NFA;
 import algorithms.ShuntingYardAlgorithm;
 import algorithms.ThompsonAlgorithmMega;
-
+import automatas.NFA;
 import models.*;
 
 // Importar librerias de java framework collections

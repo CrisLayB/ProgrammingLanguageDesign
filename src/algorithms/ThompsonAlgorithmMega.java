@@ -1,13 +1,15 @@
 package algorithms;
 
-import models.NFA;
 import models.State;
-import models.Types;
 import models.Transition;
 import models.Symbol;
 
 import java.util.Map;
 import java.util.Stack;
+
+import automatas.NFA;
+import enums.Types;
+
 import java.util.ArrayList;
 
 // De antemano pido disculpas ya que esta clase será casi lo mismo que "ShuntingYardAlgorithm"

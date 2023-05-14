@@ -2,12 +2,14 @@ package controllers;
 
 import java.util.ArrayList;
 import java.util.Map;
+
+import enums.AsciiSymbol;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Arrays;
 
 import models.RuleContent;
-import models.AsciiSymbol;
 import models.Colors;
 
 public class YalChecker {
