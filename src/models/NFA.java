@@ -160,6 +160,7 @@ public class NFA extends Automata {
         
         String lexema = "";
         State acceptedState = null;
+        
         for (int i = 0; i < asccis.size(); i++) {
             int number = asccis.get(i);
             Symbol c = new Symbol(number+"");
@@ -167,7 +168,6 @@ public class NFA extends Automata {
             
             for (State state : S) { // Guardar estado final
                 if(state.getType() == Types.Final){
-                    // ! CUIDADO CON LOS ESTADOS FINALES DEL MEGAAUTOMATA
                     acceptedState = state;
                     break;
                 }

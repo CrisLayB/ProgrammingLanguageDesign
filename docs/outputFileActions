@@ -1,42 +1,43 @@
-12 -> Token Action: NUMBER
-. -> Token Action: NULL
-17 -> Token Action: NUMBER
+holaquehace -> Token Action: ID
   -> Token Action: WHITESPACE
-else -> Token Action: NULL
+5 -> Token Action: NUMBER
   -> Token Action: WHITESPACE
-j -> Token Action: NULL
-a -> Token Action: ID
-j -> Token Action: NULL
-a1a -> Token Action: ID
-v -> Token Action: NULL
-c -> Token Action: ID
+12.17 -> Token Action: NUMBER
+  -> Token Action: WHITESPACE
+if -> Token Action: IF
+  -> Token Action: WHITESPACE
+:= -> Token Action: ASSIGNOP
+  -> Token Action: WHITESPACE
+abc -> Token Action: ID
+ 
+ -> Token Action: WHITESPACE
+variable_1_xd -> Token Action: ID
+  -> Token Action: WHITESPACE
+if -> Token Action: IF
+  -> Token Action: WHITESPACE
+funciona -> Token Action: ID
 
  -> Token Action: WHITESPACE
-f -> Token Action: NULL
-or -> Token Action: NULL
+; -> Token Action: SEMICOLON
+  -> Token Action: WHITESPACE
+< -> Token Action: LT
+  -> Token Action: WHITESPACE
+= -> Token Action: EQ
+  -> Token Action: WHITESPACE
++ -> Token Action: PLUS
+  -> Token Action: WHITESPACE
+* -> Token Action: TIMES
+  -> Token Action: WHITESPACE
+( -> Token Action: LPAREN
+  -> Token Action: WHITESPACE
+) -> Token Action: RPAREN
   -> Token Action: WHITESPACE
 if -> Token Action: IF
   -> Token Action: WHITESPACE
-h -> Token Action: NULL
-i -> Token Action: NULL
-jole -> Token Action: NULL
+for -> Token Action: FOR
+  -> Token Action: WHITESPACE
+else -> Token Action: ELSE
   -> Token Action: WHITESPACE
 if -> Token Action: IF
   -> Token Action: WHITESPACE
-if -> Token Action: IF
-  -> Token Action: WHITESPACE
-if -> Token Action: IF
-  -> Token Action: WHITESPACE
-if -> Token Action: IF
-  -> Token Action: WHITESPACE
-j -> Token Action: NULL
-a -> Token Action: ID
-j -> Token Action: NULL
-a -> Token Action: ID
-j -> Token Action: NULL
-a_ -> Token Action: ID
-s -> Token Action: NULL
-i -> Token Action: NULL
-_ -> Token Action: NULL
-soy -> Token Action: NULL
-1 -> Token Action: NUMBER
+jajajaja -> Token Action: ID
