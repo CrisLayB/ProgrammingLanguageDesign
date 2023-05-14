@@ -4,8 +4,7 @@
 /* T → T ∗ F | F */
 /* F → ( E ) | id */
 
-%token ID
-%token PLUS
+%token ID PLUS
 %token TIMES
 %token LPAREN RPAREN
 

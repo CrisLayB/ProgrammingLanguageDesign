@@ -57,7 +57,7 @@ public class ParserGenerator {
 
         // Mostrar los tokens encontrados
         System.out.println("\n========================================================");
-        System.out.println("TOKENS entrontados =====================================");
+        System.out.println("TOKENS detectados del Scanner ==========================");
         System.out.println("========================================================");
         for(Map.Entry<String, String> token: tokensDetected.entrySet()){
             String tokenN = token.getKey();
@@ -68,6 +68,14 @@ public class ParserGenerator {
 
         // * ===> Vamos a analizar el contenido YAPar
         YaparAnalyzer yapar = new YaparAnalyzer(yalpContent, tokensDetected);
+
+        if(yapar.getHasErrors()) return; // No continuar SI hay errores
+        
+        System.out.println("\n========================================================");
+        System.out.println("TOKENS Yapar ===========================================");
+        System.out.println("========================================================");
+        yapar.seeTokensYapar();
+        System.out.println("========================================================");
     }
 
     private static HashMap<String, String> getTokens(ArrayList<String> tokens){
