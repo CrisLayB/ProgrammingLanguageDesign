@@ -72,6 +72,14 @@ En la carpeta "docs" se guardaran en archivos los tokens generados, los archivos
 
 ## ---> Generador de Analizadores Sintáticos (YAPar)
 
+Para correr este programa para generar un analizador sintático es escencial contar con un archivo .yalp y con un output de tokens generado por el Scanner.java donde este ultimo debe de tener la siguiente esctructura para el correcto proceso de datos:
+
+```
+TOKEN→contenido_token↑
+```
+
 ```
 java ParserGenerator 'direccion_archivo_yalpar.yalp' 'archivo_output_tokens_generados'
 ```
+
+![Alt text](/img/ForREADME/Parser_00.png 'Pre-Parser')
