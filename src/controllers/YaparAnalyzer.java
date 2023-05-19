@@ -5,6 +5,8 @@ import models.Colors;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Arrays;
 
 public class YaparAnalyzer {
     // Contenido procesado y almacenado por el yapar
@@ -13,6 +15,10 @@ public class YaparAnalyzer {
     private HashMap<String, String> tokensOfScanner;
     // Auxiliares
     private boolean hasErrors;
+    // Caracteres en ascii auxiliares
+    private final int firstLetterLowerCase = (int)'a', lastLetterLowerCase = (int)'z';
+    private final int firstCapitalLetter = (int)'A', lastCapitalLetter = (int)'Z';
+    private final int spaceLetter = (int)' ';
     
     public YaparAnalyzer(ArrayList<String> yaparContent, HashMap<String, String> tokensOfScanner){        
         this.tokensOfScanner = tokensOfScanner;
@@ -44,9 +50,37 @@ public class YaparAnalyzer {
     }
 
     private boolean getProductionsFromYapar(String content, int jContinue){
+        List<Character> ignoreSpaces = Arrays.asList((char)9, (char)10);
+        List<Character> ignoreAllSpaces = Arrays.asList((char)32, (char)9, (char)10);
+        boolean initialProduction = true;
+        boolean insertProductions = false;
+        boolean foundLetter = false;
         for (int i = jContinue; i < content.length(); i++) {
             char c = content.charAt(i);
-            System.out.print(c);
+
+            if(initialProduction){
+                if(!ignoreAllSpaces.contains(c)){
+                    System.out.print(c);
+                    if(c == ':'){
+                        initialProduction = false;
+                        insertProductions = true;
+                        continue;
+                    }
+                }
+            }
+
+            if(insertProductions){
+                if(!ignoreSpaces.contains(c)){
+                    System.out.print(c);
+                    if(c == ';'){ // Para finalizar el ingreso de la produccion
+                        initialProduction = true;
+                        insertProductions = false;
+                        continue;
+                    }
+
+                    
+                }
+            }
         }
         return true; // Retornara true si no se encontraron errores
     }
@@ -65,10 +99,9 @@ public class YaparAnalyzer {
                         return 0;
                     }
                     // Tomando en cuenta las consideraciones de yalex solo se admiten letras mayusculas y un spacio
-                    int firstLetter = (int)'A', lastLetter = (int)'Z', space = (int)' ';
 
                     // Se espera que el primer char sea una letra mayuscula y el ultimo tambien
-                    if((int)buffer.charAt(0) >= lastLetter || (int)buffer.charAt(0) <= firstLetter){
+                    if((int)buffer.charAt(0) >= lastCapitalLetter || (int)buffer.charAt(0) <= firstCapitalLetter){
                         System.out.println(Colors.RED + "\nERROR: Se esperaba una letra mayuscula para el token a definir\n" + Colors.RESET);
                         return 0;
                     }
@@ -80,12 +113,12 @@ public class YaparAnalyzer {
                         char cBuffer = buffer.charAt(index);
                         int cNumber = (int)cBuffer;
 
-                        if(cNumber == space){ // Detectar espacio
+                        if(cNumber == spaceLetter){ // Detectar espacio
                             if(!saveToken(bufferTokenDetected)) return 0;
                             bufferTokenDetected = "";
                             continue;
                         }
-                        if(cNumber >= firstLetter && cNumber <= lastLetter){ // Si es mayuscula
+                        if(cNumber >= firstCapitalLetter && cNumber <= lastCapitalLetter){ // Si es mayuscula
                             bufferTokenDetected += cBuffer;
                         }
                         else{
