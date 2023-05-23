@@ -13,6 +13,8 @@ public class YaparAnalyzer {
     private HashMap<String, String> tokensYapar;    
     // Tokens Generados por el scanner
     private HashMap<String, String> tokensOfScanner;
+    // Producciones generadas
+    private ArrayList<ArrayList<String>> productions;    
     // Auxiliares
     private boolean hasErrors;
     // Caracteres en ascii auxiliares
@@ -24,6 +26,7 @@ public class YaparAnalyzer {
         this.tokensOfScanner = tokensOfScanner;
         hasErrors = false;
         tokensYapar = new HashMap<String, String>();
+        productions = new ArrayList<>();
         processYapar(yaparContent);
     }
 
@@ -54,34 +57,99 @@ public class YaparAnalyzer {
         List<Character> ignoreAllSpaces = Arrays.asList((char)32, (char)9, (char)10);
         boolean initialProduction = true;
         boolean insertProductions = false;
-        boolean foundLetter = false;
+        boolean foundProduction = false, foundToken = false;
+        String buffer = "";
+        
         for (int i = jContinue; i < content.length(); i++) {
             char c = content.charAt(i);
 
             if(initialProduction){
                 if(!ignoreAllSpaces.contains(c)){
-                    System.out.print(c);
                     if(c == ':'){
+                        // ! Guardar *NUEVA PRODUCTION*
+                        System.out.println("NEW PRODUCTION: " + buffer);
                         initialProduction = false;
                         insertProductions = true;
+                        buffer = "";
                         continue;
+                    }
+
+                    // Se espera que solamente se ingresen letras minusculas para ingresar una produccion
+                    if((int)c >= firstLetterLowerCase && (int)c <= lastLetterLowerCase){
+                        buffer += c;
                     }
                 }
             }
 
-            if(insertProductions){
-                if(!ignoreSpaces.contains(c)){
-                    System.out.print(c);
-                    if(c == ';'){ // Para finalizar el ingreso de la produccion
+            if(insertProductions){                
+                if(c == ' ' && foundProduction){
+                    // ! Guardar *PRODUCTION*
+                    System.out.println("\n+" + buffer + "+");
+                    buffer = "";
+                    foundProduction = false;
+                    continue;
+                }
+
+                if(c == ' ' && foundToken){
+                    // ! Guardar *TOKEN*
+                    System.out.println("\n-" + buffer + "-");
+                    buffer = "";
+                    foundToken = false;
+                    continue;
+                }
+                                
+                if(!ignoreSpaces.contains(c)){ // Por si no se a detectado nada
+                    // Para finalizar el ingreso de la produccion
+                    if(c == ';'){
+                        // ! Guardar *PRODUCTION* O *TOKEN*
+                        System.out.println("\n;" + buffer + ";");
                         initialProduction = true;
                         insertProductions = false;
+                        buffer = "";
+                        foundToken = false;
+                        foundProduction = false;
                         continue;
                     }
 
-                    
+                    if(foundProduction){ // Por si se encontro una produccion a guardar                    
+                        if((int)c >= firstLetterLowerCase && (int)c <= lastLetterLowerCase) {
+                            buffer += c;
+                            continue;
+                        }
+                        System.out.println(Colors.RED + "ERROR: El caracter " + c + " es invalido con la secuencia de letras minusculas (Para una PRODUCCION)" + Colors.RESET);
+                        return false;
+                    }
+    
+                    if(foundToken){ // Por si se encontro un Token a procesar
+                        if((int)c >= firstCapitalLetter && (int)c <= lastCapitalLetter) {
+                            buffer += c;
+                            continue;
+                        }
+                        System.out.println(Colors.RED + "ERROR: El caracter " + c + " es invalido con la secuencia de letras mayusculas (Para un TOKEN)" + Colors.RESET);
+                        return false;
+                    }
+
+                    if(c == '|'){
+                        // ! Guardar *OR*
+                        System.out.println(">" + c + "<");
+                        continue;
+                    }
+
+                    // Si se detecto una letra minuscula (Representa PRODUCCIONES)
+                    if((int)c >= firstLetterLowerCase && (int)c <= lastLetterLowerCase){
+                        foundProduction = true;
+                        buffer += c;
+                    }
+
+                    // Si se detecto una letra mayuscula (Representa TOKENS)
+                    if((int)c >= firstCapitalLetter && (int)c <= lastCapitalLetter){
+                        foundToken = true;
+                        buffer += c;
+                    }
                 }
             }
         }
+
         return true; // Retornara true si no se encontraron errores
     }
 
