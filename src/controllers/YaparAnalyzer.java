@@ -18,7 +18,9 @@ public class YaparAnalyzer {
     // Tokens Generados por el scanner
     private HashMap<String, String> tokensOfScanner;
     // Producciones generadas
-    private ArrayList<ArrayList<Symbol>> productions;    
+    private ArrayList<ArrayList<Symbol>> productions;
+    // Simbolos gramaticales
+    private ArrayList<Symbol> gramaticalSymbols;
     // Auxiliares
     private boolean hasErrors;
     // Caracteres en ascii auxiliares
@@ -34,7 +36,8 @@ public class YaparAnalyzer {
         this.tokensOfScanner = tokensOfScanner;
         hasErrors = false;
         tokensYapar = new HashMap<String, String>();
-        productions = new ArrayList<>();
+        productions = new ArrayList<ArrayList<Symbol>>();
+        gramaticalSymbols = new ArrayList<Symbol>();
         processYapar(yaparContent);
     }
 
@@ -45,6 +48,10 @@ public class YaparAnalyzer {
 
     public ArrayList<ArrayList<Symbol>> getProductions() {
         return productions;
+    }
+
+    public ArrayList<Symbol> getGramaticalSymbols() {
+        return gramaticalSymbols;
     }
 
     // ==> METODOS
@@ -120,7 +127,7 @@ public class YaparAnalyzer {
                     // Tomando en cuenta las consideraciones de yalex solo se admiten letras mayusculas y un spacio
 
                     // Se espera que el primer char sea una letra mayuscula y el ultimo tambien
-                    if((int)buffer.charAt(0) >= lastCapitalLetter || (int)buffer.charAt(0) <= firstCapitalLetter){
+                    if((int)buffer.charAt(0) > lastCapitalLetter || (int)buffer.charAt(0) < firstCapitalLetter){
                         System.out.println(Colors.RED + "\nERROR: Se esperaba una letra mayuscula para el token a definir\n" + Colors.RESET);
                         return 0;
                     }
@@ -297,7 +304,7 @@ public class YaparAnalyzer {
             firstListProductions.add(new Symbol(ARROW));
             firstListProductions.add(new Symbol(DOT));
             firstListProductions.add(new Symbol(production, 0));
-            productions.add(firstListProductions);
+            productions.add(firstListProductions);            
         }
 
         // Ingresar la correspondiente produccion
@@ -305,6 +312,7 @@ public class YaparAnalyzer {
         newListProductions.add(new Symbol(production, 0));
         newListProductions.add(new Symbol(ARROW));
         productions.add(newListProductions);        
+        updateGramaticalSymbols(new Symbol(production, 0));
     }
 
     private void addProduction(String production, int posArrayList){
@@ -312,7 +320,8 @@ public class YaparAnalyzer {
         if(getListProductions.size() == 2){
             getListProductions.add(new Symbol(DOT));
         }
-        getListProductions.add(new Symbol(production, 0));
+        getListProductions.add(new Symbol(production, 0));        
+        updateGramaticalSymbols(new Symbol(production, 0));
     }
 
     private boolean addToken(String production, int posArrayList){
@@ -326,7 +335,8 @@ public class YaparAnalyzer {
         }
 
         String gettedToken = tokensYapar.get(production);
-        getListProductions.add(new Symbol(gettedToken, 1));
+        getListProductions.add(new Symbol(gettedToken, 1));        
+        updateGramaticalSymbols(new Symbol(gettedToken, 1));
         return true;
     }
 
@@ -345,6 +355,23 @@ public class YaparAnalyzer {
         setProduction(firstSymbol.getStringId());
     }
 
+    private void updateGramaticalSymbols(Symbol symbolNew){
+        if(gramaticalSymbols.size() == 0){
+            gramaticalSymbols.add(symbolNew);
+            return;
+        }
+
+        for (Symbol symbol : gramaticalSymbols) {
+            String idSymbol = symbol.getStringId();
+            String idNewSymbol = symbolNew.getStringId();
+            if(idSymbol.equals(idNewSymbol)){
+                return;
+            }
+        }
+
+        gramaticalSymbols.add(symbolNew);
+    }
+
     // ==> VER CONTENIDO
     public void seeTokensYapar(){        
         for(Map.Entry<String, String> id: tokensYapar.entrySet()){
@@ -360,6 +387,12 @@ public class YaparAnalyzer {
                 System.out.print(symbol.getStringId());
             }
             System.out.print("\n\n");
+        }
+    }
+
+    public void seeGramaticalSymbols(){
+        for (Symbol symbol : gramaticalSymbols) {
+            System.out.println("-> " + symbol.getStringId());
         }
     }
 }

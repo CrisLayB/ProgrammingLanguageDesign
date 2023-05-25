@@ -83,6 +83,12 @@ public class ParserGenerator {
         yapar.seeAllProductions();
         System.out.println("========================================================");
 
+        System.out.println("\n========================================================");
+        System.out.println("Gramatical Symbols======================================");
+        System.out.println("========================================================");
+        yapar.seeGramaticalSymbols();
+        System.out.println("========================================================");
+
         // * ===> Empezar a construir el Automata LR(0)
         // ! ...
     }

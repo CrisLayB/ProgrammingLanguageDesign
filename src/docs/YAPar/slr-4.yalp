@@ -70,6 +70,7 @@ e:
 z:
     LT x
   | EQ x
+;
 x:
     r w
   | r
