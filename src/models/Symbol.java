@@ -5,6 +5,8 @@ public class Symbol implements Comparable<Symbol>{
     private char cId;
     private String stringId;
     private String letValue;
+    private boolean isToken = false;
+    private boolean isProduction = false;
 
     public Symbol(char cId){
         this.id = (int)cId;
@@ -18,7 +20,17 @@ public class Symbol implements Comparable<Symbol>{
 
     public Symbol(String stringId){
         this.stringId = stringId;
-        this.letValue = null;
+        this.letValue = null;        
+    }
+
+    public Symbol(String stringId, int option){
+        this.stringId = stringId;
+        if(option == 0){ // Detectar si es produccion
+            this.stringId = Character.toUpperCase(stringId.charAt(0)) + "";
+            isProduction = true;
+        }
+        // Detectar si es token
+        if(option == 1) isToken = true; 
     }
 
     public Symbol(String stringId, String letValue){
@@ -40,6 +52,14 @@ public class Symbol implements Comparable<Symbol>{
 
     public String getLetValue() {
         return letValue;
+    }
+
+    public boolean getIsProduction(){
+        return isProduction;
+    }
+
+    public boolean getIsToken(){
+        return isToken;
     }
 
     @Override

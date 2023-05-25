@@ -76,6 +76,15 @@ public class ParserGenerator {
         System.out.println("========================================================");
         yapar.seeTokensYapar();
         System.out.println("========================================================");
+
+        System.out.println("\n========================================================");
+        System.out.println("PRODUCTIONS Yapar ======================================");
+        System.out.println("========================================================");
+        yapar.seeAllProductions();
+        System.out.println("========================================================");
+
+        // * ===> Empezar a construir el Automata LR(0)
+        // ! ...
     }
 
     private static HashMap<String, String> getTokens(ArrayList<String> tokens){

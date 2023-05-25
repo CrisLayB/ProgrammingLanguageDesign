@@ -20,7 +20,9 @@ public enum AsciiSymbol {
     Interrogation('?'),
     Numeral('#'),
     Dot('·'),
-    Epsilon('€');
+    Epsilon('€'),
+    Arrow('→'),
+    SingleQuotee('\'');
         
     public final char c;
     public final int ascii;
