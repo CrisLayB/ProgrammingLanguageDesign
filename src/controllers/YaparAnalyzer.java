@@ -273,8 +273,10 @@ public class YaparAnalyzer {
 
                     if(c == '|'){
                         // ! Guardar *OR*
-                        newProductionByOr(positionListProductions);
-                        positionListProductions = productions.size() - 1;
+                        ArrayList<Symbol> getListProductions = productions.get(positionListProductions);
+                        getListProductions.add(new Symbol("|"));
+                        // newProductionByOr(positionListProductions);
+                        // positionListProductions = productions.size() - 1;
                         continue;
                     }
 
@@ -349,11 +351,11 @@ public class YaparAnalyzer {
         return true;
     }
 
-    private void newProductionByOr(int posArrayList){
-        ArrayList<Symbol> gettedList = productions.get(posArrayList);
-        Symbol firstSymbol = gettedList.get(0);
-        setProduction(firstSymbol.getStringId());
-    }
+    // private void newProductionByOr(int posArrayList){
+    //     ArrayList<Symbol> gettedList = productions.get(posArrayList);
+    //     Symbol firstSymbol = gettedList.get(0);
+    //     setProduction(firstSymbol.getStringId());
+    // }
 
     private void updateGramaticalSymbols(Symbol symbolNew){
         if(gramaticalSymbols.size() == 0){

@@ -5,6 +5,9 @@ import controllers.YaparAnalyzer;
 // Importar librerias de java framework collections
 import java.util.ArrayList;
 import java.util.Map;
+
+import automatas.AutomataLR0;
+
 import java.util.HashMap;
 
 /**
@@ -90,7 +93,8 @@ public class ParserGenerator {
         System.out.println("========================================================");
 
         // * ===> Empezar a construir el Automata LR(0)
-        // ! ...
+        AutomataLR0 lr0 = new AutomataLR0(yapar.getProductions(), yapar.getGramaticalSymbols());
+        lr0.seeStates();
     }
 
     private static HashMap<String, String> getTokens(ArrayList<String> tokens){
