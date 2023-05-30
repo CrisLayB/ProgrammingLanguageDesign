@@ -2,19 +2,15 @@ package automatas;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Queue;
-
-import enums.AsciiSymbol;
 
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 
 import models.ItemProd;
 import models.Symbol;
 
 public class AutomataLR0 {
     private ArrayList<ItemProd> productions;
-    private Map<String, ArrayList<ItemProd>> states;
+    private Map<String, ArrayList<ItemProd>> states; // ! TOCARA QUE REPLANTEAR PARA GOTO
     private ArrayList<Symbol> symbols;
     private int count;
     
@@ -30,8 +26,8 @@ public class AutomataLR0 {
 
     private void construct(){        
         ArrayList<ItemProd> C = closure(productions.get(0));
-        states.put("S" + (++count), C);
-
+        states.put("S" + (++count), C);        
+        
         boolean noMoreAddedSets = false;
         do {
             boolean isNewSets = false;
@@ -40,7 +36,7 @@ public class AutomataLR0 {
                 for (Symbol X : symbols) {
                     ArrayList<ItemProd> G = goTo(item, X);
                     // Verificar que G no este vacio y que no este en Sets
-                    if(G.size() != 0){
+                    if(G.size() != 0 && !sameContentSet(C)){
                         // Agregar G a States
                         isNewSets = true;
                     }
@@ -96,31 +92,48 @@ public class AutomataLR0 {
         // En este metodo se definiran las transiciones en el automata LR(0)
         ArrayList<ItemProd> goToSet = new ArrayList<ItemProd>();
         
-        // for (int i = 0; i < setI.size(); i++) {
-            // Symbol symbolI = setI.get(i);            
-            // String strSymbolI = symbolI.getStringId();
-            // String strSymbol = symbol.getStringId();
-
-            // if(strSymbolI.equals(strSymbol)){
-            //     Symbol newSymbol = new Symbol(strSymbolI);
-            //     goToSet.add(newSymbol);
-            // }
-        // }
+        // ...
         
         return goToSet;
     }
 
-    private ArrayList<Symbol> first(Symbol symbol){
-        ArrayList<Symbol> firstSet = new ArrayList<Symbol>();
+    private boolean sameContentSet(ArrayList<ItemProd> setCheck){
+        for(Map.Entry<String, ArrayList<ItemProd>> state: states.entrySet()){
+            int amountProductionsState = state.getValue().size();
+            int amountSetCheck = setCheck.size();
 
-        return firstSet;
+            if(amountProductionsState != amountSetCheck) continue;
+
+            int counter = 0;
+
+            for (int i = 0; i < amountSetCheck; i++) {
+                ItemProd itemCheck = setCheck.get(i);
+                ItemProd itemState = state.getValue().get(i);
+
+                String strItemCheck = itemCheck.getExpression();
+                String strItemState = itemState.getExpression();
+
+                if(strItemCheck.equals(strItemState)){
+                    counter++;
+                }
+            }
+
+            if(counter == amountProductionsState) return true;
+        }
+        return false;
     }
 
-    private ArrayList<Symbol> follow(Symbol symbol){
-        ArrayList<Symbol> followSet = new ArrayList<Symbol>();
+    // private ArrayList<Symbol> first(Symbol symbol){
+    //     ArrayList<Symbol> firstSet = new ArrayList<Symbol>();
 
-        return followSet;
-    }
+    //     return firstSet;
+    // }
+
+    // private ArrayList<Symbol> follow(Symbol symbol){
+    //     ArrayList<Symbol> followSet = new ArrayList<Symbol>();
+
+    //     return followSet;
+    // }
 
     public ArrayList<String> prepareTransitions(){
         // Metodo que nos dara una estructura para graficarlo con dot
@@ -137,11 +150,6 @@ public class AutomataLR0 {
             System.out.println("\n==> " + numState);
             for (ItemProd listProductions : productions) {
                 System.out.println("\t" + listProductions.getExpression());
-                // System.out.print("\t");
-                // for (Symbol symbol : listProductions) {
-                //     System.out.print(symbol.getStringId());
-                // }
-                // System.out.print("\n");
             }
         }
     }
