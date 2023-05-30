@@ -2,6 +2,7 @@ package controllers;
 
 import models.Colors;
 import models.Symbol;
+import models.ItemProd;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -19,7 +20,8 @@ public class YaparAnalyzer {
     private HashMap<String, String> tokensOfScanner;
     // Producciones generadas
     private ArrayList<ArrayList<Symbol>> productions;
-    // Simbolos gramaticales
+    // Simbolos gramaticales y items de producciones finales que se retornaran
+    private ArrayList<ItemProd> itemsProductions;
     private ArrayList<Symbol> gramaticalSymbols;
     // Auxiliares
     private boolean hasErrors;
@@ -37,6 +39,7 @@ public class YaparAnalyzer {
         hasErrors = false;
         tokensYapar = new HashMap<String, String>();
         productions = new ArrayList<ArrayList<Symbol>>();
+        itemsProductions = new ArrayList<ItemProd>();
         gramaticalSymbols = new ArrayList<Symbol>();
         processYapar(yaparContent);
     }
@@ -46,8 +49,8 @@ public class YaparAnalyzer {
         return hasErrors;
     }
 
-    public ArrayList<ArrayList<Symbol>> getProductions() {
-        return productions;
+    public ArrayList<ItemProd> getItemProductions(){
+        return itemsProductions;
     }
 
     public ArrayList<Symbol> getGramaticalSymbols() {
@@ -70,6 +73,33 @@ public class YaparAnalyzer {
         if(!getProductionsFromYapar(allContent, jContinue)){ // Obtener todas las producciones del yapar
             hasErrors = true;
             return;
+        }
+
+        // Vamos a guardar de una forma mejor los items de las producciones generadas
+        for (ArrayList<Symbol> productionsList : productions) {
+            ArrayList<Symbol> tempInitial = new ArrayList<Symbol>();
+            ArrayList<Symbol> tempProductions = new ArrayList<Symbol>();
+            String tempExpression = "";
+            boolean insertProductions = false;
+            
+            for (Symbol s : productionsList) {
+                String stringId = s.getStringId(); // Obtener stringId
+
+                // Actualizar la expresion
+                tempExpression += stringId;
+                
+                // Si se detecta un arrow entonces se procedera a crear producciones
+                if(stringId.equals(ARROW + "")){
+                    insertProductions = true;
+                    continue;
+                }
+
+                // Se ingresa el elemento depende de lo que se detecto
+                if(!insertProductions) tempInitial.add(s);
+                else tempProductions.add(s);
+            }
+
+            itemsProductions.add(new ItemProd(tempExpression, tempInitial, tempProductions));
         }
     }
 
@@ -273,10 +303,8 @@ public class YaparAnalyzer {
 
                     if(c == '|'){
                         // ! Guardar *OR*
-                        ArrayList<Symbol> getListProductions = productions.get(positionListProductions);
-                        getListProductions.add(new Symbol("|"));
-                        // newProductionByOr(positionListProductions);
-                        // positionListProductions = productions.size() - 1;
+                        newProductionByOr(positionListProductions);
+                        positionListProductions = productions.size() - 1;
                         continue;
                     }
 
@@ -293,7 +321,7 @@ public class YaparAnalyzer {
                     }
                 }
             }
-        }
+        }        
 
         return true; // Retornara true si no se encontraron errores
     }
@@ -319,19 +347,12 @@ public class YaparAnalyzer {
 
     private void addProduction(String production, int posArrayList){
         ArrayList<Symbol> getListProductions = productions.get(posArrayList);
-        if(getListProductions.size() == 2){
-            getListProductions.add(new Symbol(DOT));
-        }
         getListProductions.add(new Symbol(production, 0));        
         updateGramaticalSymbols(new Symbol(production, 0));
     }
 
     private boolean addToken(String production, int posArrayList){
         ArrayList<Symbol> getListProductions = productions.get(posArrayList);
-        if(getListProductions.size() == 2){
-            getListProductions.add(new Symbol(DOT));
-        }
-
         if(!tokensYapar.containsKey(production)) {            
             return false;
         }
@@ -342,7 +363,14 @@ public class YaparAnalyzer {
         return true;
     }
 
+    private void newProductionByOr(int posArrayList){
+        ArrayList<Symbol> gettedList = productions.get(posArrayList);
+        Symbol firstSymbol = gettedList.get(0);
+        setProduction(firstSymbol.getStringId());
+    }
+
     private boolean updateProduction(String production, int posArrayList){
+        // Para guardar token o una produccion
         if(addToken(production, posArrayList)){
             return true;
         }
@@ -351,12 +379,7 @@ public class YaparAnalyzer {
         return true;
     }
 
-    // private void newProductionByOr(int posArrayList){
-    //     ArrayList<Symbol> gettedList = productions.get(posArrayList);
-    //     Symbol firstSymbol = gettedList.get(0);
-    //     setProduction(firstSymbol.getStringId());
-    // }
-
+    // ==> Actualizar simbolos gramaticales
     private void updateGramaticalSymbols(Symbol symbolNew){
         if(gramaticalSymbols.size() == 0){
             gramaticalSymbols.add(symbolNew);
@@ -384,12 +407,9 @@ public class YaparAnalyzer {
     }
 
     public void seeAllProductions(){
-        for (ArrayList<Symbol> listProductions : productions) {
-            for (Symbol symbol : listProductions) {
-                System.out.print(symbol.getStringId());
-            }
-            System.out.print("\n\n");
-        }
+        for (ItemProd itemP : itemsProductions) {
+            System.out.println(itemP.getExpression());
+        }        
     }
 
     public void seeGramaticalSymbols(){

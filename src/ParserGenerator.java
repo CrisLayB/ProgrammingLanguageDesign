@@ -93,7 +93,7 @@ public class ParserGenerator {
         System.out.println("========================================================");
 
         // * ===> Empezar a construir el Automata LR(0)
-        AutomataLR0 lr0 = new AutomataLR0(yapar.getProductions(), yapar.getGramaticalSymbols());
+        AutomataLR0 lr0 = new AutomataLR0(yapar.getItemProductions(), yapar.getGramaticalSymbols());
         lr0.seeStates();
     }
 
