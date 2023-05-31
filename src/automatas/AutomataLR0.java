@@ -2,15 +2,17 @@ package automatas;
 
 import java.util.ArrayList;
 import java.util.Map;
-
 import java.util.LinkedHashMap;
+import java.util.Queue;
+import java.util.LinkedList;
 
 import models.ItemProd;
+import models.PairData;
 import models.Symbol;
 
 public class AutomataLR0 {
     private ArrayList<ItemProd> productions;
-    private Map<String, ArrayList<ItemProd>> states; // ! TOCARA QUE REPLANTEAR PARA GOTO
+    private ArrayList<ArrayList<ItemProd>> C;
     private ArrayList<Symbol> symbols;
     private int count;
     
@@ -18,33 +20,51 @@ public class AutomataLR0 {
         // Inicializar atributos
         this.productions = productions;
         this.symbols = symbols;
-        this.states = new LinkedHashMap<String, ArrayList<ItemProd>>();
-        this.count = -1;
+        this.C = new ArrayList<ArrayList<ItemProd>>();
+        count = -1;
         // Empezar a ingresar la informacion
         construct();
     }
 
     private void construct(){        
-        ArrayList<ItemProd> C = closure(productions.get(0));
-        states.put("S" + (++count), C);        
+        ArrayList<ItemProd> c = closure(productions.get(0));
+        C.add((++count), c);
         
-        boolean noMoreAddedSets = false;
-        do {
-            boolean isNewSets = false;
-            for (int i = 0; i < C.size(); i++) {
-                ItemProd item = C.get(i);
-                for (Symbol X : symbols) {
-                    ArrayList<ItemProd> G = goTo(item, X);
-                    // Verificar que G no este vacio y que no este en Sets
-                    if(G.size() != 0 && !sameContentSet(C)){
-                        // Agregar G a States
-                        isNewSets = true;
-                    }
+        Queue<ArrayList<ItemProd>> queue = new LinkedList<ArrayList<ItemProd>>();
+        ArrayList<ItemProd> forQueue = new ArrayList<ItemProd>();
+        for (ItemProd item : c) {
+            forQueue.add(new ItemProd(item.getExpression(), item.getInitial(), item.getElements()));
+        }
+        queue.add(forQueue);
+        
+        while(!queue.isEmpty()){
+            ArrayList<ItemProd> I = queue.poll();
+            for (Symbol X : symbols){
+                ArrayList<ItemProd> G = goTo(I, X);
+                if(G.size() != 0 && !sameContentSet(G)){                        
+                    C.add((++count), G); // Agregar G a C
+                    // Agregar transicion
                 }
             }
+        }
+        
+        // boolean noMoreAddedSets = false;
+        // do {
+        //     boolean isNewSets = false;
+        //     for (int i = 0; i < C.size(); i++) {                
+        //         ArrayList<ItemProd> I = C.get(i);
 
-            if(isNewSets == false) noMoreAddedSets = true;
-        } while (!noMoreAddedSets);
+        //         for (Symbol X : symbols){
+        //             ArrayList<ItemProd> G = goTo(I, X);
+        //             if(G.size() != 0 && !sameContentSet(G)){                        
+        //                 C.add((++count), G); // Agregar G a C
+        //                 // Agregar transicion
+        //                 isNewSets = true;
+        //             }
+        //         }
+        //     }
+        //     if(isNewSets == false) noMoreAddedSets = true;
+        // } while (!noMoreAddedSets);
     }
 
     private ArrayList<ItemProd> closure(ItemProd items){
@@ -88,27 +108,35 @@ public class AutomataLR0 {
         return J;
     }
 
-    private ArrayList<ItemProd> goTo(ItemProd setI, Symbol symbol){
-        // En este metodo se definiran las transiciones en el automata LR(0)
+    private ArrayList<ItemProd> goTo(ArrayList<ItemProd> setI, Symbol symbol){
+        // En este metodo se definiran las transiciones en el automata LR(0)        
+        ArrayList<ItemProd> copyI = new ArrayList<>();
+        for (ItemProd itemProd : setI) {
+            copyI.add(new ItemProd(itemProd.getExpression(), itemProd.getInitial(), itemProd.getElements()));
+        }
         ArrayList<ItemProd> goToSet = new ArrayList<ItemProd>();
-        
-        // ...
+                
+        for (ItemProd item : copyI) {
+            // ! PROGRAMAR BUENA LOGICA DE GOTO
+            if(item.moveDot(symbol)){
+                goToSet.add(item);
+            }
+        }
         
         return goToSet;
     }
 
     private boolean sameContentSet(ArrayList<ItemProd> setCheck){
-        for(Map.Entry<String, ArrayList<ItemProd>> state: states.entrySet()){
-            int amountProductionsState = state.getValue().size();
+        for (ArrayList<ItemProd> stateC : C) {
+            int amountProductionsState = stateC.size();
             int amountSetCheck = setCheck.size();
 
             if(amountProductionsState != amountSetCheck) continue;
 
             int counter = 0;
-
             for (int i = 0; i < amountSetCheck; i++) {
                 ItemProd itemCheck = setCheck.get(i);
-                ItemProd itemState = state.getValue().get(i);
+                ItemProd itemState = stateC.get(i);
 
                 String strItemCheck = itemCheck.getExpression();
                 String strItemState = itemState.getExpression();
@@ -120,6 +148,7 @@ public class AutomataLR0 {
 
             if(counter == amountProductionsState) return true;
         }
+
         return false;
     }
 
@@ -143,13 +172,12 @@ public class AutomataLR0 {
     }
     
     public void seeStates(){
-        for(Map.Entry<String, ArrayList<ItemProd>> state: states.entrySet()){
-            String numState = state.getKey();
-            ArrayList<ItemProd> productions = state.getValue();
+        for (int i = 0; i < C.size(); i++) {
+            System.out.println("\n==> S" + i);
+            ArrayList<ItemProd> productionsSee = C.get(i);
 
-            System.out.println("\n==> " + numState);
-            for (ItemProd listProductions : productions) {
-                System.out.println("\t" + listProductions.getExpression());
+            for (ItemProd itemProd : productionsSee) {
+                System.out.println("\t" + itemProd.getExpression());
             }
         }
     }

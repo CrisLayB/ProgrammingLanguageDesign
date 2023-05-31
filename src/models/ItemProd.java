@@ -57,7 +57,33 @@ public class ItemProd { // Esta clase representara una lista de varias produccio
         if(elements.get(0).getStringId().equals(AsciiSymbol.Dot.c + "")) return;
         
         elements.add(0, new Symbol(AsciiSymbol.Dot.c + ""));
+        
+        rewriteExpression();
+    }
 
+    public boolean moveDot(Symbol sFinded){        
+        int posDot = -1; // Buscar el punto
+        for (int i = 0; i < elements.size(); i++) {
+            Symbol checkSymbol = elements.get(i);
+
+            if(checkSymbol.getStringId().equals(AsciiSymbol.Dot.c + "")){
+                posDot = i;
+                i = elements.size();
+            }
+        }
+        
+        if(posDot == -1 || posDot == elements.size() - 1) return false;
+
+        Symbol nextSymbol = elements.get(posDot + 1); // Obtener el siguiente simbolo
+        if(!sFinded.getStringId().equals(nextSymbol.getStringId())) return false;
+        
+        elements.remove(posDot); // Eliminar el punto        
+        elements.add(posDot + 1, new Symbol(AsciiSymbol.Dot.c + ""));
+        rewriteExpression();
+        return true;
+    }
+
+    private void rewriteExpression(){
         expression = ""; // Reiniciar expression
 
         for (Symbol symbol : initial) {
