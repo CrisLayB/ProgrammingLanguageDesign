@@ -42,12 +42,15 @@ public class AutomataLR0 {
             counter++;
             for (Symbol X : symbols) {
                 ArrayList<ItemProd> G = goTo(I, X);
-                boolean sameContent = sameContentSet(G);
-                if(G.size() != 0 && !sameContent){
+                int sameContent = sameContentSet(G);
+                if(G.size() != 0 && sameContent == -1){
                     C.add((++count), G); // Agregar a C                    
                     queue.offer(copyItems(G)); // Agregar nuevos items al queue
                     transitions.add(new SimpleTransition("S" + counter, "S" + count, X.getStringId()));
                 }
+                // else if(G.size() != 0 && sameContent != -1){
+                //     transitions.add(new SimpleTransition("S" + count, "S" + sameContent, X.getStringId()));
+                // }
             }
         }
 
@@ -130,7 +133,8 @@ public class AutomataLR0 {
     }
 
     // !!! Creo que voy a cambiar el valor de retorno y la logica para que se acomode mejor
-    private boolean sameContentSet(ArrayList<ItemProd> setCheck){
+    private int sameContentSet(ArrayList<ItemProd> setCheck){
+        int num = 0;
         for (ArrayList<ItemProd> stateC : C) {
             int amountProductionsState = stateC.size();
             int amountSetCheck = setCheck.size();
@@ -151,11 +155,13 @@ public class AutomataLR0 {
             }
 
             if(counter == amountProductionsState) {
-                return true;
+                return num;
             }
+
+            num++;
         }
 
-        return false;
+        return -1; // Indica que no hay ninguna coincidencia
     }
 
     // private ArrayList<Symbol> first(Symbol symbol){
@@ -206,16 +212,16 @@ public class AutomataLR0 {
 
     public ArrayList<String> prepareContentDot(String label){
         // Metodo que nos dara una estructura para graficarlo con dot
-        ArrayList<String> infoTransitions = new ArrayList<String>();
+        ArrayList<String> code = new ArrayList<String>();
 
         // Insertar informacion inicial
-        infoTransitions.add("digraph \"AUTOMATA LR0\" {\n");
-        infoTransitions.add("\tlabel = \"" + label + " [LR0]\"\n");
-        infoTransitions.add("\tlabelloc  =  t\n");
-        infoTransitions.add("\tfontsize  = 20\n");
-        infoTransitions.add("\trankdir=LR size=\"8,5\"\n");
+        code.add("digraph \"AUTOMATA LR0\" {\n");
+        code.add("\tlabel = \"" + label + " [LR0]\"\n");
+        code.add("\tlabelloc  =  t\n");
+        code.add("\tfontsize  = 20\n");
+        code.add("\trankdir=LR size=\"8,5\"\n");
         
-        infoTransitions.add("\tSA [label=\"Aceptar\", shape=\"none\"]\n");
+        code.add("\tSA [label=\"Aceptar\", shape=\"none\"]\n");
         
         // Implementar informacion de los states
         for (int i = 0; i < C.size(); i++) {
@@ -227,16 +233,17 @@ public class AutomataLR0 {
                 information += itemProd.getExpression() + "\\n";
             }
             String allinfo = state + " [label=\"" + information + "\", shape=\"box\"];";
-            infoTransitions.add("\t" + allinfo + "\n");
+            code.add("\t" + allinfo + "\n");
         }
         
         // Implementar transiciones para el contenido
         for (SimpleTransition transition : transitions) {
-            infoTransitions.add("\t" + transition.toString());
+            code.add("\t" + transition.toString());
         }
 
         // Parte Final
-        infoTransitions.add("}");        
-        return infoTransitions;
+        code.add("}");
+        
+        return code;
     }        
 }
