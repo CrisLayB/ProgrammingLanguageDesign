@@ -4,15 +4,13 @@ import java.util.ArrayList;
 
 import enums.AsciiSymbol;
 
-public class ItemProd { // Esta clase representara una lista de varias producciones
-    private String expression;
+public class ItemProd implements Cloneable { // Esta clase representara una lista de varias producciones
     private Symbol idInitial;
     private ArrayList<Symbol> initial;
     private ArrayList<Symbol> elements;
 
     // Constructor
-    public ItemProd(String expression, ArrayList<Symbol> initial, ArrayList<Symbol> elements){
-        this.expression = expression;
+    public ItemProd(ArrayList<Symbol> initial, ArrayList<Symbol> elements){
         this.initial = initial;
         this.elements = elements;
         idInitial = this.initial.get(0);
@@ -20,6 +18,18 @@ public class ItemProd { // Esta clase representara una lista de varias produccio
 
     // Getters
     public String getExpression() {
+        String expression = "";
+
+        for (Symbol symbol : initial) {
+            expression += symbol.getStringId();
+        }
+
+        expression += AsciiSymbol.Arrow.c;
+
+        for (Symbol symbol : elements) {
+            expression += symbol.getStringId();
+        }
+        
         return expression;
     }
 
@@ -55,10 +65,7 @@ public class ItemProd { // Esta clase representara una lista de varias produccio
     // Métodos
     public void insertDot(){
         if(elements.get(0).getStringId().equals(AsciiSymbol.Dot.c + "")) return;
-        
         elements.add(0, new Symbol(AsciiSymbol.Dot.c + ""));
-        
-        rewriteExpression();
     }
 
     public boolean moveDot(Symbol sFinded){        
@@ -72,28 +79,13 @@ public class ItemProd { // Esta clase representara una lista de varias produccio
             }
         }
         
-        if(posDot == -1 || posDot == elements.size() - 1) return false;
+        if(posDot == -1 || posDot >= elements.size() - 1) return false;
 
         Symbol nextSymbol = elements.get(posDot + 1); // Obtener el siguiente simbolo
         if(!sFinded.getStringId().equals(nextSymbol.getStringId())) return false;
         
         elements.remove(posDot); // Eliminar el punto        
-        elements.add(posDot + 1, new Symbol(AsciiSymbol.Dot.c + ""));
-        rewriteExpression();
+        elements.add(posDot + 1, new Symbol(AsciiSymbol.Dot.c + ""));    
         return true;
-    }
-
-    private void rewriteExpression(){
-        expression = ""; // Reiniciar expression
-
-        for (Symbol symbol : initial) {
-            expression += symbol.getStringId();
-        }
-
-        expression += AsciiSymbol.Arrow.c;
-        
-        for (Symbol symbol : elements) {
-            expression += symbol.getStringId();
-        }
     }
 }

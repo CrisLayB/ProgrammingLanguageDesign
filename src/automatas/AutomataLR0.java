@@ -29,42 +29,24 @@ public class AutomataLR0 {
     private void construct(){        
         ArrayList<ItemProd> c = closure(productions.get(0));
         C.add((++count), c);
-        
+
         Queue<ArrayList<ItemProd>> queue = new LinkedList<ArrayList<ItemProd>>();
         ArrayList<ItemProd> forQueue = new ArrayList<ItemProd>();
         for (ItemProd item : c) {
-            forQueue.add(new ItemProd(item.getExpression(), item.getInitial(), item.getElements()));
+            forQueue.add(new ItemProd(copyElements(item.getInitial()), copyElements(item.getElements())));
         }
         queue.add(forQueue);
-        
+
         while(!queue.isEmpty()){
             ArrayList<ItemProd> I = queue.poll();
-            for (Symbol X : symbols){
+            for (Symbol X : symbols) {
                 ArrayList<ItemProd> G = goTo(I, X);
-                if(G.size() != 0 && !sameContentSet(G)){                        
-                    C.add((++count), G); // Agregar G a C
-                    // Agregar transicion
+                if(G.size() != 0 && !sameContentSet(G)){
+                    C.add((++count), G); // Agregar a C                    
+                    queue.offer(copyItems(G)); // Agregar nuevos items al queue
                 }
             }
-        }
-        
-        // boolean noMoreAddedSets = false;
-        // do {
-        //     boolean isNewSets = false;
-        //     for (int i = 0; i < C.size(); i++) {                
-        //         ArrayList<ItemProd> I = C.get(i);
-
-        //         for (Symbol X : symbols){
-        //             ArrayList<ItemProd> G = goTo(I, X);
-        //             if(G.size() != 0 && !sameContentSet(G)){                        
-        //                 C.add((++count), G); // Agregar G a C
-        //                 // Agregar transicion
-        //                 isNewSets = true;
-        //             }
-        //         }
-        //     }
-        //     if(isNewSets == false) noMoreAddedSets = true;
-        // } while (!noMoreAddedSets);
+        }    
     }
 
     private ArrayList<ItemProd> closure(ItemProd items){
@@ -93,8 +75,9 @@ public class AutomataLR0 {
                     String strSymProduction = symPro.getStringId();
 
                     if(!strItem.equals(strProduction) && strSymProduction.equals(symbolNext.getStringId())){
-                        production.insertDot();
-                        J.add(production);
+                        ItemProd newProd = new ItemProd(copyElements(production.getInitial()), copyElements(production.getElements()));
+                        newProd.insertDot();
+                        J.add(newProd);
                         isMoreAdded = true;
                     }
                 }
@@ -110,16 +93,12 @@ public class AutomataLR0 {
 
     private ArrayList<ItemProd> goTo(ArrayList<ItemProd> setI, Symbol symbol){
         // En este metodo se definiran las transiciones en el automata LR(0)        
-        ArrayList<ItemProd> copyI = new ArrayList<>();
-        for (ItemProd itemProd : setI) {
-            copyI.add(new ItemProd(itemProd.getExpression(), itemProd.getInitial(), itemProd.getElements()));
-        }
         ArrayList<ItemProd> goToSet = new ArrayList<ItemProd>();
-                
-        for (ItemProd item : copyI) {
-            // ! PROGRAMAR BUENA LOGICA DE GOTO
-            if(item.moveDot(symbol)){
-                goToSet.add(item);
+
+        for (ItemProd itemProd : setI) {
+            ItemProd newItem = new ItemProd(copyElements(itemProd.getInitial()), copyElements(itemProd.getElements()));
+            if(newItem.moveDot(symbol)){
+                goToSet.add(newItem);
             }
         }
         
@@ -163,6 +142,29 @@ public class AutomataLR0 {
 
     //     return followSet;
     // }
+
+    private ArrayList<Symbol> copyElements(ArrayList<Symbol> elements){
+        ArrayList<Symbol> listNew = new ArrayList<Symbol>();
+
+        for (Symbol s : elements) {
+            int option = (s.getIsTerminal()) ? 1 : 0;
+            Symbol newSymbol = new Symbol(s.getStringId(), option);
+            listNew.add(newSymbol);
+        }
+        
+        return listNew;
+    }
+
+    private ArrayList<ItemProd> copyItems(ArrayList<ItemProd> itemsToCopy){
+        ArrayList<ItemProd> listNew = new ArrayList<ItemProd>();
+
+        for (ItemProd item : itemsToCopy) {
+            ItemProd newItemProd = new ItemProd(copyElements(item.getInitial()), copyElements(item.getElements()));
+            listNew.add(newItemProd);
+        }
+        
+        return listNew;
+    }
 
     public ArrayList<String> prepareTransitions(){
         // Metodo que nos dara una estructura para graficarlo con dot

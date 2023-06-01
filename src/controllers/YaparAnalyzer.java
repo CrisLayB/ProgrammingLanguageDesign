@@ -79,14 +79,10 @@ public class YaparAnalyzer {
         for (ArrayList<Symbol> productionsList : productions) {
             ArrayList<Symbol> tempInitial = new ArrayList<Symbol>();
             ArrayList<Symbol> tempProductions = new ArrayList<Symbol>();
-            String tempExpression = "";
             boolean insertProductions = false;
             
             for (Symbol s : productionsList) {
                 String stringId = s.getStringId(); // Obtener stringId
-
-                // Actualizar la expresion
-                tempExpression += stringId;
                 
                 // Si se detecta un arrow entonces se procedera a crear producciones
                 if(stringId.equals(ARROW + "")){
@@ -99,7 +95,7 @@ public class YaparAnalyzer {
                 else tempProductions.add(s);
             }
 
-            itemsProductions.add(new ItemProd(tempExpression, tempInitial, tempProductions));
+            itemsProductions.add(new ItemProd(tempInitial, tempProductions));
         }
     }
 
