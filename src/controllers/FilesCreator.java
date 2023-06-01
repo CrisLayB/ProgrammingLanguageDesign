@@ -97,6 +97,19 @@ public class FilesCreator {
         return contentScript;
     }
 
+    public static boolean createDotFile(ArrayList<String> information, String fileNameDot){
+        try {
+            FileWriter myWriter = new FileWriter(fileNameDot);
+            for (String line : information) {
+                myWriter.write(line);
+            }
+            myWriter.close();
+        } catch (IOException e) {            
+            return false;
+        }
+        return true;
+    }
+
     public static boolean createScannerJava(ArrayList<String> codeMegaAutomata, ArrayList<String> codeRule){
         try {
             FileWriter myWriter = new FileWriter("src/Scanner.java");

@@ -95,6 +95,15 @@ public class ParserGenerator {
         // * ===> Empezar a construir el Automata LR(0)
         AutomataLR0 lr0 = new AutomataLR0(yapar.getItemProductions(), yapar.getGramaticalSymbols());
         lr0.seeStates();
+
+        // Construir archivo dot para visualizacion visual del automata lr0
+        if(!FilesCreator.createDotFile(lr0.prepareContentDot(args[0]), "docs/LR0.dot")){
+            System.out.println("\n--> ERROR: No se pudo generar el archivo dot\n");
+            return;
+        }
+
+        // Crear la imagen a travez del .dot generado
+        FilesCreator.createDot("docs/LR0.dot", "img/LR0.pdf", "-Tpdf");
     }
 
     private static HashMap<String, String> getTokens(ArrayList<String> tokens){
