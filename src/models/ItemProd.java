@@ -16,7 +16,20 @@ public class ItemProd implements Cloneable { // Esta clase representara una list
         idInitial = this.initial.get(0);
     }
 
-    // Getters
+    // Getters    
+    public Symbol getIdInitial() {
+        return idInitial;
+    }
+    
+    public ArrayList<Symbol> getInitial() {
+        return initial;
+    }
+
+    public ArrayList<Symbol> getElements() {
+        return elements;
+    }
+
+    // Special Methods
     public String getExpression() {
         String expression = "";
 
@@ -32,17 +45,9 @@ public class ItemProd implements Cloneable { // Esta clase representara una list
         
         return expression;
     }
-
-    public Symbol getIdInitial() {
-        return idInitial;
-    }
     
-    public ArrayList<Symbol> getInitial() {
-        return initial;
-    }
-
-    public ArrayList<Symbol> getElements() {
-        return elements;
+    public boolean isReallyInitial(){
+        return (initial.size() > 1);
     }
 
     public Symbol getFirstElement(){
@@ -54,7 +59,8 @@ public class ItemProd implements Cloneable { // Esta clase representara una list
         for (int i = 0; i < elements.size(); i++) {
             Symbol s = elements.get(i);
             if(s.getStringId().equals(AsciiSymbol.Dot.c + "")){
-                // Tenemos que verificar que exista un elemento                
+                // Tenemos que verificar que exista un elemento           
+                if(i+1 >= elements.size()) continue;   
                 return elements.get(i+1);
             }
         }

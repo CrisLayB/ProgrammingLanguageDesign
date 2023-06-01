@@ -9,10 +9,12 @@ import models.SimpleTransition;
 import models.Symbol;
 
 public class AutomataLR0 {
+    // Atributos para guardar informacion del automata
     private ArrayList<ItemProd> productions;
     private ArrayList<ArrayList<ItemProd>> C;
     private ArrayList<Symbol> symbols;
     private ArrayList<SimpleTransition> transitions;
+    // Auxiliares para el 
     private int count;
     
     public AutomataLR0(ArrayList<ItemProd> productions, ArrayList<Symbol> symbols){
@@ -32,20 +34,34 @@ public class AutomataLR0 {
 
         Queue<ArrayList<ItemProd>> queue = new LinkedList<ArrayList<ItemProd>>();
         queue.add(copyItems(c));
-
+        
+        // * Construir Automata LR(0)
         int counter = -1;
-        while(!queue.isEmpty()){
+        while(!queue.isEmpty()){ 
             ArrayList<ItemProd> I = queue.poll();
             counter++;
             for (Symbol X : symbols) {
                 ArrayList<ItemProd> G = goTo(I, X);
-                if(G.size() != 0 && !sameContentSet(G)){
+                boolean sameContent = sameContentSet(G);
+                if(G.size() != 0 && !sameContent){
                     C.add((++count), G); // Agregar a C                    
                     queue.offer(copyItems(G)); // Agregar nuevos items al queue
                     transitions.add(new SimpleTransition("S" + counter, "S" + count, X.getStringId()));
                 }
             }
-        }    
+        }
+
+        // * Ingresar transicion para estado de aceptacion
+        for (int i = 1; i < C.size(); i++) {
+            String state = "S" + i;
+            ArrayList<ItemProd> productionsSee = C.get(i);
+            for (ItemProd item : productionsSee) {
+                if(item.isReallyInitial()){ // Determinar si es la expression expandida
+                    transitions.add(new SimpleTransition(state, "SA", "$"));
+                    i = C.size();
+                }
+            }
+        }
     }
     
     private ArrayList<ItemProd> closure(ItemProd items){
@@ -100,10 +116,20 @@ public class AutomataLR0 {
                 goToSet.add(newItem);
             }
         }
+
+        // Si estamos ante un simbolo terminal entonces se aplicara closure
+        if(symbol.getIsTerminal() && goToSet.size() == 1){            
+            ArrayList<ItemProd> c = closure(goToSet.get(0));
+            goToSet.remove(0); // Para evitar ingresar doble produccion
+            for (ItemProd item : c) {
+                if(!item.isReallyInitial()) goToSet.add(item);
+            }
+        }
         
         return goToSet;
     }
 
+    // !!! Creo que voy a cambiar el valor de retorno y la logica para que se acomode mejor
     private boolean sameContentSet(ArrayList<ItemProd> setCheck){
         for (ArrayList<ItemProd> stateC : C) {
             int amountProductionsState = stateC.size();
@@ -124,7 +150,9 @@ public class AutomataLR0 {
                 }
             }
 
-            if(counter == amountProductionsState) return true;
+            if(counter == amountProductionsState) {
+                return true;
+            }
         }
 
         return false;
@@ -187,6 +215,8 @@ public class AutomataLR0 {
         infoTransitions.add("\tfontsize  = 20\n");
         infoTransitions.add("\trankdir=LR size=\"8,5\"\n");
         
+        infoTransitions.add("\tSA [label=\"Aceptar\", shape=\"none\"]\n");
+        
         // Implementar informacion de los states
         for (int i = 0; i < C.size(); i++) {
             String state = "S" + i;
@@ -199,15 +229,14 @@ public class AutomataLR0 {
             String allinfo = state + " [label=\"" + information + "\", shape=\"box\"];";
             infoTransitions.add("\t" + allinfo + "\n");
         }
-
+        
         // Implementar transiciones para el contenido
         for (SimpleTransition transition : transitions) {
             infoTransitions.add("\t" + transition.toString());
         }
 
         // Parte Final
-        infoTransitions.add("}");
-        
+        infoTransitions.add("}");        
         return infoTransitions;
     }        
 }

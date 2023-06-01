@@ -1,18 +1,19 @@
 digraph "AUTOMATA LR0" {
-	label = "src/docs/YAPar/slr-own.yalp [LR0]"
+	label = "src/docs/YAPar/slr-1.yalp [LR0]"
 	labelloc  =  t
 	fontsize  = 20
 	rankdir=LR size="8,5"
+	SA [label="Aceptar", shape="none"]
 	S0 [label="S0\nE'→·E\nE→·E+T\nE→·T\nT→·T*F\nT→·F\nF→·(E)\nF→·soy_un_id\n", shape="box"];
 	S1 [label="S1\nE'→E·\nE→E·+T\n", shape="box"];
 	S2 [label="S2\nE→T·\nT→T·*F\n", shape="box"];
 	S3 [label="S3\nT→F·\n", shape="box"];
-	S4 [label="S4\nF→(·E)\n", shape="box"];
+	S4 [label="S4\nF→(·E)\nE→·E+T\nE→·T\nT→·T*F\nT→·F\nF→·(E)\nF→·soy_un_id\n", shape="box"];
 	S5 [label="S5\nF→soy_un_id·\n", shape="box"];
-	S6 [label="S6\nE→E+·T\n", shape="box"];
-	S7 [label="S7\nT→T*·F\n", shape="box"];
-	S8 [label="S8\nF→(E·)\n", shape="box"];
-	S9 [label="S9\nE→E+T·\n", shape="box"];
+	S6 [label="S6\nE→E+·T\nT→·T*F\nT→·F\nF→·(E)\nF→·soy_un_id\n", shape="box"];
+	S7 [label="S7\nT→T*·F\nF→·(E)\nF→·soy_un_id\n", shape="box"];
+	S8 [label="S8\nF→(E·)\nE→E·+T\n", shape="box"];
+	S9 [label="S9\nE→E+T·\nT→T·*F\n", shape="box"];
 	S10 [label="S10\nT→T*F·\n", shape="box"];
 	S11 [label="S11\nF→(E)·\n", shape="box"];
 	S0 -> S1[label="E"]
@@ -26,4 +27,5 @@ digraph "AUTOMATA LR0" {
 	S6 -> S9[label="T"]
 	S7 -> S10[label="F"]
 	S8 -> S11[label=")"]
+	S1 -> SA[label="$"]
 }
