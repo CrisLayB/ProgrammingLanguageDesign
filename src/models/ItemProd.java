@@ -15,7 +15,7 @@ public class ItemProd implements Cloneable { // Esta clase representara una list
         this.elements = elements;
         idInitial = this.initial.get(0);
     }
-
+    
     // Getters    
     public Symbol getIdInitial() {
         return idInitial;

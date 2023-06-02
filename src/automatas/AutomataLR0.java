@@ -42,15 +42,15 @@ public class AutomataLR0 {
             counter++;
             for (Symbol X : symbols) {
                 ArrayList<ItemProd> G = goTo(I, X);
-                int sameContent = sameContentSet(G);
+                int sameContent = findSet(G);
                 if(G.size() != 0 && sameContent == -1){
                     C.add((++count), G); // Agregar a C                    
                     queue.offer(copyItems(G)); // Agregar nuevos items al queue
                     transitions.add(new SimpleTransition("S" + counter, "S" + count, X.getStringId()));
                 }
-                // else if(G.size() != 0 && sameContent != -1){
-                //     transitions.add(new SimpleTransition("S" + count, "S" + sameContent, X.getStringId()));
-                // }
+                else if(G.size() != 0 && sameContent != -1){
+                    transitions.add(new SimpleTransition("S" + counter, "S" + sameContent, X.getStringId()));
+                }
             }
         }
 
@@ -132,36 +132,23 @@ public class AutomataLR0 {
         return goToSet;
     }
 
-    // !!! Creo que voy a cambiar el valor de retorno y la logica para que se acomode mejor
-    private int sameContentSet(ArrayList<ItemProd> setCheck){
-        int num = 0;
-        for (ArrayList<ItemProd> stateC : C) {
-            int amountProductionsState = stateC.size();
-            int amountSetCheck = setCheck.size();
-
-            if(amountProductionsState != amountSetCheck) continue;
-
-            int counter = 0;
-            for (int i = 0; i < amountSetCheck; i++) {
-                ItemProd itemCheck = setCheck.get(i);
-                ItemProd itemState = stateC.get(i);
-
-                String strItemCheck = itemCheck.getExpression();
-                String strItemState = itemState.getExpression();
-
-                if(strItemCheck.equals(strItemState)){
-                    counter++;
+    private int findSet(ArrayList<ItemProd> compareSet){
+        for (int i = 0; i < C.size(); i++) {
+            ArrayList<ItemProd> itemProd = C.get(i);
+            if(itemProd.size() == compareSet.size()){
+                boolean next = false;
+                for (int j = 0; j < compareSet.size(); j++) {
+                    ItemProd itemI = itemProd.get(j);
+                    ItemProd itemJ = compareSet.get(j);
+                    
+                    if(!itemI.getExpression().equals(itemJ.getExpression())) next = true;
                 }
+                if(next) continue;
+                return i;
             }
-
-            if(counter == amountProductionsState) {
-                return num;
-            }
-
-            num++;
         }
-
-        return -1; // Indica que no hay ninguna coincidencia
+        
+        return -1;
     }
 
     // private ArrayList<Symbol> first(Symbol symbol){
