@@ -1,42 +1,37 @@
 digraph "AUTOMATA LR0" {
-	label = "src/docs/YAPar/slr-1.yalp [LR0]"
+	label = "src/docs/ForLabF/slr-3.yalp [LR0]"
 	labelloc  =  t
 	fontsize  = 20
 	rankdir=LR size="8,5"
 	SA [label="Aceptar", shape="none"]
-	S0 [label="S0\nE'→·E\nE→·E+T\nE→·T\nT→·T*F\nT→·F\nF→·(E)\nF→·soy_un_id\n", shape="box"];
-	S1 [label="S1\nE'→E·\nE→E·+T\n", shape="box"];
-	S2 [label="S2\nE→T·\nT→T·*F\n", shape="box"];
-	S3 [label="S3\nT→F·\n", shape="box"];
-	S4 [label="S4\nF→(·E)\nE→·E+T\nE→·T\nT→·T*F\nT→·F\nF→·(E)\nF→·soy_un_id\n", shape="box"];
-	S5 [label="S5\nF→soy_un_id·\n", shape="box"];
-	S6 [label="S6\nE→E+·T\nT→·T*F\nT→·F\nF→·(E)\nF→·soy_un_id\n", shape="box"];
-	S7 [label="S7\nT→T*·F\nF→·(E)\nF→·soy_un_id\n", shape="box"];
-	S8 [label="S8\nF→(E·)\nE→E·+T\n", shape="box"];
-	S9 [label="S9\nE→E+T·\nT→T·*F\n", shape="box"];
-	S10 [label="S10\nT→T*F·\n", shape="box"];
-	S11 [label="S11\nF→(E)·\n", shape="box"];
+	S0 [label="S0\nE'→·E\nE→·T+E\nE→·T\nT→·12*T\nT→·12\nT→·(E)\n", shape="box"];
+	S1 [label="S1\nE'→E·\n", shape="box"];
+	S2 [label="S2\nE→T·+E\nE→T·\n", shape="box"];
+	S3 [label="S3\nT→12·*T\nT→12·\n", shape="box"];
+	S4 [label="S4\nT→(·E)\nE→·T+E\nE→·T\nT→·12*T\nT→·12\nT→·(E)\n", shape="box"];
+	S5 [label="S5\nE→T+·E\nE→·T+E\nE→·T\nT→·12*T\nT→·12\nT→·(E)\n", shape="box"];
+	S6 [label="S6\nT→12*·T\nT→·12*T\nT→·12\nT→·(E)\n", shape="box"];
+	S7 [label="S7\nT→(E·)\n", shape="box"];
+	S8 [label="S8\nE→T+E·\n", shape="box"];
+	S9 [label="S9\nT→12*T·\n", shape="box"];
+	S10 [label="S10\nT→(E)·\n", shape="box"];
 	S0 -> S1[label="E"]
 	S0 -> S2[label="T"]
-	S0 -> S3[label="F"]
+	S0 -> S3[label="12"]
 	S0 -> S4[label="("]
-	S0 -> S5[label="soy_un_id"]
-	S1 -> S6[label="+"]
-	S2 -> S7[label="*"]
-	S4 -> S8[label="E"]
+	S2 -> S5[label="+"]
+	S3 -> S6[label="*"]
+	S4 -> S7[label="E"]
 	S4 -> S2[label="T"]
-	S4 -> S3[label="F"]
+	S4 -> S3[label="12"]
 	S4 -> S4[label="("]
-	S4 -> S5[label="soy_un_id"]
+	S5 -> S8[label="E"]
+	S5 -> S2[label="T"]
+	S5 -> S3[label="12"]
+	S5 -> S4[label="("]
 	S6 -> S9[label="T"]
-	S6 -> S3[label="F"]
+	S6 -> S3[label="12"]
 	S6 -> S4[label="("]
-	S6 -> S5[label="soy_un_id"]
-	S7 -> S10[label="F"]
-	S7 -> S4[label="("]
-	S7 -> S5[label="soy_un_id"]
-	S8 -> S6[label="+"]
-	S8 -> S11[label=")"]
-	S9 -> S7[label="*"]
+	S7 -> S10[label=")"]
 	S1 -> SA[label="$"]
 }
