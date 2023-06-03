@@ -2,8 +2,6 @@ ID→soy_un_id↑
 WHITESPACE→ ↑
 NUMBER→12↑
 WHITESPACE→ ↑
-NULL→$↑
-WHITESPACE→ ↑
 IF→if↑
 WHITESPACE→
 ↑

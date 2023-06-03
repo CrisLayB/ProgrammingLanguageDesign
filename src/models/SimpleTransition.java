@@ -11,6 +11,18 @@ public class SimpleTransition {
         this.symbol = symbol;
     }
 
+    public String getStateOrigin() {
+        return stateOrigin;
+    }
+
+    public String getStateFinal() {
+        return stateFinal;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
     // Metodos
     @Override
     public String toString() {

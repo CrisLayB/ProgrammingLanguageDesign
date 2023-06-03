@@ -1,24 +1,26 @@
 	let delim = [' ''\t''\n']
- let ws = delim+ 
-let letter = ['A'-'C''a'-'c']
-
-let digit = ["0123456789"]
-   let id = letter (letter | digit)*
+let ws = delim+
+  let letter = ['A'-'Z''a'-'z']
+let str = (_)*
+let digit = ['0'-'9']
+	let digits = digit+
+let id = letter(letter|str|digit)*
+let number = digits(.digits)?('E'['+''-']?digits)?
 
 rule tokens = 
-    ws  {return NONE}
-  
-	| id  {  
-				if t.value = 0: return ID
-				else:
-					return NONE
-
-	}         (* Cambie por una acción válida, que devuelva el token *)
-  
-	| '+'       { return PLUS }
-  	| '*'       { return TIMES }
-  	| '('       { return LPAREN }
-  	| ')'       { return RPAREN }
-	| "*)"		 { return STARTCOMMENT }
+    ws        { return WHITESPACE }
+  | id        { return ID }               (* Cambie por una acción válida, que devuelva el token *)  
+  | "if"    { return IF }
+  | number    { return NUMBER }
+  | ';'       { return SEMICOLON }
+  | ":="      { return ASSIGNOP }
+  | '<'       { return LT }
+  | '='       { return EQ }
+  | '+'       { return PLUS }
+  | '-'       { return MINUS }
+  | '*'       { return TIMES }
+  | '/'       { return DIV }
+  | '('       { return LPAREN }
+  | ')'       { return RPAREN }
 
 (* Introducir cualquier trailer aqui *)

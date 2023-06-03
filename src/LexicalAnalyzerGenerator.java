@@ -122,6 +122,7 @@ public class LexicalAnalyzerGenerator {
         }
         // Luego vamos a crear las condiciones para el metodo de scan
         code.add("\n\tprivate static String scan(String token){\n");
+        code.add("\n\t\tif(token == null) return NULL;\n");
         for (int i = 0; i < ruleContent.getNamesBuffer().size(); i++) {
             String name = ruleContent.getNamesBuffer().get(i);
             String action = ruleContent.getActions().get(i);

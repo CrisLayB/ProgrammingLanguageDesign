@@ -2,8 +2,6 @@ soy_un_id -> Token Action: ID
   -> Token Action: WHITESPACE
 12 -> Token Action: NUMBER
   -> Token Action: WHITESPACE
-$ -> Token Action: NULL
-  -> Token Action: WHITESPACE
 if -> Token Action: IF
 
  -> Token Action: WHITESPACE

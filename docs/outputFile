@@ -2,8 +2,6 @@ soy_un_id -> Token: id
   -> Token: ws
 12 -> Token: number
   -> Token: ws
-$ -> Token: ERROR LEXICO
-  -> Token: ws
 if -> Token: if
 
  -> Token: ws

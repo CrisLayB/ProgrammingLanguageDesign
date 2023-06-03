@@ -94,7 +94,17 @@ public class ParserGenerator {
 
         // * ===> Empezar a construir el Automata LR(0)
         AutomataLR0 lr0 = new AutomataLR0(yapar.getItemProductions(), yapar.getGramaticalSymbols());
+        System.out.println("\n========================================================");
+        System.out.println("Estados Generados ======================================");
+        System.out.println("========================================================");
         lr0.seeStates();
+        System.out.println("========================================================");
+
+        System.out.println("\n========================================================");
+        System.out.println("Tabla de Parseo ========================================");
+        System.out.println("========================================================");
+        lr0.seeParsingTable();
+        System.out.println("========================================================");
 
         // Construir archivo dot para visualizacion visual del automata lr0
         if(!FilesCreator.createDotFile(lr0.prepareContentDot(args[0]), "docs/LR0.dot")){

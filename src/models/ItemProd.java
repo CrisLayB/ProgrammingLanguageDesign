@@ -8,6 +8,7 @@ public class ItemProd implements Cloneable { // Esta clase representara una list
     private Symbol idInitial;
     private ArrayList<Symbol> initial;
     private ArrayList<Symbol> elements;
+    private final String DOT_SYMBOL = AsciiSymbol.Dot.c + "";
 
     // Constructor
     public ItemProd(ArrayList<Symbol> initial, ArrayList<Symbol> elements){
@@ -30,18 +31,34 @@ public class ItemProd implements Cloneable { // Esta clase representara una list
     }
 
     // Special Methods
-    public String getExpression() {
+    public String getInitialExpression(){
         String expression = "";
 
         for (Symbol symbol : initial) {
             expression += symbol.getStringId();
         }
+        
+        return expression;
+    }
 
-        expression += AsciiSymbol.Arrow.c;
+    public String getElementsExpression(){
+        String expression = "";
 
         for (Symbol symbol : elements) {
             expression += symbol.getStringId();
         }
+
+        return expression;
+    }
+    
+    public String getExpression() {
+        String expression = "";
+
+        expression += getInitialExpression();
+
+        expression += AsciiSymbol.Arrow.c;
+
+        expression += getElementsExpression();
         
         return expression;
     }
@@ -55,10 +72,16 @@ public class ItemProd implements Cloneable { // Esta clase representara una list
         return elements.get(0);
     }
 
+    public boolean isComplete(){
+        Symbol lastSymbol = elements.get(elements.size() - 1);
+        String isDot = lastSymbol.getStringId();        
+        return (isDot.equals(DOT_SYMBOL));
+    }
+
     public Symbol getNextProduction(){
         for (int i = 0; i < elements.size(); i++) {
             Symbol s = elements.get(i);
-            if(s.getStringId().equals(AsciiSymbol.Dot.c + "")){
+            if(s.getStringId().equals(DOT_SYMBOL)){
                 // Tenemos que verificar que exista un elemento           
                 if(i+1 >= elements.size()) continue;   
                 return elements.get(i+1);
@@ -70,8 +93,8 @@ public class ItemProd implements Cloneable { // Esta clase representara una list
 
     // Métodos
     public void insertDot(){
-        if(elements.get(0).getStringId().equals(AsciiSymbol.Dot.c + "")) return;
-        elements.add(0, new Symbol(AsciiSymbol.Dot.c + ""));
+        if(elements.get(0).getStringId().equals(DOT_SYMBOL)) return;
+        elements.add(0, new Symbol(DOT_SYMBOL));
     }
 
     public boolean moveDot(Symbol sFinded){        
@@ -79,7 +102,7 @@ public class ItemProd implements Cloneable { // Esta clase representara una list
         for (int i = 0; i < elements.size(); i++) {
             Symbol checkSymbol = elements.get(i);
 
-            if(checkSymbol.getStringId().equals(AsciiSymbol.Dot.c + "")){
+            if(checkSymbol.getStringId().equals(DOT_SYMBOL)){
                 posDot = i;
                 i = elements.size();
             }
@@ -91,7 +114,7 @@ public class ItemProd implements Cloneable { // Esta clase representara una list
         if(!sFinded.getStringId().equals(nextSymbol.getStringId())) return false;
         
         elements.remove(posDot); // Eliminar el punto        
-        elements.add(posDot + 1, new Symbol(AsciiSymbol.Dot.c + ""));    
+        elements.add(posDot + 1, new Symbol(DOT_SYMBOL));    
         return true;
     }
 }

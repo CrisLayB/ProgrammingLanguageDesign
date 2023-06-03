@@ -14,6 +14,7 @@ public class AutomataLR0 {
     private ArrayList<ArrayList<ItemProd>> C;
     private ArrayList<Symbol> symbols;
     private ArrayList<SimpleTransition> transitions;
+    private String[][] parsingTable;
     // Auxiliares para el 
     private int count;
     
@@ -25,10 +26,11 @@ public class AutomataLR0 {
         this.transitions = new ArrayList<SimpleTransition>();
         count = -1;
         // Empezar a ingresar la informacion
-        construct();
+        constructAutomata();
+        constructParsingTable();
     }
 
-    private void construct(){        
+    private void constructAutomata(){
         ArrayList<ItemProd> c = closure(productions.get(0));
         C.add((++count), c);
 
@@ -55,6 +57,7 @@ public class AutomataLR0 {
         }
 
         // * Ingresar transicion para estado de aceptacion
+        symbols.add(new Symbol("$", 1));
         for (int i = 1; i < C.size(); i++) {
             String state = "S" + i;
             ArrayList<ItemProd> productionsSee = C.get(i);
@@ -151,17 +154,106 @@ public class AutomataLR0 {
         return -1;
     }
 
-    // private ArrayList<Symbol> first(Symbol symbol){
-    //     ArrayList<Symbol> firstSet = new ArrayList<Symbol>();
+    private ArrayList<Symbol> first(Symbol symbol){
+        ArrayList<Symbol> firstSet = new ArrayList<Symbol>();
 
-    //     return firstSet;
-    // }
+        return firstSet;
+    }
 
-    // private ArrayList<Symbol> follow(Symbol symbol){
-    //     ArrayList<Symbol> followSet = new ArrayList<Symbol>();
+    private ArrayList<Symbol> follow(Symbol symbol){
+        ArrayList<Symbol> followSet = new ArrayList<Symbol>();
 
-    //     return followSet;
-    // }
+        return followSet;
+    }
+
+    private void constructParsingTable() {
+        int numStates = C.size() + 1;
+        int numSymbols = symbols.size() + 1;
+        parsingTable = new String[numStates][numSymbols];
+
+        // * ==> Vamos a preparar la informacion de las columnas
+        parsingTable[0][0] = "STATE";
+        ArrayList<Symbol> terminalSymbols = new ArrayList<Symbol>();
+        ArrayList<Symbol> noTerminalSymbols = new ArrayList<Symbol>();
+
+        for (Symbol s : symbols) {
+            if(s.getIsTerminal()){
+                terminalSymbols.add(s);
+            }
+            else{
+                noTerminalSymbols.add(s);
+            }
+        }
+    
+        int numControl = 1;
+        for (Symbol s : terminalSymbols) {
+            parsingTable[0][numControl] = s.getStringId();
+            numControl++;
+        }
+
+        // Guardar numero del dolar
+        int dolarNum = numControl - 1;
+
+        for (Symbol s : noTerminalSymbols) {
+            parsingTable[0][numControl] = s.getStringId();
+            numControl++;
+        }
+
+        for (int i = 1; i < numStates; i++) {
+            parsingTable[i][0] = (i - 1) + "";
+        }
+        
+        // * ==> Se empezara a contruir la tabla de parsing
+        // ! IMPORTATE:
+        // !        SUMAR si se ingresara de forma correcta un dato de una COLUMNA
+        // !        RESTAR si se ingresara de forma correcta un dato de una FILA
+        for (int state = 1; state < numStates; state++) {
+            ArrayList<ItemProd> items = C.get(state - 1);
+            for (ItemProd item : items) {
+                if (item.isComplete()) {
+                    if (item.getInitialExpression().equals(productions.get(0).getInitialExpression())){
+                        // Accion de Aceptacion para el item inicial
+                        parsingTable[state][dolarNum] = "ACCEPT";
+                    }
+                    else{
+                        // Accion de Reducion para el item completo
+                        // int productionIndex = productions.indexOf(item.getInitial());
+                        // ArrayList<Symbol> followSet = follow(item.getInitial().get(0));
+                        // for (Symbol followSymbol : followSet) {
+                        //     int symbolIndex = symbols.indexOf(followSymbol);
+                        //     parsingTable[state + 1][symbolIndex - 1] = "r" + productionIndex;
+                        // }
+                    }
+                }
+                else{
+                    Symbol nextSymbol = item.getNextProduction();
+                    // Acción de cambio para el simbolo dado
+                    int symbolIndex = getIndexSymbol(nextSymbol);
+                    String nextState = getGoTo(state - 1, nextSymbol.getStringId());
+                    String test = (nextState == null) ? "S?" : nextState;
+                    parsingTable[state][symbolIndex] = test;
+                }
+            }
+        }
+    }
+    
+    private int getIndexSymbol(Symbol symbol){
+        String symbolStr = symbol.getStringId();
+        for (int i = 0; i < parsingTable[0].length; i++) {
+            if(symbolStr.equals(parsingTable[0][i])) return i;
+        }
+        return -1;
+    }
+
+    private String getGoTo(int state, String symbol){
+        for (SimpleTransition transition : transitions) {
+            if (transition.getStateOrigin().equals("S" + state) && transition.getSymbol().equals(symbol)) {
+                String destinationState = transition.getStateFinal();
+                return destinationState;
+            }
+        }
+        return null;
+    }
 
     private ArrayList<Symbol> copyElements(ArrayList<Symbol> elements){
         ArrayList<Symbol> listNew = new ArrayList<Symbol>();
@@ -191,9 +283,18 @@ public class AutomataLR0 {
             System.out.println("\n==> S" + i);
             ArrayList<ItemProd> productionsSee = C.get(i);
 
-            for (ItemProd itemProd : productionsSee) {
+            for (ItemProd itemProd : productionsSee) {                
                 System.out.println("\t" + itemProd.getExpression());
             }
+        }
+    }
+
+    public void seeParsingTable(){
+        for (String[] row : parsingTable) {
+            for (String data : row) {           
+                System.out.print(data + "\t\t");
+            }
+            System.out.println();
         }
     }
 
